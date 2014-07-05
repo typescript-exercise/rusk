@@ -5,7 +5,7 @@
   <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
     <param name="Target" value="System.out" /> 
     <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="[%-5p] [%d{yyyy/MM/dd HH:mm:ss.SSS}] [%t] - %m%n" />
+      <param name="ConversionPattern" value="[%-5p] [%d{yyyy/MM/dd HH:mm:ss.SSS}] [%t] [%l] - %m%n" />
     </layout>
   </appender>
   
@@ -25,8 +25,8 @@
   </logger>
   
   <root>
-    <level value ="info" />
-    <appender-ref ref="stdout"/>
+    <level value ="warn" />
     <appender-ref ref="file" />
+    <appender-ref ref="stdout"/>
   </root>
 </log4j:configuration>

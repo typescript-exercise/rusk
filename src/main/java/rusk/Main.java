@@ -10,14 +10,26 @@ import java.security.ProtectionDomain;
 import java.util.Objects;
 import java.util.jar.Manifest;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+/**
+ * Rusk 起動用のメインクラス。
+ */
 public class Main {
-    
+    /**Rusk 起動用のポート番号*/
     private static final int PORT_NUMBER = 58634;
+    /**コンテキストパス*/
     private static final String CONTEXT_PATH = "/rusk";
-
+    
+    /**
+     * アプリケーションを起動します。
+     * 
+     * @param args コマンドライン引数
+     */
     public static void main(String[] args) throws Exception {
         WebAppContext war = new WebAppContext();
         war.setContextPath(CONTEXT_PATH);
@@ -28,11 +40,33 @@ public class Main {
         server.setHandler(war);
         server.start();
         
-        startWebBrowser();
+        String url = "http://localhost:" + PORT_NUMBER + CONTEXT_PATH;
+        
+        initialize(url);
+        
+        startWebBrowser(url);
         
         server.join();
     }
     
+    /**
+     * 初期化のリクエストを送信する。
+     * 
+     * @param url URL のベース
+     */
+    private static void initialize(String url) {
+        Client client = ClientBuilder.newClient();
+        client.target(url).path("/rest/initialize").request().get();
+    }
+    
+    /**
+     * Web コンテンツフォルダを設定します。
+     * <p>
+     * 開発中とリリース時に合わせて Web コンテンツフォルダの場所が切り替わります。<br>
+     * 開発中は{@code src/main/webapp} が指定され、リリース時は実行している war ファイル自体が指定されます。
+     * 
+     * @param war WebAppContext
+     */
     private static void setWar(WebAppContext war) throws IOException {
         if (isRelease()) {
             System.out.println("release");
@@ -45,14 +79,22 @@ public class Main {
         }
     }
     
-    private static void startWebBrowser() throws URISyntaxException, IOException {
-        String url = "http://localhost:" + PORT_NUMBER + CONTEXT_PATH;
+    /**
+     * デフォルトの Web ブラウザを使って Rusk のページを表示させます。
+     * @param url URL のベース
+     */
+    private static void startWebBrowser(String url) throws URISyntaxException, IOException {
         System.out.println("url : " + url);
         Desktop desktop = Desktop.getDesktop();
         URI uri = new URI(url);
         desktop.browse(uri);
     }
     
+    /**
+     * 現在の実行環境が開発中かリリース後かを確認します。
+     * 
+     * @return リリース後の場合は true
+     */
     private static boolean isRelease() throws IOException {
         try (InputStream is = Main.class.getResourceAsStream("/META-INF/MANIFEST.MF")) {
             Manifest manifest = new Manifest(is);

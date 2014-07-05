@@ -1,0 +1,32 @@
+package rusk.rest.interceptor;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class AccessLoggingInterceptor implements MethodInterceptor {
+    
+    private static final Logger logger = LoggerFactory.getLogger(AccessLoggingInterceptor.class);
+    
+    private final ServiceLocator locator;
+    
+    public AccessLoggingInterceptor(ServiceLocator locator) {
+        this.locator = locator;
+    }
+
+    @Override
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        HttpServletRequest request = this.locator.getService(HttpServletRequest.class);
+        
+        String uri = request.getRequestURI();
+        
+        logger.debug("uri = {}", uri);
+        
+        return invocation.proceed();
+    }
+
+}
