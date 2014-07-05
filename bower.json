@@ -1,0 +1,27 @@
+{
+  "name": "typescript-template",
+  "version": "0.0.0",
+  "homepage": "",
+  "authors": [
+    ""
+  ],
+  "moduleType": [
+    "es6"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "angular": "~1.2.18",
+    "underscore": "~1.6.0",
+    "bootstrap": "~3.1.1",
+    "html5shiv": "~3.7.2",
+    "respond": "~1.4.2"
+  }
+}
