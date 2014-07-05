@@ -1,4 +1,4 @@
-package rusk.rest.system.db;
+package rusk.system.db;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

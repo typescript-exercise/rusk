@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rusk.rest.system.db.DatabaseMigration;
+import rusk.system.db.DatabaseMigration;
 
 @Path("initialize") @Singleton
 public class RuskInitializeResource {

@@ -1,4 +1,4 @@
-package rusk.rest.system.db;
+package rusk.system.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package rusk.rest.system.db;
+package rusk.system.db;
 
 public final class DatabaseConfig {
 

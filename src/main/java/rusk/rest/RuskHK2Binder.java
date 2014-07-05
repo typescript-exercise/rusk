@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 
 import rusk.rest.interceptor.RuskInterceptionService;
 import rusk.rest.system.RuskInitializeResource;
-import rusk.rest.system.db.DatabaseMigration;
-import rusk.rest.system.db.PersistProvider;
-import rusk.rest.system.db.RuskConnection;
-import rusk.rest.system.db.RuskConnectionPool;
+import rusk.system.db.DatabaseMigration;
+import rusk.system.db.PersistProvider;
+import rusk.system.db.RuskConnection;
+import rusk.system.db.RuskConnectionPool;
 
 /**
  * HK2 の設定。

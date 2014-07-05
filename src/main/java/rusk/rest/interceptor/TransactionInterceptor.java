@@ -6,7 +6,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import rusk.rest.system.db.RuskConnection;
+import rusk.system.db.RuskConnection;
 
 public class TransactionInterceptor implements MethodInterceptor {
     private final ServiceLocator locator;
