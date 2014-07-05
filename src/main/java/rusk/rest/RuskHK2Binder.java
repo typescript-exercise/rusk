@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rusk.rest.interceptor.RuskInterceptionService;
-import rusk.rest.system.RuskInitializeResource;
+import rusk.rest.system.RuskSystemResource;
 import rusk.system.db.DatabaseMigration;
 import rusk.system.db.PersistProvider;
 import rusk.system.db.RuskConnection;
@@ -36,7 +36,7 @@ public class RuskHK2Binder extends AbstractBinder {
         bindAsContract(PersistProvider.class).in(Singleton.class);
         
         // Resource
-        bindAsContract(RuskInitializeResource.class).in(Singleton.class);
+        bindAsContract(RuskSystemResource.class).in(Singleton.class);
         
         // Service
         

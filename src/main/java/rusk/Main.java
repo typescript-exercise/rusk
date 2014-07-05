@@ -12,6 +12,7 @@ import java.util.jar.Manifest;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -56,7 +57,7 @@ public class Main {
      */
     private static void initialize(String url) {
         Client client = ClientBuilder.newClient();
-        client.target(url).path("/rest/initialize").request().get();
+        client.target(url).path("/rest/system").request().post(Entity.text(""));
     }
     
     /**
@@ -69,12 +70,10 @@ public class Main {
      */
     private static void setWar(WebAppContext war) throws IOException {
         if (isRelease()) {
-            System.out.println("release");
             ProtectionDomain domain = Main.class.getProtectionDomain();
             URL warLocation = domain.getCodeSource().getLocation();
             war.setWar(warLocation.toExternalForm());
         } else {
-            System.out.println("develop");
             war.setResourceBase("src/main/webapp");
         }
     }

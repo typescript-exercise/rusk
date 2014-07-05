@@ -3,7 +3,6 @@ package rusk.system.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -13,17 +12,16 @@ import org.slf4j.LoggerFactory;
 /**
  * データベース接続のコネクションプール。
  */
-@Singleton
 public class RuskConnectionPool {
     private static final Logger logger = LoggerFactory.getLogger(RuskConnectionPool.class);
     
-    private final DataSource dataSource;
+    private DataSource dataSource;
     
     /**
-     * コネクションプールを作成する。
+     * コネクションプールを生成する。
      */
-    public RuskConnectionPool() {
-        logger.debug("construct datasource.");
+    public void initialize() {
+        logger.debug("initialize datasource.");
         
         BasicDataSource dataSource = new BasicDataSource();
         

@@ -1,7 +1,5 @@
 package rusk.system.db;
 
-import javax.inject.Singleton;
-
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
@@ -10,7 +8,6 @@ import org.slf4j.LoggerFactory;
 /**
  * データベースのマイグレーションを行うクラス。
  */
-@Singleton
 public class DatabaseMigration {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseMigration.class);
     

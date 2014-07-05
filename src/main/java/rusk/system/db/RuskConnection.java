@@ -6,14 +6,12 @@ import java.sql.SQLException;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
-import org.glassfish.jersey.process.internal.RequestScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * リクエストごとのデータベースコネクションを持つクラス。
  */
-@RequestScoped
 public class RuskConnection {
     private static final Logger logger = LoggerFactory.getLogger(RuskConnection.class);
     
