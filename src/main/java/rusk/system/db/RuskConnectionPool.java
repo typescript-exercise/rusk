@@ -18,6 +18,7 @@ public class RuskConnectionPool {
     
     private DataSource dataSource;
     private final DatabaseConfig databaseConfig;
+    private boolean isInitialized;
     
     @Inject
     public RuskConnectionPool(DatabaseConfig databaseConfig) {
@@ -27,7 +28,11 @@ public class RuskConnectionPool {
     /**
      * コネクションプールを生成する。
      */
-    public void initialize() {
+    synchronized public void initialize() {
+        if (this.isInitialized) {
+            return;
+        }
+        
         logger.debug("initialize datasource.");
         
         BasicDataSource dataSource = new BasicDataSource();
@@ -41,6 +46,8 @@ public class RuskConnectionPool {
         dataSource.setMaxIdle(3);
         
         this.dataSource = dataSource;
+        
+        this.isInitialized = true;
     }
     
     /**

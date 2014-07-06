@@ -16,6 +16,15 @@
     },
     "jquery/jquery.d.ts": {
       "commit": "88f38f5b582007f8a4e71cb9023f8a2daa98fbb7"
+    },
+    "angularjs/angular-animate.d.ts": {
+      "commit": "54cb6a8447cbeb75ea23044d2d1a7aa90b79ef48"
+    },
+    "angularjs/angular-route.d.ts": {
+      "commit": "54cb6a8447cbeb75ea23044d2d1a7aa90b79ef48"
+    },
+    "angularjs/angular-resource.d.ts": {
+      "commit": "54cb6a8447cbeb75ea23044d2d1a7aa90b79ef48"
     }
   }
 }

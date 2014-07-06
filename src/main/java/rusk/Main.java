@@ -10,10 +10,6 @@ import java.security.ProtectionDomain;
 import java.util.Objects;
 import java.util.jar.Manifest;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -43,21 +39,9 @@ public class Main {
         
         String url = "http://localhost:" + PORT_NUMBER + CONTEXT_PATH;
         
-        initialize(url);
-        
         startWebBrowser(url);
         
         server.join();
-    }
-    
-    /**
-     * 初期化のリクエストを送信する。
-     * 
-     * @param url URL のベース
-     */
-    private static void initialize(String url) {
-        Client client = ClientBuilder.newClient();
-        client.target(url).path("/rest/system").request().post(Entity.text(""));
     }
     
     /**
@@ -84,9 +68,11 @@ public class Main {
      */
     private static void startWebBrowser(String url) throws URISyntaxException, IOException {
         System.out.println("url : " + url);
-        Desktop desktop = Desktop.getDesktop();
-        URI uri = new URI(url);
-        desktop.browse(uri);
+        if (isRelease()) {
+            Desktop desktop = Desktop.getDesktop();
+            URI uri = new URI(url);
+            desktop.browse(uri);
+        }
     }
     
     /**

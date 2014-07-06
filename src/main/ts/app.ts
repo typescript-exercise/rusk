@@ -1,13 +1,9 @@
-/// <reference path="rusk/Sample.ts"/>
-
-import Sample = rusk.Sample;
+/// <reference path="app.d.ts" />
 
 angular
-.module('rusk', [])
-.run(['$rootScope', (scope) => {
-    
-    var sample = new Sample('AngularJS with TypeScript.');
-    
-    scope.message = sample.getName();
-    
+.module('rusk', ['ngResource'])
+.run([
+'$rootScope', 'systemService',
+($rootScope,   systemService : rusk.service.system.SystemService) => {
+    systemService.initialize();
 }]);
