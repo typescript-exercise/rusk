@@ -2,6 +2,8 @@ package rusk.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
+import rusk.RuskHK2Binder;
+
 /**
  * Jersey の設定クラス。
  */

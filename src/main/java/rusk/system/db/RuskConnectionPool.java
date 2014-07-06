@@ -3,6 +3,7 @@ package rusk.system.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -16,7 +17,13 @@ public class RuskConnectionPool {
     private static final Logger logger = LoggerFactory.getLogger(RuskConnectionPool.class);
     
     private DataSource dataSource;
+    private final DatabaseConfig databaseConfig;
     
+    @Inject
+    public RuskConnectionPool(DatabaseConfig databaseConfig) {
+        this.databaseConfig = databaseConfig;
+    }
+
     /**
      * コネクションプールを生成する。
      */
@@ -25,10 +32,10 @@ public class RuskConnectionPool {
         
         BasicDataSource dataSource = new BasicDataSource();
         
-        dataSource.setDriverClassName(DatabaseConfig.DRIVER);
-        dataSource.setUrl(DatabaseConfig.URL);
-        dataSource.setUsername(DatabaseConfig.USER);
-        dataSource.setPassword(DatabaseConfig.PASSWORD);
+        dataSource.setDriverClassName(databaseConfig.getDriver());
+        dataSource.setUrl(databaseConfig.getUrl());
+        dataSource.setUsername(databaseConfig.getUser());
+        dataSource.setPassword(databaseConfig.getPassword());
         dataSource.setDefaultAutoCommit(false);
         dataSource.setMaxActive(3);
         dataSource.setMaxIdle(3);
