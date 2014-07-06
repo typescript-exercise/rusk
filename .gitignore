@@ -8,7 +8,7 @@
 /src/main/webapp/scripts/app
 /src/main/webapp/index-dev.html
 /src/main/webapp/WEB-INF/classes
-/src/main/ts/*.d.ts
+/src/main/ts/vendor/*.d.ts
 /.project
 /.settings/com.palantir.typescript.prefs
 /src/main/ts/vendor
