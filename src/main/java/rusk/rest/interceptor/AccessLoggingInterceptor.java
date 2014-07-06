@@ -8,6 +8,9 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Web RESTful API へのアクセスログを記録するためのインターセプター。
+ */
 public class AccessLoggingInterceptor implements MethodInterceptor {
     
     private static final Logger logger = LoggerFactory.getLogger(AccessLoggingInterceptor.class);

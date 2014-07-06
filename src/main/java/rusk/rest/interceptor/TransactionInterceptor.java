@@ -8,6 +8,9 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 import rusk.system.db.RuskConnection;
 
+/**
+ * トランザクション制御をするためのインターセプター。
+ */
 public class TransactionInterceptor implements MethodInterceptor {
     private final ServiceLocator locator;
     

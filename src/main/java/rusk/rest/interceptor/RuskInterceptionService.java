@@ -18,6 +18,9 @@ import org.glassfish.hk2.utilities.BuilderHelper;
 
 import rusk.Transactional;
 
+/**
+ * フックしたメソッドごとに、適切なインターセプターを提供するためのサービス。
+ */
 public class RuskInterceptionService implements InterceptionService {
     
     private final MethodInterceptor accessLogging;
