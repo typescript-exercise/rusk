@@ -82,6 +82,7 @@ public class RuskConnection {
     public void release() {
         try {
             this.connection.close();
+            logger.debug("close connection.");
         } catch (SQLException e) {
             logger.error("failed to close connection.", e);
             throw new RuntimeException(e);
