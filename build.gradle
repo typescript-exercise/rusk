@@ -46,6 +46,8 @@ import org.gradle.plugins.ide.eclipse.model.SourceFolder
 eclipse {
     project {
         name = 'rusk'
+        buildCommand 'com.palantir.typescript.typeScriptBuilder'
+        natures 'com.palantir.typescript.typeScriptNature'
     }
     
     classpath {
@@ -54,5 +56,16 @@ eclipse {
         file.whenMerged {cp ->
             cp.entries.findAll { it instanceof SourceFolder && it.path.startsWith("src/test/") }*.output = "bin/test"
         }
+    }
+}
+
+tasks.eclipse << {
+    println file('.settings/com.palantir.typescript.prefs').withWriter {writer ->
+        writer << """\
+                  |build.path.sourceFolder=src/main/ts
+                  |compiler.outputDirOption=bin/ts
+                  |compiler.outputFileOption=
+                  |eclipse.preferences.version=1
+                  |""".stripMargin()
     }
 }
