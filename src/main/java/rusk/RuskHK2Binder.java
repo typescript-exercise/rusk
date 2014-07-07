@@ -12,6 +12,7 @@ import rusk.rest.interceptor.RuskInterceptionService;
 import rusk.rest.system.RuskSystemResource;
 import rusk.system.db.DatabaseConfig;
 import rusk.system.db.DatabaseMigration;
+import rusk.system.db.HK2PersistProvider;
 import rusk.system.db.PersistProvider;
 import rusk.system.db.RuskConnection;
 import rusk.system.db.RuskConnectionPool;
@@ -35,7 +36,7 @@ public class RuskHK2Binder extends AbstractBinder {
         bindAsContract(DatabaseMigration.class).in(Singleton.class);
         bindAsContract(RuskConnectionPool.class).in(Singleton.class);
         bindAsContract(RuskConnection.class).in(RequestScoped.class);
-        bindAsContract(PersistProvider.class).in(Singleton.class);
+        bind(HK2PersistProvider.class).to(PersistProvider.class).in(Singleton.class);
         
         // Resource
         bindAsContract(RuskSystemResource.class).in(Singleton.class);

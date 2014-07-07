@@ -24,16 +24,12 @@ import rusk.system.db.PersistProvider;
  * テスト時は、このクラスを各リポジトリクラスに渡すことで、リポジトリはこのクラスから{@code Persist} の
  * インスタンスを取得し、テストDBへの接続を行えるようになります。
  */
-public class TestPersistProvider extends PersistProvider implements TestRule {
+public class TestPersistProvider implements PersistProvider, TestRule {
     
     private Connection connection;
-    
-    public TestPersistProvider() {
-        super(null);
-    }
 
     @Override
-    public Persist provide() {
+    public Persist getPersist() {
         if (this.connection == null) {
             throw new IllegalStateException("Database connection is not opened. This class must be used as TestRule.");
         }
