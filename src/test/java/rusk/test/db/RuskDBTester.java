@@ -14,9 +14,9 @@ public class RuskDBTester extends DbUnitTester {
 
     private static class RuskJdbcDatabaseConnectionManager extends JdbcDatabaseConnectionManager {
         RuskJdbcDatabaseConnectionManager() {
-            super("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:testdb/rusk;shutdown=true");
-            super.username = "SA";
-            super.password = "";
+            super(TestDatabaseConfig.DRIVER, TestDatabaseConfig.URL);
+            super.username = TestDatabaseConfig.USER;
+            super.password = TestDatabaseConfig.PASS;
         }
     }
 }
