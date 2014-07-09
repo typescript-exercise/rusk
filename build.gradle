@@ -1,9 +1,14 @@
 apply plugin: 'war'
 
+ext.mainClass = 'rusk.Main'
+
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
+
+ant.condition(property: "grunt", value: "grunt.cmd") { os(family: "windows") }
+ant.condition(property: "grunt", value: "grunt"   ) { os(family: "unix") }
 
 repositories {
     mavenCentral()
@@ -40,7 +45,11 @@ war {
     }
     from fileTree(dir: 'build/classes/main', include: '**/Main.class')
     
-    manifest.attributes 'Main-Class': 'rusk.Main', 'Rusk-Release' : 'true'
+    manifest.attributes 'Main-Class': mainClass, 'Rusk-Release' : 'true'
+}
+
+tasks.war.doFirst {
+    tasks.grunt.execute()
 }
 
 apply plugin: 'eclipse'
@@ -70,6 +79,26 @@ tasks.eclipse << {
                   |compiler.outputFileOption=
                   |eclipse.preferences.version=1
                   |""".stripMargin()
+    }
+}
+
+apply plugin: 'application'
+
+mainClassName = mainClass
+
+tasks.run.doFirst {
+    tasks.grunt.execute()
+}
+
+task grunt << {
+    def cmd = "${ant.grunt} deploy".execute()
+    
+    def result = cmd.waitFor()
+    
+    println cmd.text
+    
+    if (result != 0) {
+        throw new RuntimeException('failed to grunt')
     }
 }
 
