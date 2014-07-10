@@ -7,7 +7,7 @@ public final class TestDatabaseConfig {
     /**JDBC ドライバー*/
     public static final String DRIVER = "org.hsqldb.jdbcDriver";
     /**接続 URL*/
-    public static final String URL = "jdbc:hsqldb:file:testdb/rusk;shutdown=true";
+    public static final String URL = "jdbc:hsqldb:file:testdb/unit_test;shutdown=true";
     /**ユーザー*/
     public static final String USER = "SA";
     /**パスワード*/

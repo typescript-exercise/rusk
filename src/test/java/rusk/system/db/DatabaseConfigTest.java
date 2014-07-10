@@ -16,7 +16,7 @@ public class DatabaseConfigTest {
             System.getProperty("user.home"); result = "userhome";
         }};
         
-        DatabaseConfig config = new DatabaseConfig();
+        ProductionDatabaseConfig config = new ProductionDatabaseConfig();
         
         // exercise
         String url = config.getUrl();
@@ -33,7 +33,7 @@ public class DatabaseConfigTest {
             System.getProperty("user.home"); result = "userhome";
         }};
         
-        DatabaseConfig config = new DatabaseConfig();
+        ProductionDatabaseConfig config = new ProductionDatabaseConfig();
         
         // exercise
         String url = config.getUrl();
