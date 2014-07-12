@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 import jp.classmethod.testing.database.Fixture;
 import mockit.NonStrictExpectations;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Rule;
 import org.junit.Test;
 

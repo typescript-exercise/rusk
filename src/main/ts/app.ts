@@ -1,9 +1,16 @@
-/// <reference path="app.d.ts" />
-
 angular
-.module('rusk', ['ngResource'])
+.module('rusk', ['ngResource', 'ngRoute'])
 .run([
-'$rootScope', 'systemService',
-($rootScope,   systemService : rusk.service.system.SystemService) => {
-    systemService.initialize();
-}]);
+    '$rootScope', 'systemService',
+    ($rootScope,   systemService : rusk.resource.system.SystemResource) => {
+        systemService.initialize();
+    }])
+.config([
+    '$routeProvider',
+    ($routeProvider) => {
+        $routeProvider
+        .when('/', {
+            controller: 'TaskListController',
+            templateUrl: 'views/task-list.html'
+        });
+    }]);
