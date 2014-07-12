@@ -15,14 +15,14 @@ import rusk.system.db.RuskConnectionPool;
  * Rusk の初期化処理を提供するリソースクラス。
  */
 @Path("system")
-public class RuskSystemResource {
-    private static final Logger logger = LoggerFactory.getLogger(RuskSystemResource.class);
+public class SystemResource {
+    private static final Logger logger = LoggerFactory.getLogger(SystemResource.class);
     
     private final DatabaseMigration dbMigration;
     private final RuskConnectionPool ruskConnectionPool;
     
     @Inject
-    public RuskSystemResource(DatabaseMigration dbMigration, RuskConnectionPool ruskConnectionPool) {
+    public SystemResource(DatabaseMigration dbMigration, RuskConnectionPool ruskConnectionPool) {
         this.dbMigration = dbMigration;
         this.ruskConnectionPool = ruskConnectionPool;
     }

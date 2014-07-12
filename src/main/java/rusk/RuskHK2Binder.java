@@ -8,7 +8,7 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rusk.rest.interceptor.RuskInterceptionService;
+import rusk.interceptor.RuskInterceptionService;
 import rusk.service.InquireTaskListService;
 import rusk.system.db.DatabaseConfig;
 import rusk.system.db.DatabaseMigration;
