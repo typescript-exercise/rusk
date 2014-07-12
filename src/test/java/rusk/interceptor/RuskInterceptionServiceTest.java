@@ -1,4 +1,4 @@
-package rusk.rest.interceptor;
+package rusk.interceptor;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -16,6 +16,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import rusk.Transactional;
+import rusk.interceptor.AccessLoggingInterceptor;
+import rusk.interceptor.RuskInterceptionService;
+import rusk.interceptor.TransactionInterceptor;
 
 public class RuskInterceptionServiceTest {
     

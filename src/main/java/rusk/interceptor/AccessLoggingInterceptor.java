@@ -1,4 +1,4 @@
-package rusk.rest.interceptor;
+package rusk.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 
