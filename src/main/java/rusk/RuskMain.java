@@ -16,7 +16,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 /**
  * Rusk 起動用のメインクラス。
  */
-public class Main {
+public class RuskMain {
     /**Rusk 起動用のポート番号*/
     private static final int PORT_NUMBER = 58634;
     /**コンテキストパス*/
@@ -54,7 +54,7 @@ public class Main {
      */
     private static void setWar(WebAppContext war) throws IOException {
         if (isRelease()) {
-            ProtectionDomain domain = Main.class.getProtectionDomain();
+            ProtectionDomain domain = RuskMain.class.getProtectionDomain();
             URL warLocation = domain.getCodeSource().getLocation();
             war.setWar(warLocation.toExternalForm());
         } else {
@@ -81,7 +81,7 @@ public class Main {
      * @return リリース後の場合は true
      */
     private static boolean isRelease() throws IOException {
-        try (InputStream is = Main.class.getResourceAsStream("/META-INF/MANIFEST.MF")) {
+        try (InputStream is = RuskMain.class.getResourceAsStream("/META-INF/MANIFEST.MF")) {
             Manifest manifest = new Manifest(is);
             String release = manifest.getMainAttributes().getValue("Rusk-Release");
             return Objects.equals(release, "true");

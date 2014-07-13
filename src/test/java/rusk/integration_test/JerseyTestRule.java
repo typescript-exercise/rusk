@@ -1,5 +1,6 @@
 package rusk.integration_test;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.test.JerseyTest;
@@ -23,7 +24,7 @@ public class JerseyTestRule extends ExternalResource {
     @Override
     public void before() throws Throwable {
         jerseyTest.setUp();
-        
+        jerseyTest.target("system").request().post(Entity.text(""));
     }
     
     @Override

@@ -1,10 +1,7 @@
+/// <reference path="./rusk/model/models.ts" />
+
 angular
 .module('rusk', ['ngResource', 'ngRoute'])
-.run([
-    '$rootScope', 'systemService',
-    ($rootScope,   systemService : rusk.resource.system.SystemResource) => {
-        systemService.initialize();
-    }])
 .config([
     '$routeProvider',
     ($routeProvider) => {
@@ -12,5 +9,8 @@ angular
         .when('/', {
             controller: 'TaskListController',
             templateUrl: 'views/task-list.html'
+        })
+        .when('/server-error', {
+            templateUrl: 'views/server-error.html'
         });
     }]);

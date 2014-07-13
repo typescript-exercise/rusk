@@ -3,10 +3,16 @@ angular
 .controller('TaskListController', [
     '$scope', 'taskListResource',
     function($scope, taskListResource : rusk.resource.list.TaskListResource) {
-        $scope.inquireTasList = () => {
-            taskListResource.inquire((taskList : rusk.model.list.TaskList) => {
-                console.dir(taskList);
+        
+        $scope.inquireTasList = inquireTaskList;
+        
+        inquireTaskList();
+        
+        function inquireTaskList() {
+            taskListResource.inquire( taskList => {
+                $scope.taskList = taskList;
+                $scope.inWorking = taskList.taskInWorking;
             });
-        };
+        }
     }
 ]);

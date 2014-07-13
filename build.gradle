@@ -1,6 +1,6 @@
 apply plugin: 'war'
 
-ext.mainClass = 'rusk.Main'
+ext.mainClass = 'rusk.RuskMain'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -34,7 +34,7 @@ dependencies {
     }
     testCompile 'org.hamcrest:hamcrest-all:1.3'
     testCompile 'jp.classmethod.testing:cmtest-db:0.4'
-    testCompile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:2.10.1'
+    testCompile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-inmemory:2.10.1'
 }
 
 war {

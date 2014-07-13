@@ -25,11 +25,13 @@ public class RuskInterceptionService implements InterceptionService {
     
     private final MethodInterceptor accessLogging;
     private final MethodInterceptor transaction;
+    private final MethodInterceptor systemInitialize;
     
     @Inject
     public RuskInterceptionService(ServiceLocator locator) {
         this.accessLogging = new AccessLoggingInterceptor(locator);
         this.transaction = new TransactionInterceptor(locator);
+        this.systemInitialize = new SystemInitializeInterceptor(locator);
     }
     
     @Override
@@ -38,6 +40,7 @@ public class RuskInterceptionService implements InterceptionService {
         
         if (isResourceMethod(method)) {
             interceptors.add(this.accessLogging);
+            interceptors.add(this.systemInitialize);
         }
         
         if (isTransactionalMethod(method)) {

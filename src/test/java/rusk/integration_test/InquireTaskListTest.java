@@ -41,14 +41,14 @@ public class InquireTaskListTest {
         
         // verify
         Task task = taskList.getTaskInWorking();
-        assertThat(task.getTitle(), is("作業中タスク"));
+        assertThat(task.getId(), is(1L));
         
-        List<String> uncompletedTaskTitles = taskList.getUncompletedTasks().stream().map(t -> t.getTitle()).collect(Collectors.toList());
-        
-        assertThat(uncompletedTaskTitles, is(contains("未着手・優先度３", "未着手・優先度２", "中断・優先度１")));
-        
-        List<String> completedTaskTitles = taskList.getCompletedTasks().stream().map(t -> t.getTitle()).collect(Collectors.toList());
+        List<Long> uncompletedTaskIds = taskList.getUncompleteTasks().stream().map(t -> t.getId()).collect(Collectors.toList());
 
-        assertThat(completedTaskTitles, is(contains("今日完了・優先度３", "今日完了・優先度１")));
+        assertThat(uncompletedTaskIds, is(contains(3L, 2L, 4L, 8L)));
+        
+        List<Long> completedTaskIds = taskList.getCompleteTasks().stream().map(t -> t.getId()).collect(Collectors.toList());
+        
+        assertThat(completedTaskIds, is(contains(7L, 5L)));
     }
 }

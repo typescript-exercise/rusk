@@ -23,7 +23,5 @@ angular
 .module('rusk')
 .factory('taskListResource', [
     '$http',
-    ($http) => {
-        return new rusk.resource.list.TaskListResource($http);
-    }
+    ($http) => new rusk.resource.list.TaskListResource($http)
 ]);

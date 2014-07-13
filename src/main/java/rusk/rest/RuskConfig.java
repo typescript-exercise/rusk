@@ -4,7 +4,6 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import rusk.RuskHK2Binder;
-import rusk.rest.system.SystemResource;
 
 /**
  * Jersey の設定クラス。
@@ -13,7 +12,6 @@ public class RuskConfig extends ResourceConfig {
     
     public RuskConfig() {
         packages(this.getClass().getPackage().getName());
-        this.registerResources();
         register(new RuskHK2Binder());
     }
     
@@ -27,12 +25,6 @@ public class RuskConfig extends ResourceConfig {
      */
     public RuskConfig(AbstractBinder binder) {
         packages(this.getClass().getPackage().getName());
-        this.registerResources();
         register(binder);
-    }
-    
-    private void registerResources() {
-        register(SystemResource.class);
-        register(TaskListResource.class);
     }
 }

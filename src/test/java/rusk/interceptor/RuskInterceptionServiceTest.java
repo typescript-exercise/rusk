@@ -32,8 +32,9 @@ public class RuskInterceptionServiceTest {
         service = new RuskInterceptionService(locator);
     }
     
+    @SuppressWarnings("unchecked")
     @Test
-    public void リソースクラスのメソッドを渡すと_アクセスロギング用のインターセプターが取得できること() throws Exception {
+    public void リソースクラスのメソッドを渡すと_アクセスロギングとシステム初期化のインターセプターが取得できること() throws Exception {
         // setup
         Method method = MockResource.class.getMethod("method");
         
@@ -41,7 +42,7 @@ public class RuskInterceptionServiceTest {
         List<MethodInterceptor> interceptors = service.getMethodInterceptors(method);
         
         // verify
-        assertThat(interceptors, contains(instanceOf(AccessLoggingInterceptor.class)));
+        assertThat(interceptors, contains(instanceOf(AccessLoggingInterceptor.class), instanceOf(SystemInitializeInterceptor.class)));
     }
     
     @Test

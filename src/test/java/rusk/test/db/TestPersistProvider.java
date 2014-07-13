@@ -57,6 +57,7 @@ public class TestPersistProvider implements PersistProvider, TestRule {
             Class.forName(TestDatabaseConfig.DRIVER);
             this.connection = DriverManager.getConnection(TestDatabaseConfig.URL, TestDatabaseConfig.USER, TestDatabaseConfig.PASS);
             this.connection.setAutoCommit(true);
+            System.out.println("success to connect test db.");
         } catch (Exception e) {
             throw new RuntimeException("failed to connect test db.", e);
         }
@@ -65,6 +66,7 @@ public class TestPersistProvider implements PersistProvider, TestRule {
     private void closeConnection() {
         try {
             this.connection.close();
+            System.out.println("close test db connection.");
         } catch (SQLException e) {
             throw new RuntimeException("failed to close test db.", e);
         }
