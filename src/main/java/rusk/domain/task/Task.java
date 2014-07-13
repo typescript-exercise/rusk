@@ -68,6 +68,18 @@ public class Task {
     public Status getStatus() {
         return status;
     }
+    public boolean isRankS() {
+        return this.priority.is(Rank.S);
+    }
+    public boolean isRankA() {
+        return this.priority.is(Rank.A);
+    }
+    public boolean isRankB() {
+        return this.priority.is(Rank.B);
+    }
+    public boolean isRankC() {
+        return this.priority.is(Rank.C);
+    }
     
     @Override
     public String toString() {

@@ -1,28 +1,20 @@
-<h1>Task List</h1>
-<div>
-  <dl>
-    <dt>タイトル</dt>
-    <dd>{{inWorking.title}}</dd>
-    
-    <dt>登録日</dt>
-    <dd>{{inWorking.registeredDate}}</dd>
-    
-    <dt>期限</dt>
-    <dd>{{inWorking.period}}</dd>
-    
-    <dt>作業時間</dt>
-    <dd>-</dd>
-    
-    <dt>優先度</dt>
-    <dd></dd>
-    
-    <dt></dt>
-    <dd></dd>
-    
-    <dt></dt>
-    <dd></dd>
-    
-    <dt></dt>
-    <dd></dd>
-  </dl>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-3 ">
+      <button type="button" class="btn btn-default btn-block">新規登録</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <h3>作業中</h3>
+      <rusk-task-tag task="inWorking" ng-if="inWorking"></rusk-task-tag>
+      
+      <h3>完了</h3>
+      <rusk-task-tag ng-repeat="task in taskList.completeTasks" task="task"></rusk-task-tag>
+    </div>
+    <div class="col-xs-6">
+      <h3>未完了</h3>
+      <rusk-task-tag ng-repeat="task in taskList.uncompleteTasks" task="task"></rusk-task-tag>
+    </div>
+  </div>
 </div>

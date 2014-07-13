@@ -1,0 +1,21 @@
+<div class="panel" ng-class="panelClass">
+  <div class="panel-heading">
+    <span class="label" ng-class="labelClass">{{task.priority.rank}}</span>
+    {{task.title}}
+    <span class="label pull-right" ng-class="labelClass">{{task.status | status}}</span>
+  </div>
+  <div class="panel-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          {{task.registeredDate | date:"yyyy/MM/dd HH:mm:ss"}} - {{task.priority.urgency.period | date:"yyyy/MM/dd HH:mm:ss"}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          作業時間 -
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
