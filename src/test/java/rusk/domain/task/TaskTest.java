@@ -1,5 +1,8 @@
 package rusk.domain.task;
 
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -44,4 +47,24 @@ public class TaskTest {
         task.setWorkTimes(workTimes);
     }
 
+    @Test
+    public void 作業時間の合計がミリ秒で取得できること() {
+        // setup
+        Date time1 = DateUtil.create("2014-01-01 11:00:00");
+        Date time2 = DateUtil.addMilliseconds(time1, 111);
+        Date time3 = DateUtil.addMilliseconds(time2, 1);
+        Date time4 = DateUtil.addMilliseconds(time3, 444);
+        
+        List<WorkTime> workTimes = Arrays.asList(new WorkTime(time1, time2), new WorkTime(time3, time4));
+        
+        Task task = new Task();
+        task.setWorkTimes(workTimes);
+        
+        // exercise
+        long total = task.getTotalWorkTime();
+        
+        // verify
+        assertThat(total, is(555L));
+    }
+    
 }

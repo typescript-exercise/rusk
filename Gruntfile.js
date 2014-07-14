@@ -57,7 +57,20 @@ module.exports = function(grunt) {
                     keepRunner: true,
                     junit: {
                         path: 'build/jasmine-test/'
-                    }
+                    },
+                    vendor: [
+                        'bower_components/jquery/dist/jquery.min.js',
+                        'bower_components/angular/angular.min.js',
+                        'bower_components/angular-route/angular-route.min.js',
+                        'bower_components/angular-animate/angular-animate.min.js',
+                        'bower_components/angular-resource/angular-resource.min.js',
+                        'bower_components/angular-mocks/angular-mocks.js',
+                        'bower_components/angular-ui-utils/ui-utils.min.js',
+                        'bower_components/underscore/underscore.js',
+                        'bower_components/bootstrap/dist/js/bootstrap.min.js',
+                        'bower_components/html5shiv/dist/*.min.js',
+                        'bower_components/respond/dest/respond.min.js',
+                    ]
                 }
             }
         },

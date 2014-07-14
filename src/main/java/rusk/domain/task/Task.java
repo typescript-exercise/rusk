@@ -3,6 +3,7 @@ package rusk.domain.task;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -146,5 +147,14 @@ public class Task {
 
             this.workTimes = new ArrayList<>(workTimes);
         }
+    }
+
+    /**
+     * このタスクの作業時間の合計をミリ秒で取得する。
+     * 
+     * @return 作業時間の合計（ミリ秒）
+     */
+    public long getTotalWorkTime() {
+        return this.workTimes.stream().collect(Collectors.summingLong(workTime -> workTime.getDuration()));
     }
 }

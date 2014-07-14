@@ -32,7 +32,7 @@ public class WorkTime {
         Validate.notNull(endTime, "終了時間は必須です。");
         
         if (endTime.getTime() <= startTime.getTime()) {
-            throw new IllegalArgumentException("開始時間は終了時間より前である必要があります。");
+            throw new IllegalArgumentException("開始時間は終了時間より前である必要があります。開始時間=" + startTime + ", 終了時間=" + endTime);
         }
     }
     
