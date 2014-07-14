@@ -1,11 +1,16 @@
 package rusk.domain.task;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Task {
     
     private final Long id;
@@ -15,7 +20,12 @@ public class Task {
     private Date completedDate;
     private Priority priority;
     private Status status;
+    private List<WorkTime> workTimes = new ArrayList<>();
     
+    /**
+     * このコンストラクタはフレームワークのために存在します。
+     */
+    @Deprecated
     public Task() {
         this.id = null;
         this.registeredDate = null;
@@ -68,6 +78,31 @@ public class Task {
     public Status getStatus() {
         return status;
     }
+    /**
+     * 作業時間を追加する。
+     * @param time 作業時間
+     * @throws DuplicateWorkTimeException 追加した作業時間が、既にこのタスクに登録されている作業時間と重複する場合
+     */
+    public void add(WorkTime time) throws DuplicateWorkTimeException {
+        Validate.notNull(time, "作業時間は必須です。");
+        
+        this.workTimes.forEach(workTime -> {
+            if (workTime.isDuplicate(time)) {
+                throw new DuplicateWorkTimeException(workTime, time);
+            }
+        });
+        
+        this.workTimes.add(time);
+    }
+    
+    /**
+     * このタスクの作業時間のリストのコピーを取得する。
+     * @return 作業時間のリストのコピー。作業時間が存在しない場合、空のリストを返す。
+     */
+    public List<WorkTime> getWorkTimes() {
+        return new ArrayList<>(this.workTimes);
+    }
+    
     public boolean isRankS() {
         return this.priority.is(Rank.S);
     }
@@ -84,5 +119,32 @@ public class Task {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
+
+    /**
+     * 作業時間を設定します。
+     * <p>
+     * null を渡した場合、空のリストで作業時間が上書きされます。
+     * 
+     * @param workTimes 作業時間
+     * @throws DuplicateWorkTimeException リストの中に作業時間が重複する要素が存在する場合
+     */
+    public void setWorkTimes(List<WorkTime> workTimes) throws DuplicateWorkTimeException {
+        if (workTimes == null) {
+            this.workTimes = new ArrayList<>();
+        } else {
+            workTimes.forEach(one -> {
+                workTimes
+                .stream()
+                .filter(other -> one != other)
+                .forEach(other -> {
+                    if (one.isDuplicate(other)) {
+                        throw new DuplicateWorkTimeException(one, other);
+                    }
+                });
+            });
+
+            this.workTimes = new ArrayList<>(workTimes);
+        }
     }
 }

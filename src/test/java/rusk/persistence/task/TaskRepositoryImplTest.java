@@ -17,6 +17,7 @@ import org.junit.Test;
 import rusk.domain.task.Importance;
 import rusk.domain.task.Status;
 import rusk.domain.task.Task;
+import rusk.domain.task.WorkTimeRepository;
 import rusk.test.db.RuskDBTester;
 import rusk.test.db.TestPersistProvider;
 import rusk.util.DateUtil;
@@ -31,6 +32,7 @@ public class TaskRepositoryImplTest {
     public RuskDBTester dbTester = new RuskDBTester();
     
     private TaskRepositoryImpl repository;
+    private WorkTimeRepository worktimeRepository;
     
     @Before
     public void setup() {
@@ -38,7 +40,8 @@ public class TaskRepositoryImplTest {
             Today.get(); result = DateUtil.create("2014-07-01 12:10:00");
         }};
         
-        repository = new TaskRepositoryImpl(provider);
+        worktimeRepository = new WorkTimeRepositoryImpl(provider);
+        repository = new TaskRepositoryImpl(provider, worktimeRepository);
     }
     
     @Test
@@ -55,6 +58,7 @@ public class TaskRepositoryImplTest {
         assertThat(task.getCompletedDate(), is(DateUtil.create("2014-07-02 11:22:33")));
         assertThat(task.getPriority().getImportance(), is(Importance.S));
         assertThat(task.getPriority().getUrgency().getPeriod(), is(DateUtil.create("2014-07-01 12:50:00")));
+        assertThat(task.getWorkTimes().get(0).getStartTime(), is(DateUtil.create("2014-07-01 13:00:00")));
     }
     
     @Test

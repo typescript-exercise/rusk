@@ -13,6 +13,8 @@ import rusk.domain.task.Status;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.Urgency;
+import rusk.domain.task.WorkTime;
+import rusk.domain.task.WorkTimeRepository;
 import rusk.system.db.PersistProvider;
 import rusk.util.DateUtil;
 import rusk.util.Today;
@@ -24,15 +26,18 @@ import rusk.util.Today;
  */
 public class TaskRepositoryImpl implements TaskRepository {
     
-    private PersistProvider provider;
+    private final PersistProvider provider;
+    private final WorkTimeRepository workTimeRepository;
     
     /**
      * コンストラクタ。
      * @param provider {@link PersistProvider}
+     * @param workTimeRepository {@link WorkTimeRepository}
      */
     @Inject
-    public TaskRepositoryImpl(PersistProvider provider) {
+    public TaskRepositoryImpl(PersistProvider provider, WorkTimeRepository workTimeRepository) {
         this.provider = provider;
+        this.workTimeRepository = workTimeRepository;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public List<Task> findUncompletedTasks() {
         List<TaskTable> tables = this.provider.getPersist().readList(TaskTable.class, "SELECT * FROM TASK WHERE STATUS IN (0, 2)");
-        return tables.stream().map(table -> map(table)).collect(Collectors.toList());
+        return tables.stream().map(this::map).collect(Collectors.toList());
     }
 
     @Override
@@ -57,7 +62,7 @@ public class TaskRepositoryImpl implements TaskRepository {
                                                 "SELECT * FROM TASK WHERE STATUS = 3 AND ? <= COMPLETED_DATE AND COMPLETED_DATE < ?",
                                                 from, to);
         
-        return tables.stream().map(table -> map(table)).collect(Collectors.toList());
+        return tables.stream().map(this::map).collect(Collectors.toList());
     }
 
     public Task findById(long id) {
@@ -75,6 +80,9 @@ public class TaskRepositoryImpl implements TaskRepository {
         Urgency urgency = new Urgency(Today.get(), table.getPeriod());
         Priority priority = new Priority(urgency, this.mapImportance(table.getImportance()));
         task.setPriority(priority);
+        
+        List<WorkTime> workTimes = this.workTimeRepository.findByTaskId(task.getId());
+        task.setWorkTimes(workTimes);
         
         return task;
     }
