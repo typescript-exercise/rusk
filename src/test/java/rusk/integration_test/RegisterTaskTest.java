@@ -51,9 +51,9 @@ public class RegisterTaskTest {
         
         // verify
         assertThat(response.getStatus(), is(Status.CREATED.getStatusCode()));
-        assertThat(response.getLocation().getPath(), is("/rest/task/1"));
+        assertThat(response.getLocation().getPath().matches("^/rest/task/\\d+$"), is(true));
         
         IDataSet expected = dbTester.loadDataSet("register-task-expected.yaml");
-        dbTester.verifyTable("TASK", expected);
+        dbTester.verifyTable("TASK", expected, "ID");
     }
 }
