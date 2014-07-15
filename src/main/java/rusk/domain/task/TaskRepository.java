@@ -12,9 +12,10 @@ public interface TaskRepository {
      * 指定したタスクを、新規登録します。
      * 
      * @param task 登録するタスク
+     * @return 新規に採番された ID
      * @throws NullPointerException タスクが null の場合
      */
-    void register(Task task);
+    long register(Task task);
     
     /**
      * 状態が作業中のタスクを取得する。

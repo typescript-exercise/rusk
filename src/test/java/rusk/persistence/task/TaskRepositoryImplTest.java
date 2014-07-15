@@ -147,7 +147,5 @@ public class TaskRepositoryImplTest {
         IDataSet expected = dbTester.loadDataSet("TaskRepositoryImple-fixuture-タスク登録-expected.yaml");
         
         dbTester.verifyTable("TASK", expected, "ID");
-        
-        assertThat(task.getId(), is(notNullValue()));
     }
 }
