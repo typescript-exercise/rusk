@@ -8,13 +8,22 @@
     <div class="col-xs-6">
       <h3>作業中</h3>
       <rusk-task-tag task="inWorking" ng-if="inWorking"></rusk-task-tag>
+      <div ng-show="!inWorking">
+        作業中のタスクは存在しません。
+      </div>
       
       <h3>完了</h3>
       <rusk-task-tag ng-repeat="task in taskList.completeTasks" task="task"></rusk-task-tag>
+      <div ng-show="taskList.completeTasks.length === 0">
+        完了タスクは存在しません。
+      </div>
     </div>
     <div class="col-xs-6">
       <h3>未完了</h3>
       <rusk-task-tag ng-repeat="task in taskList.uncompleteTasks" task="task"></rusk-task-tag>
+      <div ng-show="taskList.uncompleteTasks.length === 0">
+        未完了のタスクは存在しません。
+      </div>
     </div>
   </div>
 </div>

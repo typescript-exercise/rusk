@@ -71,10 +71,10 @@ public class WorkTime {
      * @return 作業時間が重複する場合は true
      */
     public boolean isDuplicate(WorkTime other) {
-        return this.isInclude(other.startTime) || this.isInclude(other.endTime);
+        return this.includes(other.startTime) || this.includes(other.endTime);
     }
     
-    private boolean isInclude(long time) {
+    private boolean includes(long time) {
         return this.startTime <= time && time <= this.endTime;
     }
 }

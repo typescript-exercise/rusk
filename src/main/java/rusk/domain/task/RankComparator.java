@@ -3,7 +3,7 @@ package rusk.domain.task;
 import java.util.stream.Stream;
 
 /**
- * 自分のランクと指定したランクを比較するインターフェース。
+ * 自分のランクと、指定したランクを比較するインターフェース。
  */
 public interface RankComparator {
 
