@@ -1,15 +1,19 @@
 package rusk.integration_test.db;
 
-import jp.classmethod.testing.database.DbUnitTester;
 import jp.classmethod.testing.database.JdbcDatabaseConnectionManager;
+import rusk.test.db.RuskDBTester;
 
 /**
  * Rusk 開発用の DbUnitTester
  */
-public class RuskDBTester extends DbUnitTester {
+public class RuskIntegrationDBTester extends RuskDBTester {
 
-    public RuskDBTester() {
-        super(new RuskJdbcDatabaseConnectionManager());
+    public RuskIntegrationDBTester() {
+        super(new RuskJdbcDatabaseConnectionManager(), null);
+    }
+
+    public RuskIntegrationDBTester(Class<?> testClass) {
+        super(new RuskJdbcDatabaseConnectionManager(), testClass);
     }
 
     private static class RuskJdbcDatabaseConnectionManager extends JdbcDatabaseConnectionManager {

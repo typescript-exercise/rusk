@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import rusk.domain.list.TaskList;
 import rusk.domain.task.Task;
-import rusk.integration_test.db.RuskDBTester;
+import rusk.integration_test.db.RuskIntegrationDBTester;
 import rusk.util.DateUtil;
 import rusk.util.Today;
 
@@ -26,7 +26,7 @@ public class InquireTaskListTest {
     @Rule
     public JerseyTestRule rule = new JerseyTestRule();
     @Rule
-    public RuskDBTester dbTester = new RuskDBTester();
+    public RuskIntegrationDBTester dbTester = new RuskIntegrationDBTester();
     
     @Test
     @Fixture(resources="inquire-task-list.yaml")

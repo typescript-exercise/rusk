@@ -14,6 +14,7 @@ import rusk.interceptor.RuskInterceptionService;
 import rusk.persistence.task.TaskRepositoryImpl;
 import rusk.persistence.task.WorkTimeRepositoryImpl;
 import rusk.rest.list.TaskListResource;
+import rusk.rest.task.TaskResource;
 import rusk.service.list.InquireTaskListService;
 import rusk.service.system.SystemInitializeService;
 import rusk.system.db.DatabaseConfig;
@@ -63,5 +64,6 @@ public class RuskHK2Binder extends AbstractBinder {
         
         // resource
         bindAsContract(TaskListResource.class).in(Singleton.class);
+        bindAsContract(TaskResource.class).in(Singleton.class);
     }
 }

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import jp.classmethod.testing.database.Fixture;
 import mockit.NonStrictExpectations;
 
+import org.dbunit.dataset.IDataSet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,7 +18,9 @@ import org.junit.Test;
 import rusk.domain.task.Importance;
 import rusk.domain.task.Status;
 import rusk.domain.task.Task;
+import rusk.domain.task.TaskFactory;
 import rusk.domain.task.WorkTimeRepository;
+import rusk.rest.task.RegisterTaskForm;
 import rusk.test.db.RuskDBTester;
 import rusk.test.db.TestPersistProvider;
 import rusk.util.DateUtil;
@@ -29,7 +32,7 @@ public class TaskRepositoryImplTest {
     @Rule
     public TestPersistProvider provider = new TestPersistProvider();
     @Rule
-    public RuskDBTester dbTester = new RuskDBTester();
+    public RuskDBTester dbTester = new RuskDBTester(TaskRepositoryImplTest.class);
     
     private TaskRepositoryImpl repository;
     private WorkTimeRepository worktimeRepository;
@@ -123,5 +126,26 @@ public class TaskRepositoryImplTest {
         
         // verify
         assertThat(completedTasks, is(empty()));
+    }
+    
+    @Test
+    @Fixture(resources="TaskRepositoryImple-fixuture-タスク登録.yaml")
+    public void 指定したタスクがデータベースに登録されること() throws Exception {
+        // setup
+        RegisterTaskForm form = new RegisterTaskForm();
+        form.setTitle("タスク登録");
+        form.setImportance(Importance.A);
+        form.setPeriod(DateUtil.create("2014-07-03 09:00:00"));
+        form.setDetail("詳細");
+        
+        Task task = TaskFactory.create(form);
+        
+        // exercise
+        repository.register(task);
+        
+        // verify
+        IDataSet expected = dbTester.loadDataSet("TaskRepositoryImple-fixuture-タスク登録-expected.yaml");
+        
+        dbTester.verifyTable("TASK", expected, "ID");
     }
 }

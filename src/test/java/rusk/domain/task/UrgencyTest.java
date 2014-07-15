@@ -106,5 +106,16 @@ public class UrgencyTest {
         assertThat(urgency.is(Rank.C), is(true));
     }
     
-    
+    @Test
+    public void 期限とランクが同じ場合_equalsメソッドはtrueを返すこと() {
+        // setup
+        Date period = DateUtil.create("2014-01-08 00:00:00");
+        
+        // exercise
+        Urgency one = new Urgency(now, period);
+        Urgency other = new Urgency(now, period);
+        
+        // verify
+        assertThat(one, is(other));
+    }
 }

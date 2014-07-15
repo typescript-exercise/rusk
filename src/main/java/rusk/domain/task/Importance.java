@@ -3,9 +3,12 @@ package rusk.domain.task;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import rusk.util.Immutable;
+
 /**
  * 重要度
  */
+@Immutable
 public enum Importance implements RankComparator {
     C(Rank.C),
     B(Rank.B),

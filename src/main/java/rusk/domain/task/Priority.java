@@ -1,7 +1,11 @@
 package rusk.domain.task;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import rusk.util.Immutable;
 
 /**
  * 優先度
@@ -49,6 +53,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  *     </tr>
  * </table>
  */
+@Immutable
 public class Priority implements RankComparator, Comparable<Priority> {
     private final Urgency urgency;
     private final Importance importance;
@@ -117,5 +122,19 @@ public class Priority implements RankComparator, Comparable<Priority> {
     @Override
     public int compareTo(Priority other) {
         return this.rank.compareTo(other.rank);
+    }
+    
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this.urgency).append(this.importance).toHashCode();
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof Priority)) return false;
+        
+        Priority o = (Priority)other;
+        
+        return new EqualsBuilder().append(this.urgency, o.urgency).append(this.importance, o.importance).isEquals();
     }
 }

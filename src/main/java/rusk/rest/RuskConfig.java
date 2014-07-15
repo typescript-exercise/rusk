@@ -1,5 +1,7 @@
 package rusk.rest;
 
+import javax.ws.rs.core.UriBuilder;
+
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -26,5 +28,15 @@ public class RuskConfig extends ResourceConfig {
     public RuskConfig(AbstractBinder binder) {
         packages(this.getClass().getPackage().getName());
         register(binder);
+    }
+    
+    /**
+     * 指定したリソースクラスをベースにした{@link UriBuilder} を取得する。
+     * 
+     * @param resourceClass リソースクラス
+     * @return 指定したリソースクラスをベースにした{@link UriBuilder}
+     */
+    public static UriBuilder resource(Class<?> resourceClass) {
+        return UriBuilder.fromPath("rest").path(resourceClass);
     }
 }

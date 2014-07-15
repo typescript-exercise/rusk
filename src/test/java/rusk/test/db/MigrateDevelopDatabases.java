@@ -4,12 +4,13 @@ import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import rusk.integration_test.db.MigrateIntegrationTestDatabase;
 import rusk.system.db.DatabaseConfig;
 import rusk.system.db.ProductionDatabaseConfig;
 
-public class MigrateDevelopDatabase {
+public class MigrateDevelopDatabases {
 
-    private static final Logger logger = LoggerFactory.getLogger(MigrateDevelopDatabase.class);
+    private static final Logger logger = LoggerFactory.getLogger(MigrateDevelopDatabases.class);
     
     public static void main(String[] args) {
         DatabaseConfig config = new ProductionDatabaseConfig();
@@ -20,5 +21,8 @@ public class MigrateDevelopDatabase {
         flyway.migrate();
         
         logger.info("success to migrate develop database.");
+        
+        MigrateUnitTestDatabase.main(null);
+        MigrateIntegrationTestDatabase.main(null);
     }
 }

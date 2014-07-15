@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Task {
     
-    private final Long id;
+    private Long id;
     private String title;
     private String detail;
     private final Date registeredDate;
@@ -32,12 +32,17 @@ public class Task {
         this.registeredDate = null;
     }
     
+    public Task(Date registeredDate) {
+        this.id = null;
+        this.registeredDate = new Date(registeredDate.getTime());
+    }
+    
     public Task(long id, Date registeredDate) {
         Validate.isTrue(0 < id, "ID は 1 以上の値のみ受け付けます。");
         Validate.notNull(registeredDate, "登録日は必須です。");
         
         this.id = id;
-        this.registeredDate = registeredDate;
+        this.registeredDate = new Date(registeredDate.getTime());
     }
     
     public void setTitle(String title) {

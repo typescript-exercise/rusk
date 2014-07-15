@@ -4,8 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import rusk.util.DateUtil;
+import rusk.util.Immutable;
 
 /**
  * 緊急度
@@ -40,8 +43,9 @@ import rusk.util.DateUtil;
  * このクラスには、ランクのみを設定した緊急度のインスタンスが存在します（{@link Urgency#RANK_S}）。
  * これらは期限が設定されていないため、 {@link #getPeriod()} を実行すると {@link UnsupportedOperationException} がスローされます。
  */
+@Immutable
 public class Urgency implements RankComparator {
-    private final Date period;
+    private final long period;
     private final Rank rank;
     
     /**ランクSの緊急度*/
@@ -58,7 +62,7 @@ public class Urgency implements RankComparator {
      */
     @Deprecated
     public Urgency() {
-        this.period = null;
+        this.period = Long.MIN_VALUE;
         this.rank = null;
     }
     
@@ -74,7 +78,7 @@ public class Urgency implements RankComparator {
         Validate.notNull(base, "基準日に null は指定できません。");
         Validate.notNull(period, "期限に null は指定できません。");
         
-        this.period = new Date(period.getTime());
+        this.period = period.getTime();
         this.rank = this.isolateRank(base, period);
     }
     
@@ -85,7 +89,7 @@ public class Urgency implements RankComparator {
      */
     private Urgency(Rank rank) {
         this.rank = rank;
-        period = null;
+        period = Long.MIN_VALUE;
     }
     
     private Rank isolateRank(Date base, Date period) {
@@ -123,11 +127,26 @@ public class Urgency implements RankComparator {
             throw new UnsupportedOperationException();
         }
         
-        return new Date(period.getTime());
+        return new Date(period);
     }
 
     @Override
     public Rank getRank() {
         return this.rank;
+    }
+    
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this.rank).append(this.period).toHashCode();
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof Urgency)) return false;
+        
+        Urgency other = (Urgency)o;
+        
+        return new EqualsBuilder().append(this.rank, other.rank).append(this.period, other.period).isEquals();
     }
 }

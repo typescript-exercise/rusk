@@ -1,5 +1,6 @@
 package rusk.persistence.task;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -102,6 +103,21 @@ public class TaskRepositoryImpl implements TaskRepository {
         throw new IllegalArgumentException("s = " + s);
     }
     
+    private byte toByte(Status status) {
+        switch (status) {
+        case UNSTARTED:
+            return 0;
+        case IN_WORKING:
+            return 1;
+        case STOPPED:
+            return 2;
+        case COMPLETE:
+            return 3;
+        }
+        
+        throw new IllegalArgumentException("status = " + status);
+    }
+    
     private Importance mapImportance(byte i) {
         switch (i) {
         case 0:
@@ -116,5 +132,38 @@ public class TaskRepositoryImpl implements TaskRepository {
         
         throw new IllegalArgumentException("i = " + i);
     }
+    
+    private byte toByte(Importance importance) {
+        switch (importance) {
+        case C:
+            return 0;
+        case B:
+            return 1;
+        case A:
+            return 2;
+        case S:
+            return 3;
+        }
+        
+        throw new IllegalArgumentException("importance = " + importance);
+    }
 
+    @Override
+    public void register(Task task) {
+        TaskTable table = this.convert(task);
+        this.provider.getPersist().insert(table);
+    }
+    
+    public TaskTable convert(Task task) {
+        TaskTable table = new TaskTable();
+        
+        table.setDetail(task.getDetail());
+        table.setImportance(toByte(task.getPriority().getImportance()));
+        table.setPeriod(new Timestamp(task.getPriority().getUrgency().getPeriod().getTime()));
+        table.setRegisteredDate(new Timestamp(task.getRegisteredDate().getTime()));
+        table.setStatus(toByte(task.getStatus()));
+        table.setTitle(task.getTitle());
+        
+        return table;
+    }
 }

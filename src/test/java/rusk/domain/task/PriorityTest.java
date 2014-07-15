@@ -174,5 +174,15 @@ public class PriorityTest {
         }
     }
     
-
+    public static class equalsメソッドのテスト {
+        @Test
+        public void 重要度と緊急度が同じ場合_equalsメソッドはtrueを返すこと() {
+            // setup
+            Priority one = new Priority(Urgency.RANK_B, Importance.C);
+            Priority other = new Priority(Urgency.RANK_B, Importance.C);
+            
+            // verify
+            assertThat(one, is(other));
+        }
+    }
 }
