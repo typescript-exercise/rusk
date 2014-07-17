@@ -78,16 +78,19 @@ module.exports = function(grunt) {
             init: {
                 files: [
                     // js files
-                    {expand: true, cwd: 'bower_components/angular/',          src: '*',  dest: 'src/main/webapp/scripts/vendor/angular/'},
-                    {expand: true, cwd: 'bower_components/angular-route/',    src: '*',  dest: 'src/main/webapp/scripts/vendor/angular-route/'},
-                    {expand: true, cwd: 'bower_components/angular-animate/',  src: '*',  dest: 'src/main/webapp/scripts/vendor/angular-animate/'},
-                    {expand: true, cwd: 'bower_components/angular-resource/',  src: '*',  dest: 'src/main/webapp/scripts/vendor/angular-resource/'},
-                    {expand: true, cwd: 'bower_components/angular-ui-utils/', src: '*',  dest: 'src/main/webapp/scripts/vendor/angular-ui-utils/'},
-                    {expand: true, cwd: 'bower_components/jquery/dist',       src: '*',  dest: 'src/main/webapp/scripts/vendor/jquery/'},
-                    {expand: true, cwd: 'bower_components/underscore',        src: '*',  dest: 'src/main/webapp/scripts/vendor/underscore/'},
-                    {expand: true, cwd: 'bower_components/bootstrap/dist',    src: '**', dest: 'src/main/webapp/scripts/vendor/bootstrap/'},
-                    {expand: true, cwd: 'bower_components/html5shiv/dist',    src: '*',  dest: 'src/main/webapp/scripts/vendor/html5shiv/'},
-                    {expand: true, cwd: 'bower_components/respond/dest',      src: '*',  dest: 'src/main/webapp/scripts/vendor/respond/'},
+                    {expand: true, cwd: 'bower_components/angular/',              src: '*',  dest: 'src/main/webapp/scripts/vendor/angular/'},
+                    {expand: true, cwd: 'bower_components/angular-route/',        src: '*',  dest: 'src/main/webapp/scripts/vendor/angular-route/'},
+                    {expand: true, cwd: 'bower_components/angular-animate/',      src: '*',  dest: 'src/main/webapp/scripts/vendor/angular-animate/'},
+                    {expand: true, cwd: 'bower_components/angular-resource/',      src: '*',  dest: 'src/main/webapp/scripts/vendor/angular-resource/'},
+                    {expand: true, cwd: 'bower_components/angular-ui-utils/',     src: '*',  dest: 'src/main/webapp/scripts/vendor/angular-ui-utils/'},
+                    {expand: true, cwd: 'bower_components/jquery/dist',           src: '*',  dest: 'src/main/webapp/scripts/vendor/jquery/'},
+                    {expand: true, cwd: 'bower_components/underscore',            src: '*',  dest: 'src/main/webapp/scripts/vendor/underscore/'},
+                    {expand: true, cwd: 'bower_components/bootstrap/dist',        src: '**', dest: 'src/main/webapp/scripts/vendor/bootstrap/'},
+                    {expand: true, cwd: 'bower_components/html5shiv/dist',        src: '*',  dest: 'src/main/webapp/scripts/vendor/html5shiv/'},
+                    {expand: true, cwd: 'bower_components/respond/dest',          src: '*',  dest: 'src/main/webapp/scripts/vendor/respond/'},
+                    {expand: true, cwd: 'bower_components/datetimepicker/',       src: '*',  dest: 'src/main/webapp/scripts/vendor/datetimepicker/'},
+                    {expand: true, cwd: 'bower_components/jquery-validate/dist/', src: '*',  dest: 'src/main/webapp/scripts/vendor/jquery-validate/'},
+                    {expand: true, cwd: 'bower_components/jquery-autosize/',      src: '*',  dest: 'src/main/webapp/scripts/vendor/jquery-autosize/'},
                     
                     // d.ts files
                     {expand: true, src: 'typings/**/*.d.ts', dest: 'src/main/ts/vendor', flatten: true},

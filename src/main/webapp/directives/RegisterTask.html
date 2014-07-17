@@ -1,0 +1,49 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        
+        <h4 class="modal-title">タスク登録</h4>
+      </div>
+      
+      <form ng-submit="register()" ui-jq="validate" ui-options="validateOption">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="title" class="control-label">タイトル</label>
+            <input id="title" name="title" class="form-control" ng-model="title" maxlength="{{validateOption.rules.title.maxlength}}" />
+          </div>
+          
+          <div class="form-group">
+            <label for="period" class="control-label">期限</label>
+            <input id="period" name="period" type="text" class="form-control" ui-jq="datetimepicker" ui-options="datepickerOption" />
+          </div>
+          
+          <div class="form-group">
+            <label for="importance" class="control-label" >重要度</label>
+            <select id="importance" name="importance" class="form-control" ng-model="importance">
+              <option value="S">S</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="detail" class="control-label">詳細</label>
+            <textarea id="detail" name="detail" class="form-control" maxlength="{{validateOption.rules.detail.maxlength}}"
+                       ng-model="detail" ui-jq="autosize"></textarea>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+          <button type="submit" class="btn btn-primary">登録</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
