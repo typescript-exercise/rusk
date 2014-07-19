@@ -38,4 +38,13 @@ public interface TaskRepository {
      * @return 指定日に完了したタスク。存在しない場合は、空のリストを返す。
      */
     List<Task> findCompleteTasks(Date date);
+    
+    /**
+     * 指定した ID のタスクを取得する。
+     * 
+     * @param id タスクの ID
+     * @return 取得したタスク
+     * @throws TaskNotFoundException ID に紐づくタスクが存在しない場合
+     */
+    Task inquire(long id) throws TaskNotFoundException;
 }

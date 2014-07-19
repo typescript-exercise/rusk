@@ -58,16 +58,6 @@ public class Priority implements RankComparator, Comparable<Priority> {
     private final Urgency urgency;
     private final Importance importance;
     private final Rank rank;
-
-    /**
-     * このコンストラクタは、フレームワークのために存在します。
-     */
-    @Deprecated
-    public Priority() {
-        this.urgency = null;
-        this.importance = null;
-        this.rank = null;
-    }
     
     public Priority(Urgency urgency, Importance importance) {
         this.urgency = urgency;
@@ -136,5 +126,15 @@ public class Priority implements RankComparator, Comparable<Priority> {
         Priority o = (Priority)other;
         
         return new EqualsBuilder().append(this.urgency, o.urgency).append(this.importance, o.importance).isEquals();
+    }
+
+    /**
+     * このコンストラクタは、フレームワークのために存在します。
+     */
+    @Deprecated
+    public Priority() {
+        this.urgency = null;
+        this.importance = null;
+        this.rank = null;
     }
 }

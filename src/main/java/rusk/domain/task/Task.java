@@ -17,29 +17,19 @@ public class Task {
     private Long id;
     private String title;
     private String detail;
-    private final Date registeredDate;
+    private Date registeredDate;
     private Date completedDate;
     private Priority priority;
     private Status status;
     private List<WorkTime> workTimes = new ArrayList<>();
     
-    /**
-     * このコンストラクタはフレームワークのために存在します。
-     */
-    @Deprecated
-    public Task() {
-        this.registeredDate = null;
-    }
-    
     public Task(Date registeredDate) {
-        this.registeredDate = new Date(registeredDate.getTime());
+        this.setRegisteredDate(registeredDate);
     }
     
     public Task(long id, Date registeredDate) {
-        Validate.notNull(registeredDate, "登録日は必須です。");
-        
         this.setId(id);
-        this.registeredDate = new Date(registeredDate.getTime());
+        this.setRegisteredDate(registeredDate);
     }
     
     public void setTitle(String title) {
@@ -50,7 +40,9 @@ public class Task {
         this.detail = detail;
     }
     public void setCompletedDate(Date completedDate) {
-        this.completedDate = completedDate;
+        if (completedDate != null) {
+            this.completedDate = new Date(completedDate.getTime());
+        }
     }
     public void setPriority(Priority priority) {
         Validate.notNull(priority, "優先度は必須です。");
@@ -173,5 +165,18 @@ public class Task {
     private void setId(long id) {
         Validate.isTrue(0 < id, "ID は 1 以上の値のみ受け付けます。");
         this.id = id;
+    }
+
+    private void setRegisteredDate(Date registeredDate) {
+        Validate.notNull(registeredDate, "登録日は必須です。");
+        this.registeredDate = new Date(registeredDate.getTime());
+    }
+    
+    /**
+     * このコンストラクタはフレームワークのために存在します。
+     */
+    @Deprecated
+    public Task() {
+        this.registeredDate = null;
     }
 }

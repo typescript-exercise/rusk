@@ -59,15 +59,6 @@ public class Urgency implements RankComparator {
     public static final Urgency RANK_C = new Urgency(Rank.C);
     
     /**
-     * このコンストラクタは、フレームワークのために存在します。
-     */
-    @Deprecated
-    public Urgency() {
-        this.period = Long.MIN_VALUE;
-        this.rank = null;
-    }
-    
-    /**
      * 基準日と期限を指定してインスタンスを生成する。
      * 
      * @param base 基準日
@@ -154,5 +145,14 @@ public class Urgency implements RankComparator {
     @Override
     public String toString() {
         return this.getClass().getName() + "[period = " + DateFormatUtils.format(new Date(this.period), "yyyy/MM/dd HH:mm:ss.SSS") + ", rank = " + this.rank + "]";
+    }
+    
+    /**
+     * このコンストラクタは、フレームワークのために存在します。
+     */
+    @Deprecated
+    public Urgency() {
+        this.period = Long.MIN_VALUE;
+        this.rank = null;
     }
 }

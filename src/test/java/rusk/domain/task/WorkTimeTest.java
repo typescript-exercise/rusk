@@ -80,4 +80,16 @@ public class WorkTimeTest {
         assertThat(duplicate, is(false));
     }
 
+    @Test
+    public void 開始時間と終了時間が同じ場合_equalsメソッドはtrueを返すこと() {
+        // setup
+        Date before = DateUtil.create("2014-01-01 11:00:00");
+        Date after = DateUtil.addMilliseconds(before, 100);
+        
+        WorkTime one = new WorkTime(before, after);
+        WorkTime other = new WorkTime(before, after);
+        
+        // verify
+        assertThat(one.equals(other), is(true));
+    }
 }

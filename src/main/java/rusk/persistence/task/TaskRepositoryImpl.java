@@ -11,15 +11,14 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rusk.domain.task.Priority;
 import rusk.domain.task.Task;
+import rusk.domain.task.TaskBuilder;
+import rusk.domain.task.TaskNotFoundException;
 import rusk.domain.task.TaskRepository;
-import rusk.domain.task.Urgency;
 import rusk.domain.task.WorkTime;
 import rusk.domain.task.WorkTimeRepository;
 import rusk.system.db.PersistProvider;
 import rusk.util.DateUtil;
-import rusk.util.Today;
 
 /**
  * {@link TaskRepository} の実装クラス。
@@ -68,26 +67,27 @@ public class TaskRepositoryImpl implements TaskRepository {
         return tables.stream().map(this::toTask).collect(Collectors.toList());
     }
 
-    public Task findById(long id) {
+    @Override
+    public Task inquire(long id) throws TaskNotFoundException {
         TaskTable taskTable = this.provider.getPersist().readByPrimaryKey(TaskTable.class, id);
+        if (taskTable == null) {
+            throw new TaskNotFoundException(id);
+        }
+        
         return this.toTask(taskTable);
     }
     
     private Task toTask(TaskTable table) {
-        Task task = new Task(table.getId(), table.getRegisteredDate());
-        task.setTitle(table.getTitle());
-        task.setStatus(table.getStatusAsEnum());
-        task.setDetail(table.getDetail());
-        task.setCompletedDate(table.getCompletedDate());
+        List<WorkTime> workTimes = this.workTimeRepository.findByTaskId(table.getId());
         
-        Urgency urgency = new Urgency(Today.get(), table.getPeriod());
-        Priority priority = new Priority(urgency, table.getImportanceAsEnum());
-        task.setPriority(priority);
-        
-        List<WorkTime> workTimes = this.workTimeRepository.findByTaskId(task.getId());
-        task.setWorkTimes(workTimes);
-        
-        return task;
+        return new TaskBuilder(table.getId(), table.getRegisteredDate())
+                        .title(table.getTitle())
+                        .status(table.getStatusAsEnum())
+                        .detail(table.getDetail())
+                        .completeDate(table.getCompletedDate())
+                        .priority(table.getPeriod(), table.getImportanceAsEnum())
+                        .workTimes(workTimes)
+                        .build();
     }
 
     @Override

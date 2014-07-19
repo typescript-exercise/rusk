@@ -2,6 +2,7 @@ package rusk.persistence.task;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import static rusk.test.matcher.RuskMatchers.*;
 
 import java.util.Date;
 import java.util.List;
@@ -15,9 +16,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import rusk.domain.EntityNotFoundException;
 import rusk.domain.task.Importance;
 import rusk.domain.task.Status;
 import rusk.domain.task.Task;
+import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
 import rusk.domain.task.WorkTimeRepository;
 import rusk.rest.task.RegisterTaskForm;
@@ -50,18 +53,25 @@ public class TaskRepositoryImplTest {
     @Test
     public void データベースに登録されているタスクの情報を_Javaオブジェクトに正しくマッピングされること() {
         // exercise
-        Task task = repository.findById(1L);
+        Task task = repository.inquire(1L);
         
         // verify
-        assertThat(task.getId(), is(1L));
-        assertThat(task.getTitle(), is("完了１"));
-        assertThat(task.getStatus(), is(Status.COMPLETE));
-        assertThat(task.getDetail(), is("これは完了タスクです"));
-        assertThat(task.getRegisteredDate(), is(DateUtil.create("2014-07-01 12:00:00")));
-        assertThat(task.getCompletedDate(), is(DateUtil.create("2014-07-02 11:22:33")));
-        assertThat(task.getPriority().getImportance(), is(Importance.S));
-        assertThat(task.getPriority().getUrgency().getPeriod(), is(DateUtil.create("2014-07-01 12:50:00")));
-        assertThat(task.getWorkTimes().get(0).getStartTime(), is(DateUtil.create("2014-07-01 13:00:00")));
+        Task expected = new TaskBuilder(1L, "2014-07-01 12:00:00")
+                                .title("完了１")
+                                .status(Status.COMPLETE)
+                                .detail("これは完了タスクです")
+                                .completeDate("2014-07-02 11:22:33")
+                                .priority("2014-07-01 12:50:00", Importance.S)
+                                .addWorkTime("2014-07-01 13:00:00", "2014-07-01 13:50:00")
+                                .build();
+        
+        assertThat(task, is(sameTaskOf(expected)));
+    }
+    
+    @Test(expected=EntityNotFoundException.class)
+    public void 指定したIDのタスクがデータベースに存在しない場合_例外がスローされること() {
+        // exercise
+        repository.inquire(-1L);
     }
     
     @Test

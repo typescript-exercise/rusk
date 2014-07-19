@@ -3,11 +3,16 @@ package rusk.domain.task;
 import java.util.Date;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 作業時間内訳
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class WorkTime {
     
     private final long startTime;
@@ -76,5 +81,28 @@ public class WorkTime {
     
     private boolean includes(long time) {
         return this.startTime <= time && time <= this.endTime;
+    }
+    
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this.startTime).append(this.endTime).toHashCode();
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || !(other instanceof WorkTime)) return false;
+        
+        WorkTime o = (WorkTime)other;
+        
+        return new EqualsBuilder().append(this.startTime, o.startTime).append(this.endTime, o.endTime).isEquals();
+    }
+    
+    /**
+     * このコンストラクタは、フレームワークのために宣言されています。
+     */
+    @Deprecated
+    public WorkTime() {
+        this.startTime = Long.MIN_VALUE;
+        this.endTime = Long.MIN_VALUE;
     }
 }
