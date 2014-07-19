@@ -29,7 +29,7 @@ module rusk {
                 
                 getValue() : string {
                     var date = new Date(this.$element.val());
-                    return rusk.formatDate(date, "yyyy-MM-dd'T'HH:mm:00.000+0900");
+                    return rusk.formatDate(date, "yyyy-MM-dd'T'HH:mm:00.000+0900"); // Jackson がサポートしているフォーマットに合わせる
                 }
                 
                 reset() : void {
