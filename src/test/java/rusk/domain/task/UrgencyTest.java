@@ -25,16 +25,16 @@ public class UrgencyTest {
     }
     
     @Test
-    public void 期限が基準日と同じ場合_ランクが不定になること() {
+    public void 期限が基準日と同じ場合_ランクがSになること() {
         // exercise
         Urgency urgency = new Urgency(now, now);
         
         // verify
-        assertThat(urgency.is(Rank.INDEFINITE), is(true));
+        assertThat(urgency.is(Rank.S), is(true));
     }
     
     @Test
-    public void 期限が基準日より前の場合_ランクが不定になること() {
+    public void 期限が基準日より前の場合_ランクがSになること() {
         // setup
         Date period = DateUtil.addMilliseconds(now, -1);
         
@@ -42,7 +42,7 @@ public class UrgencyTest {
         Urgency urgency = new Urgency(now, period);
         
         // verify
-        assertThat(urgency.is(Rank.INDEFINITE), is(true));
+        assertThat(urgency.is(Rank.S), is(true));
     }
     
     @Test

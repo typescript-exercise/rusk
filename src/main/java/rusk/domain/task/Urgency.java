@@ -6,8 +6,6 @@ import java.util.Date;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import rusk.util.DateUtil;
@@ -41,7 +39,7 @@ import rusk.util.Immutable;
  * </table>
  * <p>
  * ただし、期限が基準日より前、つまり時間が経過して期限を過ぎたような場合は、
- * 緊急度は不定（{@link Rank#INDEFINITE}）になります。
+ * 緊急度は S になります。
  * <p>
  * このクラスには、ランクのみを設定した緊急度のインスタンスが存在します（{@link Urgency#RANK_S}）。
  * これらは期限が設定されていないため、 {@link #getPeriod()} を実行すると {@link UnsupportedOperationException} がスローされます。
@@ -98,7 +96,7 @@ public class Urgency implements RankComparator {
     private Rank isolateRank(Date base, Date period) {
         if (base.equals(period) || period.before(base)) {
             
-            return Rank.INDEFINITE;
+            return Rank.S;
         } else if (DateUtil.isSameDay(base, period)) {
             
             Date thresholdForSRank = this.toThresholdDateTimeForSRank(base);

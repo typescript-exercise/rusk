@@ -1,7 +1,6 @@
 package rusk;
 
 import javax.inject.Singleton;
-import javax.ws.rs.ext.ContextResolver;
 
 import org.glassfish.hk2.api.InterceptionService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -14,7 +13,6 @@ import rusk.domain.task.WorkTimeRepository;
 import rusk.interceptor.RuskInterceptionService;
 import rusk.persistence.task.TaskRepositoryImpl;
 import rusk.persistence.task.WorkTimeRepositoryImpl;
-import rusk.rest.JacksonConfigurator;
 import rusk.rest.list.TaskListResource;
 import rusk.rest.task.TaskResource;
 import rusk.service.list.InquireTaskListService;
@@ -69,8 +67,5 @@ public class RuskHK2Binder extends AbstractBinder {
         // resource
         bindAsContract(TaskListResource.class).in(Singleton.class);
         bindAsContract(TaskResource.class).in(Singleton.class);
-        
-        // other configuration
-        bind(JacksonConfigurator.class).to(ContextResolver.class).in(Singleton.class);
     }
 }
