@@ -6,6 +6,9 @@ import java.util.Date;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import rusk.util.DateUtil;
 import rusk.util.Immutable;
@@ -148,5 +151,10 @@ public class Urgency implements RankComparator {
         Urgency other = (Urgency)o;
         
         return new EqualsBuilder().append(this.rank, other.rank).append(this.period, other.period).isEquals();
+    }
+    
+    @Override
+    public String toString() {
+        return this.getClass().getName() + "[period = " + DateFormatUtils.format(new Date(this.period), "yyyy/MM/dd HH:mm:ss.SSS") + ", rank = " + this.rank + "]";
     }
 }

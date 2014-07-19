@@ -28,7 +28,8 @@ module rusk {
                 }
                 
                 getValue() : string {
-                    return this.$element.val();
+                    var date = new Date(this.$element.val());
+                    return rusk.formatDate(date, "yyyy-MM-dd'T'HH:mm:00.000+0900");
                 }
                 
                 reset() : void {

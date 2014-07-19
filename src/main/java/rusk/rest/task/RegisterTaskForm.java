@@ -2,6 +2,9 @@ package rusk.rest.task;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import rusk.domain.task.Importance;
 
 public class RegisterTaskForm {
@@ -34,5 +37,8 @@ public class RegisterTaskForm {
     public void setDetail(String detail) {
         this.detail = detail;
     }
-    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }
