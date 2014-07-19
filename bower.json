@@ -30,6 +30,7 @@
     "angular-mocks": "1.2.18",
     "datetimepicker": "~2.3.2",
     "jquery-validate": "~1.13.0",
-    "jquery-autosize": "~1.18.9"
+    "jquery-autosize": "~1.18.9",
+    "jquery-dateFormat": "~1.0.1"
   }
 }

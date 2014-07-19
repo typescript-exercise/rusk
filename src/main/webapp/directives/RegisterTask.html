@@ -10,16 +10,16 @@
         <h4 class="modal-title">タスク登録</h4>
       </div>
       
-      <form ng-submit="register()" ui-jq="validate" ui-options="validateOption">
+      <form ng-submit="register()">
         <div class="modal-body">
           <div class="form-group">
             <label for="title" class="control-label">タイトル</label>
-            <input id="title" name="title" class="form-control" ng-model="title" maxlength="{{validateOption.rules.title.maxlength}}" />
+            <input id="title" name="title" class="form-control" ng-model="title" />
           </div>
           
           <div class="form-group">
             <label for="period" class="control-label">期限</label>
-            <input id="period" name="period" type="text" class="form-control" ui-jq="datetimepicker" ui-options="datepickerOption" />
+            <input id="period" name="period" class="form-control" />
           </div>
           
           <div class="form-group">
@@ -34,8 +34,8 @@
           
           <div class="form-group">
             <label for="detail" class="control-label">詳細</label>
-            <textarea id="detail" name="detail" class="form-control" maxlength="{{validateOption.rules.detail.maxlength}}"
-                       ng-model="detail" ui-jq="autosize"></textarea>
+            <textarea id="detail" name="detail" class="form-control"
+                       ng-model="detail"></textarea>
           </div>
         </div>
         

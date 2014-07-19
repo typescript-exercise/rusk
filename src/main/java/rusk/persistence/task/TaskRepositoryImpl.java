@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import rusk.domain.task.Priority;
 import rusk.domain.task.Task;
@@ -25,6 +27,7 @@ import rusk.util.Today;
  * データベースに保存されたタスクとやり取りをする。
  */
 public class TaskRepositoryImpl implements TaskRepository {
+    private static final Logger logger = LoggerFactory.getLogger(TaskRepositoryImpl.class);
     
     private final PersistProvider provider;
     private final WorkTimeRepository workTimeRepository;
@@ -90,6 +93,8 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public long register(Task task) {
         Validate.notNull(task, "タスクが null です。");
+        
+        logger.debug("registered task = {}", task);
         
         TaskTable table = new TaskTable(task);
         this.provider.getPersist().insert(table);
