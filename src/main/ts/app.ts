@@ -3,8 +3,8 @@
 angular
 .module('rusk', ['ngResource', 'ngRoute', 'ui.utils'])
 .config([
-    '$routeProvider',
-    ($routeProvider) => {
+    '$routeProvider', '$httpProvider',
+    ($routeProvider, $httpProvider : ng.IHttpProvider) => {
         $routeProvider
         .when('/', {
             controller: 'TaskListController',
@@ -16,7 +16,15 @@ angular
         })
         .when('/server-error', {
             templateUrl: 'views/server-error.html'
+        })
+        .when('/bad-request', {
+            templateUrl: 'views/bad-request.html'
+        })
+        .when('/not-found', {
+            templateUrl: 'views/not-found.html'
         });
+        
+        $httpProvider.interceptors.push('HttpResponseInterceptor');
     }])
 .run(() => {
     var validator = (<any>$).validator;
