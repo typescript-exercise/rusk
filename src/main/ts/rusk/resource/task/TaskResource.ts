@@ -11,6 +11,10 @@ module rusk {
                 register(task : any) : ng.IHttpPromise<any> {
                     return this.$http.post('rest/task', task);
                 }
+                
+                inquire(id : number) : ng.IHttpPromise<any> {
+                    return this.$http.get('rest/task/' + id);
+                }
             }
         }
     }

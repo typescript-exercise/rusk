@@ -10,6 +10,10 @@ angular
             controller: 'TaskListController',
             templateUrl: 'views/task-list.html'
         })
+        .when('/task/:id', {
+            controller: 'TaskDetailController',
+            templateUrl: 'views/task-detail.html'
+        })
         .when('/server-error', {
             templateUrl: 'views/server-error.html'
         });

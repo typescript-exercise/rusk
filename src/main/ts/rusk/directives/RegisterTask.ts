@@ -31,13 +31,20 @@ angular
     };
     
     function createForm($scope, $element) : rusk.view.form.RegisterTaskForm {
-        var selectors = {
-            title: '#title',
-            period: '#period',
-            importance: '#importance',
-            detail: '#detail'
-        };
+        var title = new rusk.view.primitive.TextBox($scope, $element.find('#title'), 'title');
+        var period = new rusk.view.primitive.DateTime($element.find('#period'));
+        var importance = new rusk.view.primitive.SelectBox($scope, 'importance');
+        var detail = new rusk.view.primitive.TextArea($scope, $element.find('#detail'), 'detail');
         
-        return new rusk.view.form.RegisterTaskForm($scope, $element.find('form'), selectors);
+        var validateOptions = rusk.config.validation.TaskValidateOptionBuilder.create().title().period().importance().detail().build();
+        var form = new rusk.view.primitive.Form($element.find('#register-task'), validateOptions);
+        
+        return new rusk.view.form.RegisterTaskForm({
+            title: title,
+            period: period,
+            importance: importance,
+            detail: detail,
+            form: form
+        });
     }
 }]);

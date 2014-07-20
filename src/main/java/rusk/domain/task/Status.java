@@ -16,4 +16,8 @@ public enum Status {
     /**完了*/
     COMPLETE,
     ;
+
+    public boolean isCompleted() {
+        return this == COMPLETE;
+    }
 }

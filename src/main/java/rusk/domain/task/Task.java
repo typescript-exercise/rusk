@@ -110,6 +110,9 @@ public class Task {
     public boolean isRankC() {
         return this.priority.is(Rank.C);
     }
+    public boolean isCompleted() {
+        return this.status.isCompleted();
+    }
     
     @Override
     public String toString() {

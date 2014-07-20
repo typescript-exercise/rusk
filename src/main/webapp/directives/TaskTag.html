@@ -1,8 +1,8 @@
 <div class="panel" ng-class="panelClass">
   <div class="panel-heading">
-    <span class="label" ng-class="labelClass">{{task.priority.rank}}</span>
-    {{task.title}}
-    <span class="label pull-right" ng-class="labelClass">{{task.status | status}}</span>
+    <rusk-ranked-label rank="task.priority.rank" complete="task.completed">{{task.priority.rank}}</rusk-ranked-label>
+    <a href="#/task/{{task.id}}">{{task.title}}</a>
+    <rusk-ranked-label class="pull-right" rank="task.priority.rank" complete="task.completed">{{task.status | status}}</rusk-ranked-label>
   </div>
   <div class="panel-body">
     <div>

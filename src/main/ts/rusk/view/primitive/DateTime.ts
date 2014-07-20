@@ -4,8 +4,14 @@ module rusk {
             export class DateTime {
                 private $element;
                 
-                constructor($element) {
+                constructor($element, options?) {
                     this.$element = $element;
+                    
+                    var defaultDate = options ? new Date(options.defaultDate) : new Date();
+                    var minDate = options ? new Date(options.minDate) : new Date();
+                    
+                    var enableDefaultDate = new rusk.model.FixdIntervalDate(defaultDate);
+                    var enableMinDate = new rusk.model.FixdIntervalDate(minDate);
                     
                     this.$element.datetimepicker({
                         mask: true,
@@ -22,8 +28,8 @@ module rusk {
                             }
                         },
                         step: 30,
-                        minDate: 0, // today
-                        value: rusk.formatDate(new Date(), 'yyyy/MM/dd HH:mm')
+                        minDate: enableMinDate.getDateAsString(),
+                        value: rusk.formatDate(enableDefaultDate.getDate(), 'yyyy/MM/dd HH:mm')
                     });
                 }
                 
@@ -32,8 +38,9 @@ module rusk {
                     return rusk.formatDate(date, "yyyy-MM-dd'T'HH:mm:00.000+0900"); // Jackson がサポートしているフォーマットに合わせる
                 }
                 
-                reset() : void {
-                    this.$element.val(rusk.formatDate(new Date(), 'yyyy/MM/dd HH:mm'));
+                setValue(date : Date) : void {
+                    var enableDate = new rusk.model.FixdIntervalDate(date);
+                    this.$element.val(rusk.formatDate(enableDate.getDate(), 'yyyy/MM/dd HH:mm'));
                 }
             }
         }

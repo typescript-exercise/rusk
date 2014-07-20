@@ -1,0 +1,102 @@
+<form class="container well" ng-if="task">
+  <div class="row form-group" ng-init="init()">
+    <div class="col-md-2 col-sm-4 col-xs-12">
+      <label class="form-label">優先度</label>
+      <rusk-ranked-label rank="task.priority.rank" complete="task.completed">{{task.priority.rank}}</rusk-ranked-label>
+    </div>
+    
+    <div class="col-md-10 col-sm-8 col-xs-12">
+      <label class="form-label">登録日</label>
+      <span class="form-control-static h4">{{task.registeredDate | date:"yyyy/MM/dd HH:mm"}}</span>
+    </div>
+  </div>
+    
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="title" class="form-label">タイトル</label>
+            <input id="title" name="title" type="text" class="form-control" ng-model="task.title" />
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label for="status" class="form-label">状態</label>
+            <select id="status" name="status" class="form-control" ng-model="task.status">
+              <option value="UNSTARTED">未着手</option>
+              <option value="IN_WORKING">作業中</option>
+              <option value="STOPPED">中断</option>
+              <option value="COMPLETE">完了</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label class="form-label">完了日</label>
+            <p ng-show="task.completedDate" class="h4">{{task.completedDate | date:"yyyy/MM/dd HH:mm"}}</p>
+            <p ng-show="!task.completedDate">-</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label for="period" class="form-label">期限</label>
+            <input id="period" name="period" type="text" class="form-control" />
+          </div>
+        </div>
+        
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label class="form-label">緊急度</label>
+            <p class="h4">{{task.priority.urgency.rank}}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-3 col-sm-2 col-xs-4">
+          <div class="form-group">
+            <label for="importance" class="form-label">重要度</label>
+            <select id="importance" name="importance" class="form-control" ng-model="task.priority.importance">
+              <option value="S">S</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="duration" class="form-label">作業時間</label>
+            <p ng-show="task.totalWorkTime">
+              <span class="h4">{{task.totalWorkTime | timeDuration}}</span>
+              <a href="#" class="btn btn-default btn-xs">内訳</a>
+            </p>
+            <p ng-show="!task.totalWorkTime">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6 col-xs-12">
+      <div class="form-group">
+        <label for="detail" class="form-label">詳細</label>
+        <textarea id="detail" name="detail" class="form-control" ng-model="task.detail"></textarea>
+      </div>
+    </div>
+  </div>
+  
+</form>
+<div ng-if="!task">
+  <h1>タスクを読み込んでいます...</h1>
+</div>

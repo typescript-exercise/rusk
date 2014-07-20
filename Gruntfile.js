@@ -47,9 +47,6 @@ module.exports = function(grunt) {
         jasmine: {
             test: {
                 src: [
-                    'bower_components/angular/*.js',
-                    'bower_components/jquery/dist/*.js',
-                    'bower_components/underscore/*.js',
                     '<%= uglify.minify.dest %>'
                 ],
                 options: {
@@ -70,6 +67,10 @@ module.exports = function(grunt) {
                         'bower_components/bootstrap/dist/js/bootstrap.min.js',
                         'bower_components/html5shiv/dist/*.min.js',
                         'bower_components/respond/dest/respond.min.js',
+                        'bower_components/datetimepicker/jquery.datetimepicker.js',
+                        'bower_components/jquery-validate/dist/jquery.validate.min.js',
+                        'bower_components/jquery-autosize/jquery.autosize.min.js',
+                        'bower_components/jquery-dateFormat/dist/jquery-dateFormat.min.js',
                     ]
                 }
             }
