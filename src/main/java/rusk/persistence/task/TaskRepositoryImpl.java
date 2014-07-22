@@ -1,11 +1,14 @@
 package rusk.persistence.task;
 
+import static java.util.stream.Collectors.*;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+
+import net.sf.persist.Persist;
 
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -16,7 +19,6 @@ import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskNotFoundException;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.WorkTime;
-import rusk.domain.task.WorkTimeRepository;
 import rusk.system.db.PersistProvider;
 import rusk.util.DateUtil;
 
@@ -29,7 +31,6 @@ public class TaskRepositoryImpl implements TaskRepository {
     private static final Logger logger = LoggerFactory.getLogger(TaskRepositoryImpl.class);
     
     private final PersistProvider provider;
-    private final WorkTimeRepository workTimeRepository;
     
     /**
      * コンストラクタ。
@@ -37,36 +38,42 @@ public class TaskRepositoryImpl implements TaskRepository {
      * @param workTimeRepository {@link WorkTimeRepository}
      */
     @Inject
-    public TaskRepositoryImpl(PersistProvider provider, WorkTimeRepository workTimeRepository) {
+    public TaskRepositoryImpl(PersistProvider provider) {
         this.provider = provider;
-        this.workTimeRepository = workTimeRepository;
     }
 
     @Override
     public Task findTaskInWork() {
-        TaskTable table = this.provider.getPersist().read(TaskTable.class, "SELECT * FROM TASK WHERE STATUS=1");
+        TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1");
         return table == null ? null : this.toTask(table);
+    }
+    
+    private TaskTable readTaskTable(String sql, Object... parameters) {
+        return this.provider.getPersist().read(TaskTable.class, sql, parameters);
     }
 
     @Override
     public List<Task> findUncompletedTasks() {
-        List<TaskTable> tables = this.provider.getPersist().readList(TaskTable.class, "SELECT * FROM TASK WHERE STATUS IN (0, 2)");
-        return tables.stream().map(this::toTask).collect(Collectors.toList());
+        return this.readList("SELECT * FROM TASK WHERE STATUS IN (0, 2)");
     }
 
     @Override
-    public List<Task> findCompleteTasks(Date date) {
-        Date from = DateUtil.truncate(date, Calendar.DATE);
-        Date to = DateUtil.addDays(from, 1);
+    public List<Task> findCompleteTasks(final Date date) {
+        Date startOfDate = DateUtil.truncate(date, Calendar.DATE);
+        Date startOfNextDate = DateUtil.addDays(startOfDate, 1);
         
-        List<TaskTable> tables = this.provider.getPersist()
-                                        .readList(TaskTable.class,
-                                                "SELECT * FROM TASK WHERE STATUS = 3 AND ? <= COMPLETED_DATE AND COMPLETED_DATE < ?",
-                                                from, to);
-        
-        return tables.stream().map(this::toTask).collect(Collectors.toList());
+        return this.readList("SELECT * FROM TASK WHERE STATUS = 3 AND ? <= COMPLETED_DATE AND COMPLETED_DATE < ?", startOfDate, startOfNextDate);
     }
-
+    
+    private List<Task> readList(String sql, Object... parameters) {
+        List<TaskTable> recordList = this.provider.getPersist().readList(TaskTable.class, sql, parameters);
+        return this.mapTaskTableListToTaskList(recordList);
+    }
+    
+    private List<Task> mapTaskTableListToTaskList(List<TaskTable> from) {
+        return from.stream().map(this::toTask).collect(toList());
+    }
+    
     @Override
     public Task inquire(long id) throws TaskNotFoundException {
         TaskTable taskTable = this.provider.getPersist().readByPrimaryKey(TaskTable.class, id);
@@ -78,7 +85,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
     
     private Task toTask(TaskTable table) {
-        List<WorkTime> workTimes = this.workTimeRepository.findByTaskId(table.getId());
+        List<WorkTime> workTimes = this.findWorkTimeList(table.getId());
         
         return new TaskBuilder(table.getId(), table.getRegisteredDate())
                         .title(table.getTitle())
@@ -89,6 +96,23 @@ public class TaskRepositoryImpl implements TaskRepository {
                         .workTimes(workTimes)
                         .build();
     }
+    
+    private List<WorkTime> findWorkTimeList(long taskId) {
+        List<WorkTimeTable> workTimeRecords = this.readWorkTimeTableList("SELECT * FROM WORK_TIME WHERE TASK_ID=? ORDER BY START_TIME ASC", taskId);
+        return this.mapToWorkTimeList(workTimeRecords);
+    }
+    
+    private List<WorkTimeTable> readWorkTimeTableList(String sql, Object... parameters) {
+        return this.provider.getPersist().readList(WorkTimeTable.class, sql, parameters);
+    }
+    
+    private List<WorkTime> mapToWorkTimeList(List<WorkTimeTable> table) {
+        return  table.stream().map(this::toWorkTime).collect(toList());
+    }
+    
+    private WorkTime toWorkTime(WorkTimeTable table) {
+        return new WorkTime(table.getStartTime(), table.getEndTime());
+    }
 
     @Override
     public long register(Task task) {
@@ -96,8 +120,37 @@ public class TaskRepositoryImpl implements TaskRepository {
         
         logger.debug("registered task = {}", task);
         
-        TaskTable table = new TaskTable(task);
-        this.provider.getPersist().insert(table);
-        return table.getId();
+        TaskTable newRecord = new TaskTable(task);
+        this.provider.getPersist().insert(newRecord);
+        return newRecord.getId();
+    }
+
+    @Override
+    public Task inquireWithLock(long id) throws TaskNotFoundException {
+        TaskTable taskTable = this.readTaskTable("SELECT * FROM TASK WHERE ID=? FOR UPDATE", id);
+        if (taskTable == null) {
+            throw new TaskNotFoundException(id);
+        }
+        
+        return this.toTask(taskTable);
+    }
+
+    @Override
+    public void remove(long deleteTargetTaskId) {
+        this.removeWorkTimeByTaskId(deleteTargetTaskId);
+        this.removeTask(deleteTargetTaskId);
+    }
+    
+    private void removeWorkTimeByTaskId(long taskId) {
+        this.executeUpdate("DELETE FROM WORK_TIME WHERE TASK_ID=?", taskId);
+    }
+    
+    private void removeTask(long id) {
+        this.executeUpdate("DELETE FROM TASK WHERE ID=?", id);
+    }
+    
+    private void executeUpdate(String sql, Object... parameters) {
+        Persist persist = this.provider.getPersist();
+        persist.executeUpdate(sql, parameters);
     }
 }

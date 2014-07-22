@@ -13,7 +13,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,7 @@ import rusk.domain.task.Task;
 import rusk.rest.RuskConfig;
 import rusk.service.task.InquireTaskService;
 import rusk.service.task.RegisterTaskService;
+import rusk.service.task.RemoveTaskService;
 
 @Path("task")
 public class TaskResource {
@@ -29,11 +29,13 @@ public class TaskResource {
     
     private final RegisterTaskService registerService;
     private final InquireTaskService inquireService;
+    private final RemoveTaskService removeService;
     
     @Inject
-    public TaskResource(RegisterTaskService registerService, InquireTaskService inquireService) {
+    public TaskResource(RegisterTaskService registerService, InquireTaskService inquireService, RemoveTaskService removeService) {
         this.registerService = registerService;
         this.inquireService = inquireService;
+        this.removeService = removeService;
     }
 
     @POST
@@ -57,11 +59,7 @@ public class TaskResource {
     
     @DELETE
     @Path("{id}")
-    public Response remove(@PathParam("id") long id) {
-        if (id == 999) {
-            return Response.status(Status.NOT_FOUND).build();
-        } else {
-            return Response.status(Status.NO_CONTENT).build();
-        }
+    public void remove(@PathParam("id") long removeTargetTaskId) {
+        this.removeService.remove(removeTargetTaskId);
     }
 }

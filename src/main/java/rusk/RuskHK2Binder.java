@@ -9,16 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rusk.domain.task.TaskRepository;
-import rusk.domain.task.WorkTimeRepository;
 import rusk.interceptor.RuskInterceptionService;
 import rusk.persistence.task.TaskRepositoryImpl;
-import rusk.persistence.task.WorkTimeRepositoryImpl;
 import rusk.rest.list.TaskListResource;
 import rusk.rest.task.TaskResource;
 import rusk.service.list.InquireTaskListService;
 import rusk.service.system.SystemInitializeService;
 import rusk.service.task.InquireTaskService;
 import rusk.service.task.RegisterTaskService;
+import rusk.service.task.RemoveTaskService;
 import rusk.system.db.DatabaseConfig;
 import rusk.system.db.DatabaseMigration;
 import rusk.system.db.HK2PersistProvider;
@@ -61,10 +60,10 @@ public class RuskHK2Binder extends AbstractBinder {
         bindAsContract(SystemInitializeService.class).in(Singleton.class);
         bindAsContract(RegisterTaskService.class).in(Singleton.class);
         bindAsContract(InquireTaskService.class).in(Singleton.class);
+        bindAsContract(RemoveTaskService.class).in(Singleton.class);
         
         // repository
         bind(TaskRepositoryImpl.class).to(TaskRepository.class).in(Singleton.class);
-        bind(WorkTimeRepositoryImpl.class).to(WorkTimeRepository.class).in(Singleton.class);
         
         // resource
         bindAsContract(TaskListResource.class).in(Singleton.class);

@@ -22,7 +22,6 @@ import rusk.domain.task.Status;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
-import rusk.domain.task.WorkTimeRepository;
 import rusk.rest.task.RegisterTaskForm;
 import rusk.test.db.RuskDBTester;
 import rusk.test.db.TestPersistProvider;
@@ -38,7 +37,6 @@ public class TaskRepositoryImplTest {
     public RuskDBTester dbTester = new RuskDBTester(TaskRepositoryImplTest.class);
     
     private TaskRepositoryImpl repository;
-    private WorkTimeRepository worktimeRepository;
     
     @Before
     public void setup() {
@@ -46,8 +44,7 @@ public class TaskRepositoryImplTest {
             Today.get(); result = DateUtil.create("2014-07-01 12:10:00");
         }};
         
-        worktimeRepository = new WorkTimeRepositoryImpl(provider);
-        repository = new TaskRepositoryImpl(provider, worktimeRepository);
+        repository = new TaskRepositoryImpl(provider);
     }
     
     @Test
@@ -157,5 +154,18 @@ public class TaskRepositoryImplTest {
         IDataSet expected = dbTester.loadDataSet("TaskRepositoryImple-fixuture-タスク登録-expected.yaml");
         
         dbTester.verifyTable("TASK", expected, "ID");
+    }
+    
+    @Test
+    @Fixture(resources="TaskRepositoryImple-fixuture-タスク削除.yaml")
+    public void 指定したタスクが削除できること() throws Exception {
+        // exercise
+        repository.remove(2L);
+        
+        // verify
+        IDataSet expected = dbTester.loadDataSet("TaskRepositoryImple-fixuture-タスク削除-expected.yaml");
+        
+        dbTester.verifyTable("TASK", expected);
+        dbTester.verifyTable("WORK_TIME", expected);
     }
 }

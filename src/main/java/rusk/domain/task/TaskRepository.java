@@ -47,4 +47,22 @@ public interface TaskRepository {
      * @throws TaskNotFoundException ID に紐づくタスクが存在しない場合
      */
     Task inquire(long id) throws TaskNotFoundException;
+    
+    /**
+     * 指定した ID のタスクを取得する。
+     * <p>
+     * このメソッドは、取得したタスクに対して排他のためのロックを取得します。
+     * 
+     * @param id タスクの ID
+     * @return 取得したタスク。
+     * @throws TaskNotFoundException ID に紐づくタスクが存在しない場合
+     */
+    Task inquireWithLock(long id) throws TaskNotFoundException;
+
+    /**
+     * 指定した ID のタスクを削除します。
+     * 
+     * @param deleteTargetTaskId 削除対象のタスク ID
+     */
+    void remove(long deleteTargetTaskId);
 }

@@ -31,6 +31,99 @@ public class Task {
         this.setId(id);
         this.setRegisteredDate(registeredDate);
     }
+
+    private void setRegisteredDate(Date registeredDate) {
+        Validate.notNull(registeredDate, "登録日は必須です。");
+        this.registeredDate = new Date(registeredDate.getTime());
+    }
+
+    /**
+     * このタスクを永続化させる。
+     * 
+     * @param repository 永続化のためのリポジトリ
+     */
+    public void register(TaskRepository repository) {
+        long generatedId = repository.register(this);
+        this.setId(generatedId);
+    }
+
+    private void setId(long id) {
+        Validate.isTrue(0 < id, "ID は 1 以上の値のみ受け付けます。");
+        this.id = id;
+    }
+    
+    /**
+     * 指定した ID のタスクと、それに紐づく全ての作業時間を削除します。
+     * 
+     * @param repository タスクリポジトリ
+     * @param deleteTargetTaskId 削除対象のタスク ID
+     * @throws TaskNotFoundException 指定した ID に紐づくタスクが存在しない場合
+     */
+    public static void remove(TaskRepository repository, long deleteTargetTaskId) {
+        repository.inquireWithLock(deleteTargetTaskId);
+        repository.remove(deleteTargetTaskId);
+    }
+    
+    /**
+     * 作業時間を追加する。
+     * @param time 作業時間
+     * @throws DuplicateWorkTimeException 追加した作業時間が、既にこのタスクに登録されている作業時間と重複する場合
+     */
+    public void add(WorkTime time) throws DuplicateWorkTimeException {
+        Validate.notNull(time, "作業時間は必須です。");
+        
+        this.workTimes.forEach(workTime -> {
+            if (workTime.isDuplicate(time)) {
+                throw new DuplicateWorkTimeException(workTime, time);
+            }
+        });
+        
+        this.workTimes.add(time);
+    }
+    
+    /**
+     * このタスクの作業時間のリストのコピーを取得する。
+     * @return 作業時間のリストのコピー。作業時間が存在しない場合、空のリストを返す。
+     */
+    public List<WorkTime> getWorkTimes() {
+        return new ArrayList<>(this.workTimes);
+    }
+
+    /**
+     * 作業時間を設定します。
+     * <p>
+     * null を渡した場合、空のリストで作業時間が上書きされます。
+     * 
+     * @param workTimes 作業時間
+     * @throws DuplicateWorkTimeException リストの中に作業時間が重複する要素が存在する場合
+     */
+    public void setWorkTimes(List<WorkTime> workTimes) throws DuplicateWorkTimeException {
+        if (workTimes == null) {
+            this.workTimes = new ArrayList<>();
+        } else {
+            workTimes.forEach(one -> {
+                workTimes
+                .stream()
+                .filter(other -> one != other)
+                .forEach(other -> {
+                    if (one.isDuplicate(other)) {
+                        throw new DuplicateWorkTimeException(one, other);
+                    }
+                });
+            });
+
+            this.workTimes = new ArrayList<>(workTimes);
+        }
+    }
+
+    /**
+     * このタスクの作業時間の合計をミリ秒で取得する。
+     * 
+     * @return 作業時間の合計（ミリ秒）
+     */
+    public long getTotalWorkTime() {
+        return this.workTimes.stream().collect(Collectors.summingLong(workTime -> workTime.getDuration()));
+    }
     
     public void setTitle(String title) {
         Validate.notEmpty(title, "タイトルは必須です。");
@@ -73,30 +166,6 @@ public class Task {
     public Status getStatus() {
         return status;
     }
-    /**
-     * 作業時間を追加する。
-     * @param time 作業時間
-     * @throws DuplicateWorkTimeException 追加した作業時間が、既にこのタスクに登録されている作業時間と重複する場合
-     */
-    public void add(WorkTime time) throws DuplicateWorkTimeException {
-        Validate.notNull(time, "作業時間は必須です。");
-        
-        this.workTimes.forEach(workTime -> {
-            if (workTime.isDuplicate(time)) {
-                throw new DuplicateWorkTimeException(workTime, time);
-            }
-        });
-        
-        this.workTimes.add(time);
-    }
-    
-    /**
-     * このタスクの作業時間のリストのコピーを取得する。
-     * @return 作業時間のリストのコピー。作業時間が存在しない場合、空のリストを返す。
-     */
-    public List<WorkTime> getWorkTimes() {
-        return new ArrayList<>(this.workTimes);
-    }
     
     public boolean isRankS() {
         return this.priority.is(Rank.S);
@@ -117,62 +186,6 @@ public class Task {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
-
-    /**
-     * 作業時間を設定します。
-     * <p>
-     * null を渡した場合、空のリストで作業時間が上書きされます。
-     * 
-     * @param workTimes 作業時間
-     * @throws DuplicateWorkTimeException リストの中に作業時間が重複する要素が存在する場合
-     */
-    public void setWorkTimes(List<WorkTime> workTimes) throws DuplicateWorkTimeException {
-        if (workTimes == null) {
-            this.workTimes = new ArrayList<>();
-        } else {
-            workTimes.forEach(one -> {
-                workTimes
-                .stream()
-                .filter(other -> one != other)
-                .forEach(other -> {
-                    if (one.isDuplicate(other)) {
-                        throw new DuplicateWorkTimeException(one, other);
-                    }
-                });
-            });
-
-            this.workTimes = new ArrayList<>(workTimes);
-        }
-    }
-
-    /**
-     * このタスクの作業時間の合計をミリ秒で取得する。
-     * 
-     * @return 作業時間の合計（ミリ秒）
-     */
-    public long getTotalWorkTime() {
-        return this.workTimes.stream().collect(Collectors.summingLong(workTime -> workTime.getDuration()));
-    }
-
-    /**
-     * このタスクを永続化させる。
-     * 
-     * @param repository 永続化のためのリポジトリ
-     */
-    public void register(TaskRepository repository) {
-        long generatedId = repository.register(this);
-        this.setId(generatedId);
-    }
-
-    private void setId(long id) {
-        Validate.isTrue(0 < id, "ID は 1 以上の値のみ受け付けます。");
-        this.id = id;
-    }
-
-    private void setRegisteredDate(Date registeredDate) {
-        Validate.notNull(registeredDate, "登録日は必須です。");
-        this.registeredDate = new Date(registeredDate.getTime());
     }
     
     /**
