@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import rusk.domain.task.Importance;
 import rusk.integration_test.db.RuskIntegrationDBTester;
+import rusk.integration_test.jersey.JerseyTestRule;
 import rusk.rest.task.RegisterTaskForm;
 import rusk.util.DateUtil;
 import rusk.util.Today;

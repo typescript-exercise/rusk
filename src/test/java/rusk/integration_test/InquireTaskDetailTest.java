@@ -21,6 +21,7 @@ import rusk.domain.task.Status;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.integration_test.db.RuskIntegrationDBTester;
+import rusk.integration_test.jersey.JerseyTestRule;
 import rusk.util.DateUtil;
 import rusk.util.Today;
 

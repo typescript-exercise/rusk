@@ -1,4 +1,4 @@
-package rusk.integration_test;
+package rusk.integration_test.jersey;
 
 import rusk.RuskHK2Binder;
 import rusk.integration_test.db.TestDatabaseConfig;

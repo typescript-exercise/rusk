@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -12,6 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,5 +53,15 @@ public class TaskResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Task inquire(@PathParam("id") long id) {
         return this.inquireService.inquire(id);
+    }
+    
+    @DELETE
+    @Path("{id}")
+    public Response remove(@PathParam("id") long id) {
+        if (id == 999) {
+            return Response.status(Status.NOT_FOUND).build();
+        } else {
+            return Response.status(Status.NO_CONTENT).build();
+        }
     }
 }
