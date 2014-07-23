@@ -31,6 +31,9 @@
     },
     "bootstrap/bootstrap.d.ts": {
       "commit": "c1355d13139b5428381bf149137482ac2ea81d46"
+    },
+    "toastr/toastr.d.ts": {
+      "commit": "5a8f9e312f3db37b8efc4dcdd1de204f60e67eb1"
     }
   }
 }

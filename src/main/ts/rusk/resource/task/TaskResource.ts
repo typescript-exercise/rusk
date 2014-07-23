@@ -16,13 +16,12 @@ module rusk {
                     return this.$http.get('rest/task/' + id);
                 }
                 
-                remove(id : number) : void {
-                    this.$http.delete('rest/task/' + id, {ignoreInterceptors: ['HttpResponseInterceptor']})
-                        .error((response : any) => {
-                            if (response.status === 404) {
-                                
-                            }
-                        });
+                remove(id : number, onSuccess: Function, onNotFoundError : Function) : void {
+                    this.$http.delete('rest/task/' + id, {overrideInterceptor: {
+                        404: onNotFoundError
+                    }}).success(() => {
+                        onSuccess();
+                    });
                 }
             }
         }

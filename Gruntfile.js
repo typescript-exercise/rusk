@@ -71,6 +71,7 @@ module.exports = function(grunt) {
                         'bower_components/jquery-validate/dist/jquery.validate.min.js',
                         'bower_components/jquery-autosize/jquery.autosize.min.js',
                         'bower_components/jquery-dateFormat/dist/jquery-dateFormat.min.js',
+                        'bower_components/toastr/toastr.min.js',
                     ]
                 }
             }
@@ -93,6 +94,7 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'bower_components/jquery-validate/dist/',   src: '*',  dest: 'src/main/webapp/scripts/vendor/jquery-validate/'},
                     {expand: true, cwd: 'bower_components/jquery-autosize/',        src: '*',  dest: 'src/main/webapp/scripts/vendor/jquery-autosize/'},
                     {expand: true, cwd: 'bower_components/jquery-dateFormat/dist/', src: '*',  dest: 'src/main/webapp/scripts/vendor/jquery-dateFormat/'},
+                    {expand: true, cwd: 'bower_components/toastr/',                 src: '*',  dest: 'src/main/webapp/scripts/vendor/toastr/'},
                     
                     // d.ts files
                     {expand: true, src: 'typings/**/*.d.ts', dest: 'src/main/ts/vendor', flatten: true},

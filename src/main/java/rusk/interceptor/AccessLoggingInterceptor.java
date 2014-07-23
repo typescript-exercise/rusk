@@ -26,8 +26,9 @@ public class AccessLoggingInterceptor implements MethodInterceptor {
         HttpServletRequest request = this.locator.getService(HttpServletRequest.class);
         
         if (request != null) {
+            String method = request.getMethod();
             String uri = request.getRequestURI();
-            logger.debug("uri = {}", uri);
+            logger.debug("method = {}, uri = {}", method, uri);
         }
         
         return invocation.proceed();
