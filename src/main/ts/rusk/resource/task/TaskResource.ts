@@ -15,6 +15,15 @@ module rusk {
                 inquire(id : number) : ng.IHttpPromise<any> {
                     return this.$http.get('rest/task/' + id);
                 }
+                
+                remove(id : number) : void {
+                    this.$http.delete('rest/task/' + id, {ignoreInterceptors: ['HttpResponseInterceptor']})
+                        .error((response : any) => {
+                            if (response.status === 404) {
+                                
+                            }
+                        });
+                }
             }
         }
     }
