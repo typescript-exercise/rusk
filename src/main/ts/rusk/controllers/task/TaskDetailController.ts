@@ -1,17 +1,27 @@
 angular
 .module('rusk')
 .controller('TaskDetailController', [
-    '$scope', '$routeParams', 'taskResource',
-    ($scope, $routeParams, taskResource : rusk.resource.task.TaskResource) => {
-        
-        $scope.init = () => {
-            var detailForm = createTaskDetailForm($scope);
-        };
+    '$scope', '$routeParams', '$location', 'taskResource', 'removeTaskService',
+    ($scope, $routeParams, $location : ng.ILocationService, taskResource : rusk.resource.task.TaskResource, removeTaskService) => {
         
         taskResource.inquire($routeParams.id)
             .success((task) => {
                 $scope.task = task;
             });
+        
+        $scope.init = () => {
+            var detailForm = createTaskDetailForm($scope);
+        };
+        
+        $scope.remove = () => {
+            removeTaskService.remove({
+                id: $scope.task.id,
+                title: $scope.task.title,
+                onRemove: () => {
+                    $location.path('/');
+                }
+            });
+        };
         
         function createTaskDetailForm($scope) : rusk.view.form.TaskDetailForm {
             var title = new rusk.view.primitive.TextBox($scope, $('#title'), 'title');

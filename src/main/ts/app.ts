@@ -7,6 +7,7 @@ angular
     ($routeProvider, $httpProvider : ng.IHttpProvider) => {
         $routeProvider
         .when('/', {
+            controller: 'TaskListController',
             templateUrl: 'views/task-list.html'
         })
         .when('/task/:id', {

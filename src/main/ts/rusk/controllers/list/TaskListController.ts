@@ -1,13 +1,14 @@
 angular
 .module('rusk')
 .controller('TaskListController', [
-    '$scope', 'taskListResource', 'taskResource',
-    ($scope, taskListResource : rusk.resource.list.TaskListResource, taskResource : rusk.resource.task.TaskResource) => {
+    '$scope', 'taskListResource',
+    ($scope, taskListResource : rusk.resource.list.TaskListResource) => {
         $scope.inquireTaskList = inquireTaskList;
         
         inquireTaskList();
         
         function inquireTaskList() {
+        console.log('inquireTaskList');
             taskListResource.inquire( taskList => {
                 $scope.taskList = taskList;
                 $scope.inWorking = taskList.taskInWorking;

@@ -1,6 +1,8 @@
 angular
 .module('rusk')
-.directive('ruskTaskTag', ['taskResource', (taskResource) => {
+.directive('ruskTaskTag', [
+    'removeTaskService',
+    (removeTaskService) => {
     return {
         restrict: 'E',
         replace: true,
@@ -23,20 +25,11 @@ angular
                 },
                 
                 remove: () => {
-                    var id = task.id;
-                    var title = task.title;
-                    
-                    if (confirm('「' + title + '」を削除します。よろしいですか？')) {
-                    
-                        taskResource.remove(id,
-                            function onSuccess() {
-                                toastr.success('「' + title + '」を削除しました。');
-                                $scope.onRemove();
-                            },
-                            function onNotFoundError() {
-                                alert('指定したタスクは、既に削除されています。');
-                            });
-                    }
+                    removeTaskService.remove({
+                        id: task.id,
+                        title: task.title,
+                        onRemove: $scope.onRemove
+                    });
                 }
             });
         }

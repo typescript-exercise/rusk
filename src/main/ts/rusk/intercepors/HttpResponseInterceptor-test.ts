@@ -5,15 +5,18 @@ describe('HttpResponseInterceptor のテスト', () => {
     
     var RESPONSE = {
         BAD_REQUEST: {
-            status: 400
+            status: 400,
+            config: {}
         },
         
         NOT_FOUND: {
-            status: 404
+            status: 404,
+            config: {}
         },
         
         INTERNAL_SERVER_ERROR: {
-            status: 500
+            status: 500,
+            config: {}
         }
     };
 

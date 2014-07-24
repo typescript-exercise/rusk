@@ -27,7 +27,7 @@ angular
         };
         
         function isDefinedOrverrideHandler(status : number, config) : boolean {
-            if (config) {
+            if (config && config.overrideInterceptor) {
                 return _.isFunction(config.overrideInterceptor[status]);
             } else {
                 return false;

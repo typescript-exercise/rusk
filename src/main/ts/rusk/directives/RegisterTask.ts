@@ -6,7 +6,9 @@ angular
     return {
         restrict: 'E',
         replace: true,
-        scope: true,
+        scope: {
+            onRegistered: '&'
+        },
         templateUrl: 'directives/RegisterTask.html',
         link: ($scope, $element, $attr) => {
             
@@ -24,7 +26,7 @@ angular
                     .success(() => {
                         form.reset();
                         modal.close();
-                        $scope.inquireTaskList(); // TaskListController に宣言されている
+                        $scope.onRegistered();
                     });
             }
         }
