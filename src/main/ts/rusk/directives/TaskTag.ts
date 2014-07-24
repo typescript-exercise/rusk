@@ -1,12 +1,12 @@
 angular
 .module('rusk')
-.directive('ruskTaskTag', () => {
+.directive('ruskTaskTag', ['taskResource', (taskResource) => {
     return {
         restrict: 'E',
         replace: true,
         scope: {
             task: '=',
-            remove: '&'
+            onRemove: '&'
         },
         templateUrl: 'directives/TaskTag.html',
         link: ($scope, $element, $attr) => {
@@ -20,8 +20,25 @@ angular
                     'panel-success': !complete && task.rankB,
                     'panel-info': !complete && task.rankC,
                     'panel-default': complete
+                },
+                
+                remove: () => {
+                    var id = task.id;
+                    var title = task.title;
+                    
+                    if (confirm('「' + title + '」を削除します。よろしいですか？')) {
+                    
+                        taskResource.remove(id,
+                            function onSuccess() {
+                                toastr.success('「' + title + '」を削除しました。');
+                                $scope.onRemove();
+                            },
+                            function onNotFoundError() {
+                                alert('指定したタスクは、既に削除されています。');
+                            });
+                    }
                 }
             });
         }
     };
-});
+}]);

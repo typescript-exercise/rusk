@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-controller="TaskListController">
   <div class="row">
     <div class="col-xs-12 col-md-5">
       <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#register-task">新規登録</a>
@@ -7,13 +7,13 @@
   <div class="row">
     <div class="col-xs-12 col-md-6">
       <h3>作業中</h3>
-      <rusk-task-tag task="inWorking" remove="remove(inWorking.id, inWorking.title)" ng-if="inWorking"></rusk-task-tag>
+      <rusk-task-tag task="inWorking" on-remove="inquireTaskList()" ng-if="inWorking"></rusk-task-tag>
       <div ng-show="!inWorking">
         作業中のタスクは存在しません。
       </div>
       
       <h3>未完了</h3>
-      <rusk-task-tag ng-repeat="task in taskList.uncompleteTasks" task="task" remove="remove(task.id, task.title)"></rusk-task-tag>
+      <rusk-task-tag ng-repeat="task in taskList.uncompleteTasks" task="task" on-remove="inquireTaskList()"></rusk-task-tag>
       <div ng-show="taskList.uncompleteTasks.length === 0">
         未完了のタスクは存在しません。
       </div>
@@ -21,7 +21,7 @@
     
     <div class="col-xs-12 col-md-6">
       <h3>完了</h3>
-      <rusk-task-tag ng-repeat="task in taskList.completeTasks" task="task" remove="remove(task.id, task.title)"></rusk-task-tag>
+      <rusk-task-tag ng-repeat="task in taskList.completeTasks" task="task" on-remove="inquireTaskList()"></rusk-task-tag>
       <div ng-show="taskList.completeTasks.length === 0">
         完了タスクは存在しません。
       </div>
