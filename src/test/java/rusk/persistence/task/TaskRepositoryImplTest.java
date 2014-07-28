@@ -72,6 +72,25 @@ public class TaskRepositoryImplTest {
     }
     
     @Test
+    public void 作業中タスクが存在する場合はtrueを返す() {
+        // exercise
+        boolean exists = repository.existsTaskInWorking();
+        
+        // verify
+        assertThat(exists, is(true));
+    }
+    
+    @Test
+    @Fixture(resources="TaskRepositoryImple-fixuture-作業中タスクなし.yaml")
+    public void 作業中タスクが存在しない場合はfalseを返す() {
+        // exercise
+        boolean exists = repository.existsTaskInWorking();
+        
+        // verify
+        assertThat(exists, is(false));
+    }
+    
+    @Test
     public void 作業中のタスクが検索できること() {
         // exercise
         Task task = repository.findTaskInWork();

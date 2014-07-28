@@ -3,6 +3,7 @@ package rusk.domain.task;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Validate;
@@ -32,6 +33,11 @@ public class Task {
         this.setRegisteredDate(registeredDate);
     }
 
+    private void setId(long id) {
+        Validate.isTrue(0 < id, "ID は 1 以上の値のみ受け付けます。");
+        this.id = id;
+    }
+
     private void setRegisteredDate(Date registeredDate) {
         Validate.notNull(registeredDate, "登録日は必須です。");
         this.registeredDate = new Date(registeredDate.getTime());
@@ -45,11 +51,6 @@ public class Task {
     public void register(TaskRepository repository) {
         long generatedId = repository.register(this);
         this.setId(generatedId);
-    }
-
-    private void setId(long id) {
-        Validate.isTrue(0 < id, "ID は 1 以上の値のみ受け付けます。");
-        this.id = id;
     }
     
     /**
@@ -69,7 +70,7 @@ public class Task {
      * @param time 作業時間
      * @throws DuplicateWorkTimeException 追加した作業時間が、既にこのタスクに登録されている作業時間と重複する場合
      */
-    public void add(WorkTime time) throws DuplicateWorkTimeException {
+    public void addWorkTime(WorkTime time) throws DuplicateWorkTimeException {
         Validate.notNull(time, "作業時間は必須です。");
         
         this.workTimes.forEach(workTime -> {
@@ -103,13 +104,13 @@ public class Task {
         } else {
             workTimes.forEach(one -> {
                 workTimes
-                .stream()
-                .filter(other -> one != other)
-                .forEach(other -> {
-                    if (one.isDuplicate(other)) {
-                        throw new DuplicateWorkTimeException(one, other);
-                    }
-                });
+                    .stream()
+                    .filter(other -> one != other)
+                    .forEach(other -> {
+                        if (one.isDuplicate(other)) {
+                            throw new DuplicateWorkTimeException(one, other);
+                        }
+                    });
             });
 
             this.workTimes = new ArrayList<>(workTimes);
@@ -124,45 +125,72 @@ public class Task {
     public long getTotalWorkTime() {
         return this.workTimes.stream().collect(Collectors.summingLong(workTime -> workTime.getDuration()));
     }
+
+    /**
+     * 作業中の作業時間を取得します。
+     * <p>
+     * 作業中の作業時間とは、終了時間が設定されていない作業時間のことを表します。
+     * <p>
+     * 該当する作業時間が存在しない場合、 Null オブジェクトが返されます。<br>
+     * Null オブジェクトは、全てのメソッドが何も処理を行わず、値を返すメソッドは null, 0, false のいずれかを返します。
+     * 
+     * @return 作業中の作業時間。
+     */
+    public WorkTime getWorkTimeInWorking() {
+        Optional<WorkTime> result = this.workTimes.stream().filter(time -> !time.hasEndTime()).findAny();
+        
+        return result.isPresent() ? result.get() : new NullObjectWorkTime();
+    }
     
     public void setTitle(String title) {
         Validate.notEmpty(title, "タイトルは必須です。");
         this.title = title;
     }
+    
     public void setDetail(String detail) {
         this.detail = detail;
     }
+    
     public void setCompletedDate(Date completedDate) {
         if (completedDate != null) {
             this.completedDate = new Date(completedDate.getTime());
         }
     }
+    
     public void setPriority(Priority priority) {
         Validate.notNull(priority, "優先度は必須です。");
         this.priority = priority;
     }
+    
     public void setStatus(Status status) {
         Validate.notNull(status, "状態は必須です。");
         this.status = status;
     }
+    
     public Long getId() {
         return id;
     }
+    
     public String getTitle() {
         return title;
     }
+    
     public String getDetail() {
         return detail;
     }
+    
     public Date getRegisteredDate() {
         return new Date(registeredDate.getTime());
     }
+    
     public Date getCompletedDate() {
         return this.completedDate == null ? null : new Date(completedDate.getTime());
     }
+    
     public Priority getPriority() {
         return priority;
     }
+    
     public Status getStatus() {
         return status;
     }
@@ -170,15 +198,19 @@ public class Task {
     public boolean isRankS() {
         return this.priority.is(Rank.S);
     }
+    
     public boolean isRankA() {
         return this.priority.is(Rank.A);
     }
+    
     public boolean isRankB() {
         return this.priority.is(Rank.B);
     }
+    
     public boolean isRankC() {
         return this.priority.is(Rank.C);
     }
+    
     public boolean isCompleted() {
         return this.status.isCompleted();
     }

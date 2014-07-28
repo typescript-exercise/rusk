@@ -2,6 +2,7 @@ package rusk.domain.task;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,8 +16,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class WorkTime {
     
-    private final long startTime;
-    private final long endTime;
+    private long startTime;
+    private Long endTime; // 終了日時は null 可のため、型を Long にしている
+    
+    /**
+     * 開始日時だけを指定してインスタンスを生成する。
+     * 
+     * @param startTime 開始日時
+     * @throws NullPointerException 開始日時が null の場合
+     */
+    public WorkTime(Date startTime) {
+        this.setStartTime(startTime);
+    }
     
     /**
      * コンストラクタ。
@@ -26,16 +37,24 @@ public class WorkTime {
      * @throws IllegalArgumentException 終了時間 &lt;= 開始時間 の場合
      */
     public WorkTime(Date startTime, Date endTime) {
-        this.validate(startTime, endTime);
+        this.setStartTime(startTime);
+        this.setEndTime(endTime);
+    }
+    
+    private void setStartTime(Date startTime) {
+        Validate.notNull(startTime, "開始時間は必須です。");
         
         this.startTime = startTime.getTime();
+    }
+    
+    public void setEndTime(Date endTime) {
+        Validate.notNull(endTime, "終了時間は必須です。");
+        this.validateStartEndTimeRelation(this.getStartTime(), endTime);
+        
         this.endTime = endTime.getTime();
     }
     
-    private void validate(Date startTime, Date endTime) {
-        Validate.notNull(startTime, "開始時間は必須です。");
-        Validate.notNull(endTime, "終了時間は必須です。");
-        
+    private void validateStartEndTimeRelation(Date startTime, Date endTime) {
         if (endTime.getTime() <= startTime.getTime()) {
             throw new IllegalArgumentException("開始時間は終了時間より前である必要があります。開始時間=" + startTime + ", 終了時間=" + endTime);
         }
@@ -48,17 +67,13 @@ public class WorkTime {
     public Date getStartTime() {
         return new Date(this.startTime);
     }
+    
     /**
      * 終了時間のコピーを取得する。
      * @return 終了時間のコピー
      */
     public Date getEndTime() {
-        return new Date(this.endTime);
-    }
-    
-    @Override
-    public String toString() {
-        return DurationFormatUtils.formatDuration(this.getDuration(), "HH:mm:ss.SSS");
+        return this.endTime == null ? null : new Date(this.endTime);
     }
 
     /**
@@ -67,7 +82,7 @@ public class WorkTime {
      * @return 作業時間（ミリ秒）
      */
     public long getDuration() {
-        return this.endTime - this.startTime;
+        return this.endTime == null ? 0L : this.endTime - this.startTime;
     }
 
     /**
@@ -76,11 +91,19 @@ public class WorkTime {
      * @return 作業時間が重複する場合は true
      */
     public boolean isDuplicate(WorkTime other) {
-        return this.includes(other.startTime) || this.includes(other.endTime);
+        long otherEndTime = other.endTime != null ? other.endTime : Long.MAX_VALUE;
+        
+        return this.includes(other.startTime) || this.includes(otherEndTime);
     }
     
     private boolean includes(long time) {
-        return this.startTime <= time && time <= this.endTime;
+        long endTime = ObjectUtils.defaultIfNull(this.endTime, Long.MAX_VALUE);
+        
+        return this.startTime <= time && time <= endTime;
+    }
+
+    public boolean hasEndTime() {
+        return this.endTime != null;
     }
     
     @Override
@@ -95,6 +118,11 @@ public class WorkTime {
         WorkTime o = (WorkTime)other;
         
         return new EqualsBuilder().append(this.startTime, o.startTime).append(this.endTime, o.endTime).isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return DurationFormatUtils.formatDuration(this.getDuration(), "HH:mm:ss.SSS");
     }
     
     /**

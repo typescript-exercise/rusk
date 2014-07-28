@@ -65,7 +65,7 @@ public class TaskBuilder {
     
     public TaskBuilder addWorkTime(String from, String to) {
         WorkTime workTime = new WorkTime(DateUtil.create(from), DateUtil.create(to));
-        this.task.add(workTime);
+        this.task.addWorkTime(workTime);
         return this;
     }
     

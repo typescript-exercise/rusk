@@ -14,48 +14,86 @@ import rusk.util.DateUtil;
 @SuppressWarnings("deprecation")
 public class TaskTest {
 
+    private static final Date DATETIME_1 = DateUtil.create("2014-01-01 15:00:00");
+    private static final Date DATETIME_2 = DateUtil.addMilliseconds(DATETIME_1, 100);
+    private static final Date DATETIME_3 = DateUtil.addMilliseconds(DATETIME_2, 100);
+    private static final Date DATETIME_4 = DateUtil.addMilliseconds(DATETIME_3, 100);
+    
+    @Test(expected=DuplicateWorkTimeException.class)
+    public void 終了時間が設定されていない作業時間を２つ以上登録できないこと() {
+        // setup
+        WorkTime time1 = new WorkTime(DATETIME_1);
+        WorkTime time2 = new WorkTime(DATETIME_2);
+        
+        Task task = new Task();
+        task.setWorkTimes(Arrays.asList(time1, time2));
+        
+        // exercise
+        task.getWorkTimeInWorking();
+    }
+    
+    @Test
+    public void 終了時間が設定されていない作業時間を_作業中の作業時間として取得できること() {
+        // setup
+        WorkTime time1 = new WorkTime(DATETIME_3);
+        WorkTime time2 = new WorkTime(DATETIME_1, DATETIME_2);
+        
+        Task task = new Task();
+        task.setWorkTimes(Arrays.asList(time1, time2));
+        
+        // exercise
+        WorkTime actual = task.getWorkTimeInWorking();
+        
+        // verify
+        assertThat(actual, is(time1));
+    }
+    
+    @Test
+    public void 終了時間が設定されていない作業時間が存在しない場合_作業中の作業時間はNullオブジェクトが取得できること() {
+        // setup
+        WorkTime time = new WorkTime(DATETIME_1, DATETIME_2);
+        
+        Task task = new Task();
+        task.addWorkTime(time);
+        
+        // exercise
+        WorkTime actual = task.getWorkTimeInWorking();
+        
+        // verify
+        assertThat(actual, is(instanceOf(NullObjectWorkTime.class)));
+    }
+    
     @Test(expected=DuplicateWorkTimeException.class)
     public void すでに登録されている作業時間と重複する作業時間を追加した場合_例外がスローされること() {
         // setup
-        Date before = DateUtil.create("2014-01-01 11:00:00");
-        Date middle = DateUtil.addMilliseconds(before, 100);
-        Date after = DateUtil.addMilliseconds(middle, 100);
-        
-        WorkTime time1 = new WorkTime(before, middle);
-        WorkTime time2 = new WorkTime(middle, after);
+        WorkTime time1 = new WorkTime(DATETIME_1, DATETIME_2);
+        WorkTime time2 = new WorkTime(DATETIME_2, DATETIME_3);
         
         Task task = new Task();
-        task.add(time1);
+        task.addWorkTime(time1);
         
         // exercise
-        task.add(time2);
+        task.addWorkTime(time2);
     }
     
     @Test(expected=DuplicateWorkTimeException.class)
     public void 作業時間が重複しているリストをセットすると_例外がスローされること() {
         // setup
-        Date before = DateUtil.create("2014-01-01 11:00:00");
-        Date middle = DateUtil.addMilliseconds(before, 100);
-        Date after = DateUtil.addMilliseconds(middle, 100);
-        
-        WorkTime time1 = new WorkTime(before, middle);
-        WorkTime time2 = new WorkTime(middle, after);
+        WorkTime time1 = new WorkTime(DATETIME_1, DATETIME_2);
+        WorkTime time2 = new WorkTime(DATETIME_2, DATETIME_3);
         
         List<WorkTime> workTimes = Arrays.asList(time1, time2);
         
         Task task = new Task();
+        
+        // exercise
         task.setWorkTimes(workTimes);
     }
 
     @Test
     public void 作業時間の合計がミリ秒で取得できること() {
         // setup
-        Date time1 = DateUtil.create("2014-01-01 11:00:00");
-        Date time2 = DateUtil.addMilliseconds(time1, 111);
-        Date time3 = DateUtil.addMilliseconds(time2, 1);
-        Date time4 = DateUtil.addMilliseconds(time3, 444);
-        
-        List<WorkTime> workTimes = Arrays.asList(new WorkTime(time1, time2), new WorkTime(time3, time4));
+        List<WorkTime> workTimes = Arrays.asList(new WorkTime(DATETIME_1, DATETIME_2), new WorkTime(DATETIME_3, DATETIME_4));
         
         Task task = new Task();
         task.setWorkTimes(workTimes);
@@ -64,7 +102,7 @@ public class TaskTest {
         long total = task.getTotalWorkTime();
         
         // verify
-        assertThat(total, is(555L));
+        assertThat(total, is(200L));
     }
     
 }

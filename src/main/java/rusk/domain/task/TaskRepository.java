@@ -16,6 +16,13 @@ public interface TaskRepository {
      * @throws NullPointerException タスクが null の場合
      */
     long register(Task task);
+
+    /**
+     * 状態が作業中のタスクが存在するかどうかを確認する。
+     * 
+     * @return 作業中のタスクが存在する場合は true を返す。
+     */
+    boolean existsTaskInWorking();
     
     /**
      * 状態が作業中のタスクを取得する。

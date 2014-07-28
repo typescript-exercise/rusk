@@ -43,6 +43,12 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
+    public boolean existsTaskInWorking() {
+        long count = this.provider.getPersist().read(Long.class, "SELECT COUNT(*) FROM TASK WHERE STATUS=1");
+        return count != 0;
+    }
+
+    @Override
     public Task findTaskInWork() {
         TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1");
         return table == null ? null : this.toTask(table);
