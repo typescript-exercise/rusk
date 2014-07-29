@@ -15,9 +15,7 @@ import rusk.rest.list.TaskListResource;
 import rusk.rest.task.TaskResource;
 import rusk.service.list.InquireTaskListService;
 import rusk.service.system.SystemInitializeService;
-import rusk.service.task.InquireTaskService;
-import rusk.service.task.RegisterTaskService;
-import rusk.service.task.RemoveTaskService;
+import rusk.service.task.TaskService;
 import rusk.system.db.DatabaseConfig;
 import rusk.system.db.DatabaseMigration;
 import rusk.system.db.HK2PersistProvider;
@@ -58,9 +56,7 @@ public class RuskHK2Binder extends AbstractBinder {
         // service
         bindAsContract(InquireTaskListService.class).in(Singleton.class);
         bindAsContract(SystemInitializeService.class).in(Singleton.class);
-        bindAsContract(RegisterTaskService.class).in(Singleton.class);
-        bindAsContract(InquireTaskService.class).in(Singleton.class);
-        bindAsContract(RemoveTaskService.class).in(Singleton.class);
+        bindAsContract(TaskService.class).in(Singleton.class);
         
         // repository
         bind(TaskRepositoryImpl.class).to(TaskRepository.class).in(Singleton.class);

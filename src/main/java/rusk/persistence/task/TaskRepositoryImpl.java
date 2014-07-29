@@ -1,6 +1,7 @@
 package rusk.persistence.task;
 
 import static java.util.stream.Collectors.*;
+import static rusk.util.LamdaUtil.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -49,7 +50,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public Task findTaskInWork() {
+    public Task inquireTaskInWork() {
         TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1");
         return table == null ? null : this.toTask(table);
     }
@@ -59,12 +60,12 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public List<Task> findUncompletedTasks() {
+    public List<Task> inquireUncompletedTasks() {
         return this.readList("SELECT * FROM TASK WHERE STATUS IN (0, 2)");
     }
 
     @Override
-    public List<Task> findCompleteTasks(final Date date) {
+    public List<Task> inquireCompleteTasks(final Date date) {
         Date startOfDate = DateUtil.truncate(date, Calendar.DATE);
         Date startOfNextDate = DateUtil.addDays(startOfDate, 1);
         
@@ -81,7 +82,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
     
     @Override
-    public Task inquire(long id) throws TaskNotFoundException {
+    public Task inquireById(long id) throws TaskNotFoundException {
         TaskTable taskTable = this.provider.getPersist().readByPrimaryKey(TaskTable.class, id);
         if (taskTable == null) {
             throw new TaskNotFoundException(id);
@@ -113,22 +114,27 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
     
     private List<WorkTime> mapToWorkTimeList(List<WorkTimeTable> table) {
-        return  table.stream().map(this::toWorkTime).collect(toList());
+        return list(table).map(this::toWorkTime);
     }
     
     private WorkTime toWorkTime(WorkTimeTable table) {
-        return new WorkTime(table.getStartTime(), table.getEndTime());
+        if (table.hasEndTime()) {
+            return new WorkTime(table.getId(), table.getStartTime(), table.getEndTime());
+        } else {
+            return new WorkTime(table.getId(), table.getStartTime());
+        }
     }
 
     @Override
-    public long register(Task task) {
+    public void register(Task task) {
         Validate.notNull(task, "タスクが null です。");
         
         logger.debug("registered task = {}", task);
         
         TaskTable newRecord = new TaskTable(task);
         this.provider.getPersist().insert(newRecord);
-        return newRecord.getId();
+        
+        task.setId(newRecord.getId());
     }
 
     @Override
@@ -143,6 +149,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public void remove(long deleteTargetTaskId) {
+        this.inquireWithLock(deleteTargetTaskId);
         this.removeWorkTimeByTaskId(deleteTargetTaskId);
         this.removeTask(deleteTargetTaskId);
     }
@@ -158,5 +165,38 @@ public class TaskRepositoryImpl implements TaskRepository {
     private void executeUpdate(String sql, Object... parameters) {
         Persist persist = this.provider.getPersist();
         persist.executeUpdate(sql, parameters);
+    }
+
+    @Override
+    public void saveModification(Task task) {
+        this.updateTask(task);
+        this.updateWorkTimes(task);
+        this.insertWorkTimes(task);
+    }
+
+    private void updateTask(Task task) {
+        TaskTable taskTable = new TaskTable(task);
+        this.provider.getPersist().update(taskTable);
+    }
+
+    private void updateWorkTimes(Task task) {
+        List<WorkTimeTable> workTimeTables = WorkTimeTable.createBy(task);
+        
+        List<WorkTimeTable> workTimeTablesForBatchUpdate = list(workTimeTables).filter(this::existsWorkTime);
+        
+        this.provider.getPersist().updateBatch(workTimeTablesForBatchUpdate.toArray());
+    }
+    
+    private void insertWorkTimes(Task task) {
+        List<WorkTimeTable> workTimeTables = WorkTimeTable.createBy(task);
+        
+        List<WorkTimeTable> workTimeTablesForBatchInsert = list(workTimeTables).negateFilter(this::existsWorkTime);
+        
+        this.provider.getPersist().insertBatch(workTimeTablesForBatchInsert.toArray());
+    }
+    
+    private boolean existsWorkTime(WorkTimeTable workTimeTable) {
+        long count = this.provider.getPersist().read(Long.class, "SELECT COUNT(*) FROM WORK_TIME WHERE ID=?", workTimeTable.getId());
+        return count != 0;
     }
 }

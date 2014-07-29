@@ -1,5 +1,6 @@
 package rusk.domain.task;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class WorkTime {
     
+    private long id;
     private long startTime;
     private Long endTime; // 終了日時は null 可のため、型を Long にしている
     
@@ -26,6 +28,11 @@ public class WorkTime {
      * @throws NullPointerException 開始日時が null の場合
      */
     public WorkTime(Date startTime) {
+        this.setStartTime(startTime);
+    }
+
+    public WorkTime(Long id, Timestamp startTime) {
+        this.id = id;
         this.setStartTime(startTime);
     }
     
@@ -41,13 +48,27 @@ public class WorkTime {
         this.setEndTime(endTime);
     }
     
+    /**
+     * コンストラクタ。
+     * 
+     * @param id ID
+     * @param startTime 開始時間
+     * @param endTime 終了時間
+     * @throws IllegalArgumentException 終了時間 &lt;= 開始時間 の場合
+     */
+    public WorkTime(long id, Date startTime, Date endTime) {
+        this.id = id;
+        this.setStartTime(startTime);
+        this.setEndTime(endTime);
+    }
+    
     private void setStartTime(Date startTime) {
         Validate.notNull(startTime, "開始時間は必須です。");
         
         this.startTime = startTime.getTime();
     }
     
-    public void setEndTime(Date endTime) {
+    void setEndTime(Date endTime) {
         Validate.notNull(endTime, "終了時間は必須です。");
         this.validateStartEndTimeRelation(this.getStartTime(), endTime);
         
@@ -106,6 +127,10 @@ public class WorkTime {
         return this.endTime != null;
     }
     
+    public long getId() {
+        return id;
+    }
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(this.startTime).append(this.endTime).toHashCode();

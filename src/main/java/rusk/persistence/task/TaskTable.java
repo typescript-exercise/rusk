@@ -28,6 +28,7 @@ public class TaskTable {
     public TaskTable() {}
     
     public TaskTable(Task task) {
+        this.id = task.getId();
         this.title = task.getTitle();
         this.detail = task.getDetail();
         this.setImportance(task);

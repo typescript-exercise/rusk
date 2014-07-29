@@ -19,23 +19,17 @@ import org.slf4j.LoggerFactory;
 
 import rusk.domain.task.Task;
 import rusk.rest.RuskConfig;
-import rusk.service.task.InquireTaskService;
-import rusk.service.task.RegisterTaskService;
-import rusk.service.task.RemoveTaskService;
+import rusk.service.task.TaskService;
 
 @Path("task")
 public class TaskResource {
     private static final Logger logger = LoggerFactory.getLogger(TaskResource.class);
     
-    private final RegisterTaskService registerService;
-    private final InquireTaskService inquireService;
-    private final RemoveTaskService removeService;
+    private final TaskService taskService;
     
     @Inject
-    public TaskResource(RegisterTaskService registerService, InquireTaskService inquireService, RemoveTaskService removeService) {
-        this.registerService = registerService;
-        this.inquireService = inquireService;
-        this.removeService = removeService;
+    public TaskResource(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @POST
@@ -43,7 +37,7 @@ public class TaskResource {
     public Response register(RegisterTaskForm form) throws URISyntaxException {
         logger.debug("RegisterTaskForm = {}", form);
         
-        Task registerdTask = this.registerService.register(form);
+        Task registerdTask = this.taskService.register(form);
         
         URI uri = RuskConfig.resource(TaskResource.class).path("{id}").build(registerdTask.getId());
         
@@ -54,12 +48,12 @@ public class TaskResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Task inquire(@PathParam("id") long id) {
-        return this.inquireService.inquire(id);
+        return this.taskService.inquire(id);
     }
     
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") long removeTargetTaskId) {
-        this.removeService.remove(removeTargetTaskId);
+        this.taskService.remove(removeTargetTaskId);
     }
 }

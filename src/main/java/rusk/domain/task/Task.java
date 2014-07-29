@@ -33,7 +33,7 @@ public class Task {
         this.setRegisteredDate(registeredDate);
     }
 
-    private void setId(long id) {
+    public void setId(long id) {
         Validate.isTrue(0 < id, "ID は 1 以上の値のみ受け付けます。");
         this.id = id;
     }
@@ -41,28 +41,6 @@ public class Task {
     private void setRegisteredDate(Date registeredDate) {
         Validate.notNull(registeredDate, "登録日は必須です。");
         this.registeredDate = new Date(registeredDate.getTime());
-    }
-
-    /**
-     * このタスクを永続化させる。
-     * 
-     * @param repository 永続化のためのリポジトリ
-     */
-    public void register(TaskRepository repository) {
-        long generatedId = repository.register(this);
-        this.setId(generatedId);
-    }
-    
-    /**
-     * 指定した ID のタスクと、それに紐づく全ての作業時間を削除します。
-     * 
-     * @param repository タスクリポジトリ
-     * @param deleteTargetTaskId 削除対象のタスク ID
-     * @throws TaskNotFoundException 指定した ID に紐づくタスクが存在しない場合
-     */
-    public static void remove(TaskRepository repository, long deleteTargetTaskId) {
-        repository.inquireWithLock(deleteTargetTaskId);
-        repository.remove(deleteTargetTaskId);
     }
     
     /**
@@ -141,6 +119,18 @@ public class Task {
         
         return result.isPresent() ? result.get() : new NullObjectWorkTime();
     }
+
+    /**
+     * このタスクの状態を、指定した状態に切り替える。
+     * <p>
+     * 切り替えに伴い、作業時間の更新が行われます。
+     * 
+     * @param status 切り替え後の状態
+     */
+    public void switchStatus(Status status) {
+        status.updateWorkTime(this);
+        this.setStatus(status);
+    }
     
     public void setTitle(String title) {
         Validate.notEmpty(title, "タイトルは必須です。");
@@ -152,9 +142,7 @@ public class Task {
     }
     
     public void setCompletedDate(Date completedDate) {
-        if (completedDate != null) {
-            this.completedDate = new Date(completedDate.getTime());
-        }
+        this.completedDate = completedDate == null ? null : new Date(completedDate.getTime());
     }
     
     public void setPriority(Priority priority) {
@@ -162,7 +150,16 @@ public class Task {
         this.priority = priority;
     }
     
-    public void setStatus(Status status) {
+    /**
+     * このタスクの状態を、指定した状態に設定します。
+     * <p>
+     * {@link #switchStatus(Status)} とは異なり、このメソッドは単純に状態を変更するだけで、
+     * その他にこのオブジェクトを変更することはありません。
+     * 
+     * @param status 変更する状態
+     * @throws NullPointerException 状態が null の場合
+     */
+    void setStatus(Status status) {
         Validate.notNull(status, "状態は必須です。");
         this.status = status;
     }

@@ -27,12 +27,12 @@ public class TaskList {
     public static TaskList getTaskList(TaskRepository repository) {
         TaskList taskList = new TaskList();
         
-        taskList.taskInWorking = repository.findTaskInWork();
+        taskList.taskInWorking = repository.inquireTaskInWork();
         
-        taskList.uncompleteTasks = repository.findUncompletedTasks();
+        taskList.uncompleteTasks = repository.inquireUncompletedTasks();
         taskList.uncompleteTasks.sort(ORDER_BY_PRIORITY_DESC);
         
-        taskList.completeTasks = repository.findCompleteTasks(Today.get());
+        taskList.completeTasks = repository.inquireCompleteTasks(Today.get());
         taskList.completeTasks.sort(ORDER_BY_PRIORITY_DESC);
         
         return taskList;

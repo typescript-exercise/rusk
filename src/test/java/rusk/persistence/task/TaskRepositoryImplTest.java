@@ -18,10 +18,12 @@ import org.junit.Test;
 
 import rusk.domain.EntityNotFoundException;
 import rusk.domain.task.Importance;
+import rusk.domain.task.Priority;
 import rusk.domain.task.Status;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
+import rusk.domain.task.Urgency;
 import rusk.rest.task.RegisterTaskForm;
 import rusk.test.db.RuskDBTester;
 import rusk.test.db.TestPersistProvider;
@@ -30,6 +32,10 @@ import rusk.util.Today;
 
 @Fixture(resources="TaskRepositoryImple-fixuture.yaml")
 public class TaskRepositoryImplTest {
+    private static final Date DATETIME_1 = DateUtil.create("2014-07-01 14:10:00");
+    private static final Date DATETIME_2 = DateUtil.addMilliseconds(DATETIME_1, 100);
+    private static final Date DATETIME_3 = DateUtil.addMilliseconds(DATETIME_2, 100);
+    private static final Date DATETIME_4 = DateUtil.addMilliseconds(DATETIME_3, 100);
     
     @Rule
     public TestPersistProvider provider = new TestPersistProvider();
@@ -40,17 +46,13 @@ public class TaskRepositoryImplTest {
     
     @Before
     public void setup() {
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); result = DateUtil.create("2014-07-01 12:10:00");
-        }};
-        
         repository = new TaskRepositoryImpl(provider);
     }
     
     @Test
     public void データベースに登録されているタスクの情報を_Javaオブジェクトに正しくマッピングされること() {
         // exercise
-        Task task = repository.inquire(1L);
+        Task task = repository.inquireById(1L);
         
         // verify
         Task expected = new TaskBuilder(1L, "2014-07-01 12:00:00")
@@ -68,7 +70,7 @@ public class TaskRepositoryImplTest {
     @Test(expected=EntityNotFoundException.class)
     public void 指定したIDのタスクがデータベースに存在しない場合_例外がスローされること() {
         // exercise
-        repository.inquire(-1L);
+        repository.inquireById(-1L);
     }
     
     @Test
@@ -93,7 +95,7 @@ public class TaskRepositoryImplTest {
     @Test
     public void 作業中のタスクが検索できること() {
         // exercise
-        Task task = repository.findTaskInWork();
+        Task task = repository.inquireTaskInWork();
         
         // verify
         assertThat(task.getId(), is(2L));
@@ -103,7 +105,7 @@ public class TaskRepositoryImplTest {
     @Fixture(resources="TaskRepositoryImple-fixuture-作業中タスクなし.yaml")
     public void 作業中のタスクが存在しない場合_nullが返されること() {
         // exercise
-        Task task = repository.findTaskInWork();
+        Task task = repository.inquireTaskInWork();
         
         // verify
         assertThat(task, is(nullValue()));
@@ -112,7 +114,7 @@ public class TaskRepositoryImplTest {
     @Test
     public void 未完了のタスクが検索できること() {
         // exercise
-        List<Task> uncompleteTasks = repository.findUncompletedTasks();
+        List<Task> uncompleteTasks = repository.inquireUncompletedTasks();
         
         // verify
         List<Long> ids = uncompleteTasks.stream().map(task -> task.getId()).collect(Collectors.toList());
@@ -123,7 +125,7 @@ public class TaskRepositoryImplTest {
     @Fixture(resources="TaskRepositoryImple-fixuture-未完了タスクなし.yaml")
     public void 未完了のタスクが存在しない場合_空のリストが返されること() {
         // exercise
-        List<Task> uncompleteTasks = repository.findUncompletedTasks();
+        List<Task> uncompleteTasks = repository.inquireUncompletedTasks();
         
         // verify
         assertThat(uncompleteTasks, is(empty()));
@@ -135,7 +137,7 @@ public class TaskRepositoryImplTest {
         Date date = DateUtil.create("2014-07-03 12:00:00");
         
         // exercise
-        List<Task> completedTasks = repository.findCompleteTasks(date);
+        List<Task> completedTasks = repository.inquireCompleteTasks(date);
         
         // verify
         List<Long> ids = completedTasks.stream().map(task -> task.getId()).collect(Collectors.toList());
@@ -148,7 +150,7 @@ public class TaskRepositoryImplTest {
         Date date = DateUtil.create("2014-07-01 12:00:00");
         
         // exercise
-        List<Task> completedTasks = repository.findCompleteTasks(date);
+        List<Task> completedTasks = repository.inquireCompleteTasks(date);
         
         // verify
         assertThat(completedTasks, is(empty()));
@@ -158,6 +160,10 @@ public class TaskRepositoryImplTest {
     @Fixture(resources="TaskRepositoryImple-fixuture-タスク登録.yaml")
     public void 指定したタスクがデータベースに登録されること() throws Exception {
         // setup
+        new NonStrictExpectations(Today.class) {{
+            Today.get(); returns(DATETIME_1);
+        }};
+        
         RegisterTaskForm form = new RegisterTaskForm();
         form.setTitle("タスク登録");
         form.setImportance(Importance.A);
@@ -187,4 +193,30 @@ public class TaskRepositoryImplTest {
         dbTester.verifyTable("TASK", expected);
         dbTester.verifyTable("WORK_TIME", expected);
     }
+
+    
+    @Test
+    public void 指定したタスクが更新できること() throws Exception {
+        // setup
+        new NonStrictExpectations(Today.class) {{
+            Today.get(); returns(DATETIME_1, DATETIME_4);
+        }};
+        
+        Task originalTask = repository.inquireById(1L);
+        
+        originalTask.setDetail("詳細更新");
+        originalTask.setTitle("タイトル更新");
+        Urgency urgency = new Urgency(Today.get(), DATETIME_4);
+        originalTask.setPriority(new Priority(urgency, Importance.C));
+        originalTask.switchStatus(Status.IN_WORKING);
+        
+        // exercise
+        repository.saveModification(originalTask);
+        
+        // verify
+        Task savedTask = repository.inquireById(1L);
+        
+        assertThat(savedTask, is(sameTaskOf(originalTask)));
+    }
+    
 }
