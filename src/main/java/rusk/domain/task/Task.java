@@ -10,6 +10,8 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import rusk.util.Today;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -128,9 +130,44 @@ public class Task {
      * @param status 切り替え後の状態
      */
     public void switchStatus(Status status) {
-        status.updateWorkTime(this);
+        this.saveWorkTime(status);
         this.setStatus(status);
     }
+
+    private void saveWorkTime(Status status) {
+        Date now = Today.get();
+        
+        if (status == Status.IN_WORKING) {
+            if (this.status == Status.COMPLETE) {
+                this.setCompletedDate(null);
+            }
+            
+            this.startWorkTime(now);
+            
+        } else if (status == Status.STOPPED) {
+            this.endWorktime(now);
+            
+        } else if (status == Status.COMPLETE) {
+            this.endWorktime(now);
+            this.setCompletedDate(now);
+        }
+    }
+    
+    private void startWorkTime(Date startTime) {
+        WorkTime workTime = new WorkTime(startTime);
+        this.addWorkTime(workTime);
+    }
+    
+    private void endWorktime(Date endTime) {
+        WorkTime timeInWorking = this.getWorkTimeInWorking();
+        timeInWorking.setEndTime(endTime);
+    }
+    
+    
+    
+    
+    
+    
     
     public void setTitle(String title) {
         Validate.notEmpty(title, "タイトルは必須です。");
