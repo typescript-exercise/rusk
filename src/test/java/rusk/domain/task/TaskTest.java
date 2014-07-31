@@ -12,7 +12,7 @@ import mockit.NonStrictExpectations;
 import org.junit.Test;
 
 import rusk.util.DateUtil;
-import rusk.util.Today;
+import rusk.util.Now;
 
 @SuppressWarnings("deprecation")
 public class TaskTest {
@@ -25,8 +25,8 @@ public class TaskTest {
     @Test
     public void 完了済みのタスクの状態を作業中に更新した場合_タスクに完了時間がnullになっていること() {
         // setup
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); returns(DATETIME_1, DATETIME_4);
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); returns(DATETIME_1, DATETIME_4);
         }};
         
         Task task = new Task();
@@ -43,8 +43,8 @@ public class TaskTest {
     @Test
     public void 中断中のタスクの状態を完了に更新した場合_タスクに完了時間がセットされること() {
         // setup
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); returns(DATETIME_1, DATETIME_4);
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); returns(DATETIME_1, DATETIME_4);
         }};
         
         Task task = new Task();
@@ -61,8 +61,8 @@ public class TaskTest {
     @Test
     public void 作業中のタスクの状態を完了に更新した場合_作業中だった作業時間に終了時間がセットされ_タスクに完了時間がセットされること() {
         // setup
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); returns(DATETIME_1, DATETIME_3);
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); returns(DATETIME_1, DATETIME_3);
         }};
         
         Task task = new Task();
@@ -87,8 +87,8 @@ public class TaskTest {
     @Test
     public void タスクの状態を中断に更新した場合_作業中だった作業時間に終了時間がセットされること() {
         // setup
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); returns(DATETIME_1, DATETIME_3);
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); returns(DATETIME_1, DATETIME_3);
         }};
         
         Task task = new Task();
@@ -111,8 +111,8 @@ public class TaskTest {
     @Test
     public void タスクの状態を作業中に更新した場合_開始時間だけが設定された作業時間がタスクに追加されること() {
         // setup
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); result = DATETIME_1;
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); result = DATETIME_1;
         }};
         
         Task task = new Task();
@@ -134,8 +134,8 @@ public class TaskTest {
     @Test(expected=DuplicateWorkTimeException.class)
     public void 終了時間が設定されていない作業時間を２つ以上登録できないこと() {
         // setup
-        WorkTime time1 = new WorkTime(DATETIME_1);
-        WorkTime time2 = new WorkTime(DATETIME_2);
+        WorkTime time1 = WorkTime.createInWorkingTime(DATETIME_1);
+        WorkTime time2 = WorkTime.createInWorkingTime(DATETIME_2);
         
         Task task = new Task();
         task.setWorkTimes(Arrays.asList(time1, time2));
@@ -147,8 +147,8 @@ public class TaskTest {
     @Test
     public void 終了時間が設定されていない作業時間を_作業中の作業時間として取得できること() {
         // setup
-        WorkTime time1 = new WorkTime(DATETIME_3);
-        WorkTime time2 = new WorkTime(DATETIME_1, DATETIME_2);
+        WorkTime time1 = WorkTime.createInWorkingTime(DATETIME_3);
+        WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
         
         Task task = new Task();
         task.setWorkTimes(Arrays.asList(time1, time2));
@@ -163,7 +163,7 @@ public class TaskTest {
     @Test
     public void 終了時間が設定されていない作業時間が存在しない場合_作業中の作業時間はNullオブジェクトが取得できること() {
         // setup
-        WorkTime time = new WorkTime(DATETIME_1, DATETIME_2);
+        WorkTime time = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
         
         Task task = new Task();
         task.addWorkTime(time);
@@ -178,8 +178,8 @@ public class TaskTest {
     @Test(expected=DuplicateWorkTimeException.class)
     public void すでに登録されている作業時間と重複する作業時間を追加した場合_例外がスローされること() {
         // setup
-        WorkTime time1 = new WorkTime(DATETIME_1, DATETIME_2);
-        WorkTime time2 = new WorkTime(DATETIME_2, DATETIME_3);
+        WorkTime time1 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
+        WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_2, DATETIME_3);
         
         Task task = new Task();
         task.addWorkTime(time1);
@@ -191,8 +191,8 @@ public class TaskTest {
     @Test(expected=DuplicateWorkTimeException.class)
     public void 作業時間が重複しているリストをセットすると_例外がスローされること() {
         // setup
-        WorkTime time1 = new WorkTime(DATETIME_1, DATETIME_2);
-        WorkTime time2 = new WorkTime(DATETIME_2, DATETIME_3);
+        WorkTime time1 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
+        WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_2, DATETIME_3);
         
         List<WorkTime> workTimes = Arrays.asList(time1, time2);
         
@@ -205,7 +205,8 @@ public class TaskTest {
     @Test
     public void 作業時間の合計がミリ秒で取得できること() {
         // setup
-        List<WorkTime> workTimes = Arrays.asList(new WorkTime(DATETIME_1, DATETIME_2), new WorkTime(DATETIME_3, DATETIME_4));
+        List<WorkTime> workTimes = Arrays.asList(WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2),
+                                                    WorkTime.createConcludedWorkTime(DATETIME_3, DATETIME_4));
         
         Task task = new Task();
         task.setWorkTimes(workTimes);

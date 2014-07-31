@@ -1,11 +1,14 @@
 package rusk.domain.task;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import rusk.util.Immutable;
+import rusk.util.Now;
 
 /**
  * 優先度
@@ -59,6 +62,11 @@ public class Priority implements RankComparator, Comparable<Priority> {
     private final Importance importance;
     private final Rank rank;
     
+    public static Priority of(Date period, Importance importance) {
+        Urgency urgency = new Urgency(Now.get(), period);
+        return new Priority(urgency, importance);
+    }
+    
     public Priority(Urgency urgency, Importance importance) {
         this.urgency = urgency;
         this.importance = importance;
@@ -66,8 +74,8 @@ public class Priority implements RankComparator, Comparable<Priority> {
     }
     
     private Rank isolateRank(Urgency urgency, Importance importance) {
-        if (urgency.any(Rank.S, Rank.A)) {
-            if (importance.any(Rank.S, Rank.A)) {
+        if (urgency.anyOf(Rank.S, Rank.A)) {
+            if (importance.anyOf(Rank.S, Rank.A)) {
                 return Rank.S;
             } else if (importance.is(Rank.B)) {
                 return Rank.A;
@@ -75,7 +83,7 @@ public class Priority implements RankComparator, Comparable<Priority> {
                 return Rank.C;
             }
         } else if (urgency.is(Rank.B)) {
-            if (importance.any(Rank.S, Rank.A)) {
+            if (importance.anyOf(Rank.S, Rank.A)) {
                 return Rank.A;
             } else if (importance.is(Rank.B)) {
                 return Rank.B;
@@ -83,7 +91,7 @@ public class Priority implements RankComparator, Comparable<Priority> {
                 return Rank.C;
             }
         } else {
-            if (importance.any(Rank.S, Rank.A)) {
+            if (importance.anyOf(Rank.S, Rank.A)) {
                 return Rank.B;
             } else {
                 return Rank.C;

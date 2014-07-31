@@ -17,7 +17,7 @@ import rusk.domain.task.Task;
 import rusk.integration_test.db.RuskIntegrationDBTester;
 import rusk.integration_test.jersey.JerseyTestRule;
 import rusk.util.DateUtil;
-import rusk.util.Today;
+import rusk.util.Now;
 
 /**
  * タスクリストの問い合わせテスト。
@@ -33,8 +33,8 @@ public class InquireTaskListTest {
     @Fixture(resources="inquire-task-list.yaml")
     public void test() {
         // setup
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); result = DateUtil.create("2014-07-15 12:00:00");
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); result = DateUtil.create("2014-07-15 12:00:00");
         }};
         
         // exercise

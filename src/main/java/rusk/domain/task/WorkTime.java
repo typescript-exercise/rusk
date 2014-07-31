@@ -1,6 +1,5 @@
 package rusk.domain.task;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -22,41 +21,64 @@ public class WorkTime {
     private Long endTime; // 終了日時は null 可のため、型を Long にしている
     
     /**
-     * 開始日時だけを指定してインスタンスを生成する。
+     * 新規に作業中の作業時間を作成します。
      * 
-     * @param startTime 開始日時
-     * @throws NullPointerException 開始日時が null の場合
+     * @param startTime 開始時間
+     * @return 作業中の作業時間。
      */
-    public WorkTime(Date startTime) {
-        this.setStartTime(startTime);
-    }
-
-    public WorkTime(Long id, Timestamp startTime) {
-        this.id = id;
-        this.setStartTime(startTime);
+    public static WorkTime createInWorkingTime(Date startTime) {
+        return new WorkTime(startTime);
     }
     
     /**
-     * コンストラクタ。
+     * 永続化されていた作業中の作業時間を再構築します。
+     * 
+     * @param id ID
+     * @param startTime 開始時間
+     * @return 再構築された作業中の作業時間
+     */
+    public static WorkTime deserializeInWorkingTime(long id, Date startTime) {
+        return new WorkTime(id, startTime);
+    }
+    
+    /**
+     * 新規に完了した作業時間を作成します。
      * 
      * @param startTime 開始時間
      * @param endTime 終了時間
-     * @throws IllegalArgumentException 終了時間 &lt;= 開始時間 の場合
+     * @return 完了した作業時間
      */
-    public WorkTime(Date startTime, Date endTime) {
-        this.setStartTime(startTime);
-        this.setEndTime(endTime);
+    public static WorkTime createConcludedWorkTime(Date startTime, Date endTime) {
+        return new WorkTime(startTime, endTime);
     }
     
     /**
-     * コンストラクタ。
+     * 永続化されていた完了した作業時間を再構築します。
      * 
      * @param id ID
      * @param startTime 開始時間
      * @param endTime 終了時間
-     * @throws IllegalArgumentException 終了時間 &lt;= 開始時間 の場合
+     * @return 再構築された完了した作業時間
      */
-    public WorkTime(long id, Date startTime, Date endTime) {
+    public static WorkTime deserializeConcludedWorkTime(long id, Date startTime, Date endTime) {
+        return new WorkTime(id, startTime, endTime);
+    }
+    
+    private WorkTime(Date startTime) {
+        this.setStartTime(startTime);
+    }
+
+    private WorkTime(long id, Date startTime) {
+        this.id = id;
+        this.setStartTime(startTime);
+    }
+    
+    private WorkTime(Date startTime, Date endTime) {
+        this.setStartTime(startTime);
+        this.setEndTime(endTime);
+    }
+    
+    private WorkTime(long id, Date startTime, Date endTime) {
         this.id = id;
         this.setStartTime(startTime);
         this.setEndTime(endTime);

@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import rusk.util.DateUtil;
-import rusk.util.Today;
+import rusk.util.Now;
 
 public class UrgencyTest {
 
@@ -19,8 +19,8 @@ public class UrgencyTest {
     
     @Before
     public void setup() {
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); result = now;
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); result = now;
         }};
     }
     

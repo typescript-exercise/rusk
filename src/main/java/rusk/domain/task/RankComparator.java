@@ -23,7 +23,7 @@ public interface RankComparator {
      * @param ranks 比較するランク
      * @return このオブジェクトのランクが、指定したランクのいずれかに一致する場合は true
      */
-    default boolean any(Rank... ranks) {
+    default boolean anyOf(Rank... ranks) {
         return Stream.of(ranks).anyMatch(rank -> this.is(rank));
     }
     

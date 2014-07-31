@@ -23,12 +23,11 @@ import rusk.domain.task.Status;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
-import rusk.domain.task.Urgency;
 import rusk.rest.task.RegisterTaskForm;
 import rusk.test.db.RuskDBTester;
 import rusk.test.db.TestPersistProvider;
 import rusk.util.DateUtil;
-import rusk.util.Today;
+import rusk.util.Now;
 
 @Fixture(resources="TaskRepositoryImple-fixuture.yaml")
 public class TaskRepositoryImplTest {
@@ -55,11 +54,10 @@ public class TaskRepositoryImplTest {
         Task task = repository.inquireById(1L);
         
         // verify
-        Task expected = new TaskBuilder(1L, "2014-07-01 12:00:00")
+        Task expected = new TaskBuilder(1L, "2014-07-01 12:00:00", "2014-07-02 11:22:33")
                                 .title("完了１")
                                 .status(Status.COMPLETE)
                                 .detail("これは完了タスクです")
-                                .completeDate("2014-07-02 11:22:33")
                                 .priority("2014-07-01 12:50:00", Importance.S)
                                 .addWorkTime("2014-07-01 13:00:00", "2014-07-01 13:50:00")
                                 .build();
@@ -160,8 +158,8 @@ public class TaskRepositoryImplTest {
     @Fixture(resources="TaskRepositoryImple-fixuture-タスク登録.yaml")
     public void 指定したタスクがデータベースに登録されること() throws Exception {
         // setup
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); returns(DATETIME_1);
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); returns(DATETIME_1);
         }};
         
         RegisterTaskForm form = new RegisterTaskForm();
@@ -198,16 +196,15 @@ public class TaskRepositoryImplTest {
     @Test
     public void 指定したタスクが更新できること() throws Exception {
         // setup
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); returns(DATETIME_1, DATETIME_4);
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); returns(DATETIME_1, DATETIME_4);
         }};
         
         Task originalTask = repository.inquireById(1L);
         
         originalTask.setDetail("詳細更新");
         originalTask.setTitle("タイトル更新");
-        Urgency urgency = new Urgency(Today.get(), DATETIME_4);
-        originalTask.setPriority(new Priority(urgency, Importance.C));
+        originalTask.setPriority(Priority.of(DATETIME_4, Importance.C));
         originalTask.switchStatus(Status.IN_WORKING);
         
         // exercise

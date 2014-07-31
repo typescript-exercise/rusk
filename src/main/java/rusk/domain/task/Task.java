@@ -10,7 +10,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import rusk.util.Today;
+import rusk.util.Now;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -23,16 +23,17 @@ public class Task {
     private Date registeredDate;
     private Date completedDate;
     private Priority priority;
-    private Status status;
+    private Status status = Status.UNSTARTED;
     private List<WorkTime> workTimes = new ArrayList<>();
     
     public Task(Date registeredDate) {
         this.setRegisteredDate(registeredDate);
     }
     
-    public Task(long id, Date registeredDate) {
+    public Task(long id, Date registeredDate, Date completedDate, Status status) {
         this.setId(id);
         this.setRegisteredDate(registeredDate);
+        this.setStatus(status);
     }
 
     public void setId(long id) {
@@ -135,7 +136,7 @@ public class Task {
     }
 
     private void saveWorkTime(Status status) {
-        Date now = Today.get();
+        Date now = Now.get();
         
         if (status == Status.IN_WORKING) {
             if (this.status == Status.COMPLETE) {
@@ -154,8 +155,8 @@ public class Task {
     }
     
     private void startWorkTime(Date startTime) {
-        WorkTime workTime = new WorkTime(startTime);
-        this.addWorkTime(workTime);
+        WorkTime inWorkingTime = WorkTime.createInWorkingTime(startTime);
+        this.addWorkTime(inWorkingTime);
     }
     
     private void endWorktime(Date endTime) {
@@ -178,7 +179,7 @@ public class Task {
         this.detail = detail;
     }
     
-    public void setCompletedDate(Date completedDate) {
+    void setCompletedDate(Date completedDate) {
         this.completedDate = completedDate == null ? null : new Date(completedDate.getTime());
     }
     

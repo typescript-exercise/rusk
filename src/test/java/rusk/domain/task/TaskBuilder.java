@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import rusk.util.DateUtil;
-import rusk.util.Today;
 
 /**
  * {@link Task} のインスタンスを簡潔な記述で生成できるようにするためのビルダークラス。
@@ -16,12 +15,12 @@ public class TaskBuilder {
     
     private final Task task;
     
-    public TaskBuilder(long id, String registeredDate) {
-        this.task = new Task(id, DateUtil.create(registeredDate));
+    public TaskBuilder(long id, String registeredDate, String completedDate) {
+        this.task = new Task(id, DateUtil.create(registeredDate), DateUtil.create(completedDate), Status.UNSTARTED);
     }
     
-    public TaskBuilder(long id, Date registeredDate) {
-        this.task = new Task(id, registeredDate);
+    public TaskBuilder(long id, Date registeredDate, Date completedDate) {
+        this.task = new Task(id, registeredDate, completedDate, Status.UNSTARTED);
     }
     
     public TaskBuilder title(String title) {
@@ -40,9 +39,7 @@ public class TaskBuilder {
     }
     
     public TaskBuilder completeDate(String completedDate) {
-        if (completedDate != null) {
-            this.task.setCompletedDate(DateUtil.create(completedDate));
-        }
+        this.task.setCompletedDate(DateUtil.create(completedDate));
         return this;
     }
     
@@ -52,19 +49,17 @@ public class TaskBuilder {
     }
     
     public TaskBuilder priority(String period, Importance importance) {
-        Urgency urgency = new Urgency(Today.get(), DateUtil.create(period));
-        this.task.setPriority(new Priority(urgency, importance));
+        this.task.setPriority(Priority.of(DateUtil.create(period), importance));
         return this;
     }
     
     public TaskBuilder priority(Date period, Importance importance) {
-        Urgency urgency = new Urgency(Today.get(), period);
-        this.task.setPriority(new Priority(urgency, importance));
+        this.task.setPriority(Priority.of(period, importance));
         return this;
     }
     
     public TaskBuilder addWorkTime(String from, String to) {
-        WorkTime workTime = new WorkTime(DateUtil.create(from), DateUtil.create(to));
+        WorkTime workTime = WorkTime.createConcludedWorkTime(DateUtil.create(from), DateUtil.create(to));
         this.task.addWorkTime(workTime);
         return this;
     }

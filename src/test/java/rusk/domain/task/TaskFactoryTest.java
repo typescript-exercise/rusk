@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import rusk.rest.task.RegisterTaskForm;
 import rusk.util.DateUtil;
-import rusk.util.Today;
+import rusk.util.Now;
 
 public class TaskFactoryTest {
     
@@ -21,8 +21,8 @@ public class TaskFactoryTest {
     
     @Before
     public void setup() {
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); result = NOW;
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); result = NOW;
         }};
     }
     

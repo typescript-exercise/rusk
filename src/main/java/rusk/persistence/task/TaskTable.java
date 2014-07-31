@@ -16,14 +16,14 @@ import rusk.domain.task.Task;
 @Table(name="TASK")
 public class TaskTable {
     
-    private Long id;
-    private String title;
-    private byte status;
-    private String detail;
-    private Timestamp registeredDate;
-    private Timestamp completedDate;
-    private byte importance;
-    private Timestamp period;
+    public Long id;
+    public String title;
+    public byte status;
+    public String detail;
+    public Timestamp registeredDate;
+    public Timestamp completedDate;
+    public byte importance;
+    public Timestamp period;
     
     public TaskTable() {}
     

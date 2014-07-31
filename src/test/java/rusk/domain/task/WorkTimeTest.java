@@ -25,7 +25,7 @@ public class WorkTimeTest {
         
         @Before
         public void setup() {
-            time = new WorkTime(DATETIME_1);
+            time = WorkTime.createInWorkingTime(DATETIME_1);
         }
         
         @Test
@@ -40,7 +40,7 @@ public class WorkTimeTest {
         @Test
         public void 作業時間が重なっている場合_isDuplicateがtrueを返すこと() {
             // setup
-            WorkTime time2 = new WorkTime(DATETIME_2, DATETIME_3);
+            WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_2, DATETIME_3);
             
             // exercise
             boolean duplicate = time.isDuplicate(time2);
@@ -52,8 +52,8 @@ public class WorkTimeTest {
         @Test
         public void 作業時間が重なっていない場合_isDuplicateがfalseを返すこと() {
             // setup
-            WorkTime time1 = new WorkTime(DATETIME_4);
-            WorkTime time2 = new WorkTime(DATETIME_1, DATETIME_2);
+            WorkTime time1 = WorkTime.createInWorkingTime(DATETIME_4);
+            WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
             
             // exercise
             boolean duplicate = time1.isDuplicate(time2);
@@ -86,7 +86,7 @@ public class WorkTimeTest {
         @Test
         public void 終了時間を確認するメソッドはtrueを返すこと() {
             // setup
-            WorkTime workTime = new WorkTime(DATETIME_1, DATETIME_2);
+            WorkTime workTime = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
             
             // exercose
             boolean actual = workTime.hasEndTime();
@@ -98,19 +98,19 @@ public class WorkTimeTest {
         @Test(expected=IllegalArgumentException.class)
         public void 開始時間が終了時間より後の場合_例外がスローされること() {
             // exercise
-            new WorkTime(DATETIME_2, DATETIME_1);
+            WorkTime.createConcludedWorkTime(DATETIME_2, DATETIME_1);
         }
 
         @Test(expected=IllegalArgumentException.class)
         public void 開始時間と終了時間が同じ場合_例外がスローされること() {
             // exercise
-            new WorkTime(DATETIME_1, DATETIME_1);
+            WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_1);
         }
         
         @Test
         public void 開始時間と終了時間の差分がミリ秒で取得できること() {
             // setup
-            WorkTime workTime = new WorkTime(DATETIME_1, DATETIME_4);
+            WorkTime workTime = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_4);
             
             // exercise
             long duration = workTime.getDuration();
@@ -122,8 +122,8 @@ public class WorkTimeTest {
         @Test
         public void 作業時間が重なっている場合_isDuplicateがtrueを返すこと() {
             // setup
-            WorkTime time1 = new WorkTime(DATETIME_1, DATETIME_2);
-            WorkTime time2 = new WorkTime(DATETIME_2, DATETIME_3);
+            WorkTime time1 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
+            WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_2, DATETIME_3);
             
             // exercise
             boolean duplicate = time1.isDuplicate(time2);
@@ -135,8 +135,8 @@ public class WorkTimeTest {
         @Test
         public void 作業時間が重なっている場合_isDuplicateがtrueを返すこと_開始時間のみを設定している作業時間と比較した場合() {
             // setup
-            WorkTime time1 = new WorkTime(DATETIME_1, DATETIME_2);
-            WorkTime time2 = new WorkTime(DATETIME_2);
+            WorkTime time1 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
+            WorkTime time2 = WorkTime.createInWorkingTime(DATETIME_2);
             
             // exercise
             boolean duplicate = time1.isDuplicate(time2);
@@ -148,8 +148,8 @@ public class WorkTimeTest {
         @Test
         public void 作業時間が重なっていない場合_isDuplicateがfalseを返すこと() {
             // setup
-            WorkTime time1 = new WorkTime(DATETIME_1, DATETIME_2);
-            WorkTime time2 = new WorkTime(DATETIME_3, DATETIME_4);
+            WorkTime time1 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
+            WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_3, DATETIME_4);
             
             // exercise
             boolean duplicate = time1.isDuplicate(time2);
@@ -161,8 +161,8 @@ public class WorkTimeTest {
         @Test
         public void 作業時間が重なっていない場合_isDuplicateがfalseを返すこと_開始時間のみを設定している作業時間と比較した場合() {
             // setup
-            WorkTime time1 = new WorkTime(DATETIME_1, DATETIME_2);
-            WorkTime time2 = new WorkTime(DATETIME_3);
+            WorkTime time1 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
+            WorkTime time2 = WorkTime.createInWorkingTime(DATETIME_3);
             
             // exercise
             boolean duplicate = time1.isDuplicate(time2);
@@ -174,8 +174,8 @@ public class WorkTimeTest {
         @Test
         public void 開始時間と終了時間が同じ場合_equalsメソッドはtrueを返すこと() {
             // setup
-            WorkTime one = new WorkTime(DATETIME_1, DATETIME_2);
-            WorkTime other = new WorkTime(DATETIME_1, DATETIME_2);
+            WorkTime one = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
+            WorkTime other = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
             
             // verify
             assertThat(one.equals(other), is(true));
@@ -184,7 +184,7 @@ public class WorkTimeTest {
         @Test
         public void 終了時間のコピーが取得できること() {
             // setup
-            WorkTime time = new WorkTime(DATETIME_1, DATETIME_2);
+            WorkTime time = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
             
             // exercise
             Date endTime = time.getEndTime();

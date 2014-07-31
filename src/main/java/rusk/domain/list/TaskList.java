@@ -5,7 +5,7 @@ import java.util.List;
 
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskRepository;
-import rusk.util.Today;
+import rusk.util.Now;
 
 /**
  * タスク一覧
@@ -32,7 +32,7 @@ public class TaskList {
         taskList.uncompleteTasks = repository.inquireUncompletedTasks();
         taskList.uncompleteTasks.sort(ORDER_BY_PRIORITY_DESC);
         
-        taskList.completeTasks = repository.inquireCompleteTasks(Today.get());
+        taskList.completeTasks = repository.inquireCompleteTasks(Now.get());
         taskList.completeTasks.sort(ORDER_BY_PRIORITY_DESC);
         
         return taskList;

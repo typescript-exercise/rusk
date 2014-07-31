@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rusk.domain.task.Task;
-import rusk.domain.task.TaskBuilder;
+import rusk.domain.task.TaskFactory;
 import rusk.domain.task.TaskNotFoundException;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.WorkTime;
@@ -94,14 +94,13 @@ public class TaskRepositoryImpl implements TaskRepository {
     private Task toTask(TaskTable table) {
         List<WorkTime> workTimes = this.findWorkTimeList(table.getId());
         
-        return new TaskBuilder(table.getId(), table.getRegisteredDate())
-                        .title(table.getTitle())
-                        .status(table.getStatusAsEnum())
-                        .detail(table.getDetail())
-                        .completeDate(table.getCompletedDate())
-                        .priority(table.getPeriod(), table.getImportanceAsEnum())
-                        .workTimes(workTimes)
-                        .build();
+        TaskFactory builder = TaskFactory.withBuilder(table.id, table.registeredDate, table.completedDate, table.getStatusAsEnum());
+        
+        return builder.title(table.title)
+                    .detail(table.detail)
+                    .priority(table.period, table.getImportanceAsEnum())
+                    .workTimes(workTimes)
+                    .build();
     }
     
     private List<WorkTime> findWorkTimeList(long taskId) {
@@ -119,9 +118,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     
     private WorkTime toWorkTime(WorkTimeTable table) {
         if (table.hasEndTime()) {
-            return new WorkTime(table.getId(), table.getStartTime(), table.getEndTime());
+            return WorkTime.deserializeConcludedWorkTime(table.id, table.startTime, table.endTime);
         } else {
-            return new WorkTime(table.getId(), table.getStartTime());
+            return WorkTime.deserializeInWorkingTime(table.id, table.startTime);
         }
     }
 

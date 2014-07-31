@@ -20,7 +20,7 @@ import rusk.integration_test.db.RuskIntegrationDBTester;
 import rusk.integration_test.jersey.JerseyTestRule;
 import rusk.rest.task.RegisterTaskForm;
 import rusk.util.DateUtil;
-import rusk.util.Today;
+import rusk.util.Now;
 
 /**
  * タスク登録テスト
@@ -43,8 +43,8 @@ public class RegisterTaskTest {
         form.setImportance(Importance.B);
         form.setDetail("詳細内容");
         
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); result = DateUtil.create("2014-01-01 04:30:00");
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); result = DateUtil.create("2014-01-01 04:30:00");
         }};
         
         // exercise

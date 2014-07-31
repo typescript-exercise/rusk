@@ -9,10 +9,11 @@ import rusk.domain.task.Importance;
 
 public class RegisterTaskForm {
     
-    private String title;
-    private Date period;
-    private Importance importance;
-    private String detail;
+    public String title;
+    public Date period;
+    public Importance importance;
+    public String detail;
+    
     public String getTitle() {
         return title;
     }

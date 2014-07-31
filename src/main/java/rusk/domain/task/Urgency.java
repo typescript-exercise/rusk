@@ -66,7 +66,7 @@ public class Urgency implements RankComparator {
      * @throws NullPointerException 引数のいずれかが null の場合
      * @throws IllegalArgumentException 期限が基準日以前の場合
      */
-    public Urgency(Date base, Date period) {
+    Urgency(Date base, Date period) {
         Validate.notNull(base, "基準日に null は指定できません。");
         Validate.notNull(period, "期限に null は指定できません。");
         

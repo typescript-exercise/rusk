@@ -23,7 +23,7 @@ import rusk.domain.task.TaskBuilder;
 import rusk.integration_test.db.RuskIntegrationDBTester;
 import rusk.integration_test.jersey.JerseyTestRule;
 import rusk.util.DateUtil;
-import rusk.util.Today;
+import rusk.util.Now;
 
 @Fixture(resources="inquire-task-detail.yaml")
 public class InquireTaskDetailTest {
@@ -37,8 +37,8 @@ public class InquireTaskDetailTest {
     
     @Before
     public void setup() {
-        new NonStrictExpectations(Today.class) {{
-            Today.get(); result = now;
+        new NonStrictExpectations(Now.class) {{
+            Now.get(); result = now;
         }};
     }
     
@@ -48,11 +48,10 @@ public class InquireTaskDetailTest {
         Task task = rule.getTest().target("task/2").request(MediaType.APPLICATION_JSON).get(Task.class);
         
         // verify
-        Task expected = new TaskBuilder(2L, "2014-01-02 15:00:00")
+        Task expected = new TaskBuilder(2L, "2014-01-02 15:00:00", "2014-01-03 14:10:00")
                                 .title("対象タスク")
                                 .status(Status.COMPLETE)
                                 .detail("このタスクは対象です。")
-                                .completeDate("2014-01-03 14:10:00")
                                 .priority("2014-01-03 18:00:00", Importance.A)
                                 .addWorkTime("2014-01-02 17:00:00", "2014-01-02 17:10:00")
                                 .addWorkTime("2014-01-03 13:00:00", "2014-01-03 14:10:00")
