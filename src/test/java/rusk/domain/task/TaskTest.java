@@ -21,6 +21,7 @@ public class TaskTest {
     
     private Task task;
     
+    @SuppressWarnings("deprecation")
     @Before
     public void setup() {
         task = new Task();

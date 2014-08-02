@@ -29,6 +29,6 @@ public class StoppedTask extends Task {
         return "STOPPED";
     }
     
-    @Deprecated
-    public StoppedTask() {}
+    @SuppressWarnings("deprecation")
+    private StoppedTask() {}
 }

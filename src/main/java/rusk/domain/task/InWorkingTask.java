@@ -47,6 +47,6 @@ public class InWorkingTask extends Task {
         return "IN_WORKING";
     }
     
-    @Deprecated
-    public InWorkingTask() {}
+    @SuppressWarnings("deprecation")
+    private InWorkingTask() {}
 }

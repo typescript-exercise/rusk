@@ -34,6 +34,6 @@ public class CompletedTask extends Task {
         return "COMPLETE";
     }
     
-    @Deprecated
-    public CompletedTask() {}
+    @SuppressWarnings("deprecation")
+    private CompletedTask() {}
 }

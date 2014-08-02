@@ -23,17 +23,17 @@ public class Task {
     private Priority priority;
     private List<WorkTime> workTimes = new ArrayList<>();
     
-    protected void overwriteBy(Task src) {
-        this.id = src.id;
-        this.title = src.title;
-        this.detail = src.detail;
-        this.registeredDate = src.getRegisteredDate();
-        this.completedDate = src.getCompletedDate();
-        this.priority = src.getPriority();
-        this.workTimes = src.getWorkTimes();
+    protected Task(Date registeredDate) {
+        this.setRegisteredDate(registeredDate);
     }
-    
-    public Task(Date registeredDate) {
+
+    private void setRegisteredDate(Date registeredDate) {
+        Validate.notNull(registeredDate, "登録日は必須です。");
+        this.registeredDate = new Date(registeredDate.getTime());
+    }
+
+    protected Task(long id, Date registeredDate) {
+        this.setId(id);
         this.setRegisteredDate(registeredDate);
     }
 
@@ -42,9 +42,14 @@ public class Task {
         this.id = id;
     }
 
-    private void setRegisteredDate(Date registeredDate) {
-        Validate.notNull(registeredDate, "登録日は必須です。");
-        this.registeredDate = new Date(registeredDate.getTime());
+    protected Task(long id, Date registeredDate, Date completedDate) {
+        this.setId(id);
+        this.setRegisteredDate(registeredDate);
+        this.setCompletedDate(completedDate);
+    }
+    
+    void setCompletedDate(Date completedDate) {
+        this.completedDate = completedDate == null ? null : new Date(completedDate.getTime());
     }
     
     /**
@@ -124,6 +129,15 @@ public class Task {
         return result.isPresent() ? result.get() : new NullObjectWorkTime();
     }
     
+    protected void overwriteBy(Task src) {
+        this.id = src.id;
+        this.title = src.title;
+        this.detail = src.detail;
+        this.registeredDate = src.getRegisteredDate();
+        this.completedDate = src.getCompletedDate();
+        this.priority = src.getPriority();
+        this.workTimes = src.getWorkTimes();
+    }
     
     
     
@@ -135,10 +149,6 @@ public class Task {
     
     public void setDetail(String detail) {
         this.detail = detail;
-    }
-    
-    void setCompletedDate(Date completedDate) {
-        this.completedDate = completedDate == null ? null : new Date(completedDate.getTime());
     }
     
     public void setPriority(Priority priority) {
@@ -169,11 +179,6 @@ public class Task {
     public Priority getPriority() {
         return priority;
     }
-
-    public String getStatus() {
-        // TODO 抽象化
-        return null;
-    }
     
     public boolean isRankS() {
         return this.priority.is(Rank.S);
@@ -201,36 +206,25 @@ public class Task {
     }
     
     /**
-     * このコンストラクタはフレームワークのために存在します。
+     * @deprecated このコンストラクタはフレームワークのために存在します。
      */
-    @Deprecated
     public Task() {
-        this.registeredDate = null;
-    }
-
-    public Task(long id, Date registeredDate) {
-        this.setId(id);
-        this.setRegisteredDate(registeredDate);
-    }
-
-    public Task(long id, Date registeredDate, Date completedDate) {
-        this.setId(id);
-        this.setRegisteredDate(registeredDate);
-        this.setCompletedDate(completedDate);
     }
     
 
+    public String getStatus() {
+        throw new UnsupportedOperationException();
+    }
 
     public Task switchToCompletedTask() {
-        throw new UnsupportedOperationException("test");
+        throw new UnsupportedOperationException();
     }
 
     public Task switchToInWorkingTask() {
-        throw new UnsupportedOperationException("test");
+        throw new UnsupportedOperationException();
     }
 
     public Task switchToStoppedTask() {
-        throw new UnsupportedOperationException("test");
+        throw new UnsupportedOperationException();
     }
-    
 }

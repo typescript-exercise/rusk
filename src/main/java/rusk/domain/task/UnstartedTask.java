@@ -27,7 +27,4 @@ public class UnstartedTask extends Task {
     public String getStatus() {
         return "UNSTARTED";
     }
-    
-    @Deprecated
-    public UnstartedTask() {}
 }
