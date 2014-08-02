@@ -24,7 +24,6 @@ public class TaskMatcher extends TypeSafeMatcher<Task> {
                 && Objects.equals(actual.getTitle(), this.expected.getTitle())
                 && Objects.equals(actual.getDetail(),  this.expected.getDetail())
                 && Objects.equals(actual.getRegisteredDate(), this.expected.getRegisteredDate())
-                && Objects.equals(actual.getCompletedDate(), this.expected.getCompletedDate())
                 && Objects.equals(actual.getPriority(), this.expected.getPriority())
                 && Objects.equals(actual.getWorkTimes(), this.expected.getWorkTimes());
     }

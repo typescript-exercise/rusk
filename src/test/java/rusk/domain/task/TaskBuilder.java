@@ -34,16 +34,6 @@ public class TaskBuilder {
         return this;
     }
     
-    public TaskBuilder completeDate(String completedDate) {
-        this.task.setCompletedDate(DateUtil.create(completedDate));
-        return this;
-    }
-    
-    public TaskBuilder completeDate(Date completedDate) {
-        this.task.setCompletedDate(completedDate);
-        return this;
-    }
-    
     public TaskBuilder priority(String period, Importance importance) {
         this.task.setPriority(Priority.of(DateUtil.create(period), importance));
         return this;

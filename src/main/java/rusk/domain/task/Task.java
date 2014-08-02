@@ -1,10 +1,11 @@
 package rusk.domain.task;
 
+import static java.util.stream.Collectors.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,7 +20,6 @@ public class Task {
     private String title;
     private String detail;
     private Date registeredDate;
-    private Date completedDate;
     private Priority priority;
     private List<WorkTime> workTimes = new ArrayList<>();
     
@@ -40,16 +40,6 @@ public class Task {
     public void setId(long id) {
         Validate.isTrue(0 < id, "ID は 1 以上の値のみ受け付けます。");
         this.id = id;
-    }
-
-    protected Task(long id, Date registeredDate, Date completedDate) {
-        this.setId(id);
-        this.setRegisteredDate(registeredDate);
-        this.setCompletedDate(completedDate);
-    }
-    
-    void setCompletedDate(Date completedDate) {
-        this.completedDate = completedDate == null ? null : new Date(completedDate.getTime());
     }
     
     /**
@@ -110,7 +100,7 @@ public class Task {
      * @return 作業時間の合計（ミリ秒）
      */
     public long getTotalWorkTime() {
-        return this.workTimes.stream().collect(Collectors.summingLong(workTime -> workTime.getDuration()));
+        return this.workTimes.stream().collect(summingLong(workTime -> workTime.getDuration()));
     }
 
     /**
@@ -134,7 +124,6 @@ public class Task {
         this.title = src.title;
         this.detail = src.detail;
         this.registeredDate = src.getRegisteredDate();
-        this.completedDate = src.getCompletedDate();
         this.priority = src.getPriority();
         this.workTimes = src.getWorkTimes();
     }
@@ -170,10 +159,6 @@ public class Task {
     
     public Date getRegisteredDate() {
         return new Date(registeredDate.getTime());
-    }
-    
-    public Date getCompletedDate() {
-        return this.completedDate == null ? null : new Date(completedDate.getTime());
     }
     
     public Priority getPriority() {

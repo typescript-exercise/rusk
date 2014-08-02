@@ -69,9 +69,9 @@ public class UnstartedTaskTest {
         }
         
         @Test
-        public void 完了時間以外は_未着手のときと同じ値が設定されていること() {
+        public void 未着手のときと同じ値が設定されていること() {
             // verify
-            assertThat(completedTask, is(sameTaskWithoutCompletedTime(unstartedTask)));
+            assertThat(completedTask, is(sameTaskOf(unstartedTask)));
         }
     }
     

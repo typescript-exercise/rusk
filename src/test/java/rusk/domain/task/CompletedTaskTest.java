@@ -66,12 +66,6 @@ public class CompletedTaskTest {
         }
         
         @Test
-        public void タスクの完了時間がnullになっていること() {
-            // verify
-            assertThat(inWorkingTask.getCompletedDate(), is(nullValue()));
-        }
-        
-        @Test
         public void 完了時間以外は_作業中のときと同じ値が設定されること() {
             // verify
             assertThat(inWorkingTask, is(sameTaskWithoutWorkTimeAndCompletedTime(completedTask)));

@@ -19,10 +19,6 @@ public final class RuskMatchers {
         return new TaskMatcherWithoutWorkTimeAndCompletedTime(expected);
     }
     
-    public static TaskMatcherWithoutCompletedTime sameTaskWithoutCompletedTime(Task expected) {
-        return new TaskMatcherWithoutCompletedTime(expected);
-    }
-    
     public static TaskMatcherWithoutWorkTime sameTaskWithoutWorkTime(Task expected) {
         return new TaskMatcherWithoutWorkTime(expected);
     }

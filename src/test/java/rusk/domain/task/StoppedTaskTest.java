@@ -85,9 +85,9 @@ public class StoppedTaskTest {
         }
         
         @Test
-        public void 完了時間以外は_中断時と同じ値が設定されていること() {
+        public void 中断時と同じ値が設定されていること() {
             // verify
-            assertThat(completedTask, is(sameTaskWithoutCompletedTime(stoppedTask)));
+            assertThat(completedTask, is(sameTaskOf(stoppedTask)));
         }
     }
     
