@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rusk.domain.task.Task;
-import rusk.domain.task.TaskFactory;
 import rusk.domain.task.TaskNotFoundException;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.WorkTime;
@@ -94,9 +93,8 @@ public class TaskRepositoryImpl implements TaskRepository {
     private Task toTask(TaskTable table) {
         List<WorkTime> workTimes = this.findWorkTimeList(table.getId());
         
-        TaskFactory builder = TaskFactory.withBuilder(table.id, table.registeredDate, table.completedDate, table.getStatusAsEnum());
-        
-        return builder.title(table.title)
+        return table.createFactory()
+                    .title(table.title)
                     .detail(table.detail)
                     .priority(table.period, table.getImportanceAsEnum())
                     .workTimes(workTimes)

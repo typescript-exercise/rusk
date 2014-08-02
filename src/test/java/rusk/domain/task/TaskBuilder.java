@@ -14,22 +14,18 @@ import rusk.util.DateUtil;
 public class TaskBuilder {
     
     private final Task task;
-    
-    public TaskBuilder(long id, String registeredDate, String completedDate) {
-        this.task = new Task(id, DateUtil.create(registeredDate), DateUtil.create(completedDate), Status.UNSTARTED);
+
+    public static TaskBuilder completedTask(long id, String registeredDate, String completedDate) {
+        Task task = new CompletedTask(id, DateUtil.create(registeredDate), DateUtil.create(completedDate));
+        return new TaskBuilder(task);
     }
     
-    public TaskBuilder(long id, Date registeredDate, Date completedDate) {
-        this.task = new Task(id, registeredDate, completedDate, Status.UNSTARTED);
+    private TaskBuilder(Task task) {
+        this.task = task;
     }
     
     public TaskBuilder title(String title) {
         this.task.setTitle(title);
-        return this;
-    }
-    
-    public TaskBuilder status(Status status) {
-        this.task.setStatus(status);
         return this;
     }
     

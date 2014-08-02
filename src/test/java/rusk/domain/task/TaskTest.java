@@ -7,14 +7,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import mockit.NonStrictExpectations;
-
+import org.junit.Before;
 import org.junit.Test;
 
 import rusk.util.DateUtil;
-import rusk.util.Now;
 
-@SuppressWarnings("deprecation")
 public class TaskTest {
 
     private static final Date DATETIME_1 = DateUtil.create("2014-01-01 15:00:00");
@@ -22,113 +19,11 @@ public class TaskTest {
     private static final Date DATETIME_3 = DateUtil.addMilliseconds(DATETIME_2, 100);
     private static final Date DATETIME_4 = DateUtil.addMilliseconds(DATETIME_3, 100);
     
-    @Test
-    public void 完了済みのタスクの状態を作業中に更新した場合_タスクに完了時間がnullになっていること() {
-        // setup
-        new NonStrictExpectations(Now.class) {{
-            Now.get(); returns(DATETIME_1, DATETIME_4);
-        }};
-        
-        Task task = new Task();
-        task.setStatus(Status.COMPLETE);
-        task.setCompletedDate(DATETIME_2);
-        
-        // exercise
-        task.switchStatus(Status.IN_WORKING);
-        
-        // verify
-        assertThat(task.getCompletedDate(), is(nullValue()));
-    }
+    private Task task;
     
-    @Test
-    public void 中断中のタスクの状態を完了に更新した場合_タスクに完了時間がセットされること() {
-        // setup
-        new NonStrictExpectations(Now.class) {{
-            Now.get(); returns(DATETIME_1, DATETIME_4);
-        }};
-        
-        Task task = new Task();
-        task.switchStatus(Status.STOPPED);
-        
-        // exercise
-        task.switchStatus(Status.COMPLETE);
-        
-        // verify
-        assertThat(task.getStatus(), is(Status.COMPLETE));
-        assertThat(task.getCompletedDate(), is(DATETIME_4));
-    }
-    
-    @Test
-    public void 作業中のタスクの状態を完了に更新した場合_作業中だった作業時間に終了時間がセットされ_タスクに完了時間がセットされること() {
-        // setup
-        new NonStrictExpectations(Now.class) {{
-            Now.get(); returns(DATETIME_1, DATETIME_3);
-        }};
-        
-        Task task = new Task();
-        task.switchStatus(Status.IN_WORKING);
-        
-        // exercise
-        task.switchStatus(Status.COMPLETE);
-        
-        // verify
-        assertThat(task.getStatus(), is(Status.COMPLETE));
-        
-        List<WorkTime> workTimes = task.getWorkTimes();
-        assertThat(workTimes.size(), is(1));
-        
-        WorkTime timeInWorking = workTimes.get(0);
-        assertThat(timeInWorking.getStartTime(), is(DATETIME_1));
-        assertThat(timeInWorking.getEndTime(), is(DATETIME_3));
-        
-        assertThat(task.getCompletedDate(), is(DATETIME_3));
-    }
-    
-    @Test
-    public void タスクの状態を中断に更新した場合_作業中だった作業時間に終了時間がセットされること() {
-        // setup
-        new NonStrictExpectations(Now.class) {{
-            Now.get(); returns(DATETIME_1, DATETIME_3);
-        }};
-        
-        Task task = new Task();
-        task.switchStatus(Status.IN_WORKING);
-        
-        // exercise
-        task.switchStatus(Status.STOPPED);
-        
-        // verify
-        assertThat(task.getStatus(), is(Status.STOPPED));
-        
-        List<WorkTime> workTimes = task.getWorkTimes();
-        assertThat(workTimes.size(), is(1));
-        
-        WorkTime timeInWorking = workTimes.get(0);
-        assertThat(timeInWorking.getStartTime(), is(DATETIME_1));
-        assertThat(timeInWorking.getEndTime(), is(DATETIME_3));
-    }
-    
-    @Test
-    public void タスクの状態を作業中に更新した場合_開始時間だけが設定された作業時間がタスクに追加されること() {
-        // setup
-        new NonStrictExpectations(Now.class) {{
-            Now.get(); result = DATETIME_1;
-        }};
-        
-        Task task = new Task();
-        
-        // exercise
-        task.switchStatus(Status.IN_WORKING);
-        
-        // verify
-        assertThat(task.getStatus(), is(Status.IN_WORKING));
-        
-        List<WorkTime> workTimes = task.getWorkTimes();
-        assertThat(workTimes.size(), is(1));
-        
-        WorkTime timeInWorking = workTimes.get(0);
-        assertThat(timeInWorking.getStartTime(), is(DATETIME_1));
-        assertThat(timeInWorking.hasEndTime(), is(false));
+    @Before
+    public void setup() {
+        task = new Task();
     }
     
     @Test(expected=DuplicateWorkTimeException.class)
@@ -137,7 +32,6 @@ public class TaskTest {
         WorkTime time1 = WorkTime.createInWorkingTime(DATETIME_1);
         WorkTime time2 = WorkTime.createInWorkingTime(DATETIME_2);
         
-        Task task = new Task();
         task.setWorkTimes(Arrays.asList(time1, time2));
         
         // exercise
@@ -150,7 +44,6 @@ public class TaskTest {
         WorkTime time1 = WorkTime.createInWorkingTime(DATETIME_3);
         WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
         
-        Task task = new Task();
         task.setWorkTimes(Arrays.asList(time1, time2));
         
         // exercise
@@ -165,7 +58,6 @@ public class TaskTest {
         // setup
         WorkTime time = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
         
-        Task task = new Task();
         task.addWorkTime(time);
         
         // exercise
@@ -181,7 +73,6 @@ public class TaskTest {
         WorkTime time1 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
         WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_2, DATETIME_3);
         
-        Task task = new Task();
         task.addWorkTime(time1);
         
         // exercise
@@ -196,8 +87,6 @@ public class TaskTest {
         
         List<WorkTime> workTimes = Arrays.asList(time1, time2);
         
-        Task task = new Task();
-        
         // exercise
         task.setWorkTimes(workTimes);
     }
@@ -208,7 +97,6 @@ public class TaskTest {
         List<WorkTime> workTimes = Arrays.asList(WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2),
                                                     WorkTime.createConcludedWorkTime(DATETIME_3, DATETIME_4));
         
-        Task task = new Task();
         task.setWorkTimes(workTimes);
         
         // exercise

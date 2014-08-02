@@ -13,7 +13,7 @@ public class TaskFactory {
     public static Task create(RegisterTaskForm form) {
         Date now = Now.get();
         
-        Task task = new Task(now);
+        UnstartedTask task = new UnstartedTask(now);
         task.setTitle(form.title);
         task.setDetail(form.detail);
         
@@ -23,8 +23,28 @@ public class TaskFactory {
         return task;
     }
     
-    public static TaskFactory withBuilder(long id, Date registeredDate, Date completedDate, Status status) {
-        return new TaskFactory(id, registeredDate, completedDate, status);
+    public static TaskFactory unstartedTaskWithBuilder(long id, Date registeredDate) {
+        TaskFactory factory = new TaskFactory();
+        factory.task = new UnstartedTask(id, registeredDate);
+        return factory;
+    }
+    
+    public static TaskFactory inWorkingTaskWithBuilder(long id, Date registeredDate) {
+        TaskFactory factory = new TaskFactory();
+        factory.task = new InWorkingTask(id, registeredDate);
+        return factory;
+    }
+    
+    public static TaskFactory stoppedTaskWithBuilder(long id, Date registeredDate) {
+        TaskFactory factory = new TaskFactory();
+        factory.task = new StoppedTask(id, registeredDate);
+        return factory;
+    }
+    
+    public static TaskFactory completedTaskWithBuilder(long id, Date registeredDate, Date completedDate) {
+        TaskFactory factory = new TaskFactory();
+        factory.task = new CompletedTask(id, registeredDate, completedDate);
+        return factory;
     }
     
     public TaskFactory title(String title) {
@@ -50,8 +70,6 @@ public class TaskFactory {
     public Task build() {
         return this.task;
     }
-    
-    private TaskFactory(long id, Date registeredDate, Date completedDate, Status status) {
-        this.task = new Task(id, registeredDate, completedDate, status);
-    }
+
+    private TaskFactory() {}
 }

@@ -9,9 +9,13 @@ import net.sf.persist.annotations.Table;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import rusk.domain.task.CompletedTask;
 import rusk.domain.task.Importance;
-import rusk.domain.task.Status;
+import rusk.domain.task.InWorkingTask;
+import rusk.domain.task.StoppedTask;
 import rusk.domain.task.Task;
+import rusk.domain.task.TaskFactory;
+import rusk.domain.task.UnstartedTask;
 
 @Table(name="TASK")
 public class TaskTable {
@@ -129,39 +133,34 @@ public class TaskTable {
     private void setRegisteredDate(Task task) {
         this.registeredDate = new Timestamp(task.getRegisteredDate().getTime());
     }
-    @NoColumn
-    public Status getStatusAsEnum() {
+    
+    private void setStatus(Task task) {
+        if (task instanceof UnstartedTask) {
+            this.status = 0;
+        } else if (task instanceof InWorkingTask) {
+            this.status = 1;
+        } else if (task instanceof StoppedTask) {
+            this.status = 2;
+        } else if (task instanceof CompletedTask) {
+            this.status = 3;
+        } else {
+            throw new IllegalArgumentException("task.class = " + task.getClass());
+        }
+    }
+
+    public TaskFactory createFactory() {
         switch (this.status) {
         case 0:
-            return Status.UNSTARTED;
+            return TaskFactory.unstartedTaskWithBuilder(this.id, this.registeredDate);
         case 1:
-            return Status.IN_WORKING;
+            return TaskFactory.inWorkingTaskWithBuilder(this.id, this.registeredDate);
         case 2:
-            return Status.STOPPED;
+            return TaskFactory.stoppedTaskWithBuilder(this.id, this.registeredDate);
         case 3:
-            return Status.COMPLETE;
+            return TaskFactory.completedTaskWithBuilder(this.id, this.registeredDate, this.completedDate);
         }
         
         throw new IllegalArgumentException("status = " + this.status);
-    }
-    
-    private void setStatus(Task task) {
-        switch (task.getStatus()) {
-        case UNSTARTED:
-            this.status = 0;
-            return;
-        case IN_WORKING:
-            this.status = 1;
-            return;
-        case STOPPED:
-            this.status = 2;
-            return;
-        case COMPLETE:
-            this.status = 3;
-            return;
-        }
-        
-        throw new IllegalArgumentException("status = " + status);
     }
     
     @Override

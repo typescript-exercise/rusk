@@ -10,8 +10,6 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import rusk.util.Now;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -23,17 +21,20 @@ public class Task {
     private Date registeredDate;
     private Date completedDate;
     private Priority priority;
-    private Status status = Status.UNSTARTED;
     private List<WorkTime> workTimes = new ArrayList<>();
+    
+    protected void overwriteBy(Task src) {
+        this.id = src.id;
+        this.title = src.title;
+        this.detail = src.detail;
+        this.registeredDate = src.getRegisteredDate();
+        this.completedDate = src.getCompletedDate();
+        this.priority = src.getPriority();
+        this.workTimes = src.getWorkTimes();
+    }
     
     public Task(Date registeredDate) {
         this.setRegisteredDate(registeredDate);
-    }
-    
-    public Task(long id, Date registeredDate, Date completedDate, Status status) {
-        this.setId(id);
-        this.setRegisteredDate(registeredDate);
-        this.setStatus(status);
     }
 
     public void setId(long id) {
@@ -122,49 +123,6 @@ public class Task {
         
         return result.isPresent() ? result.get() : new NullObjectWorkTime();
     }
-
-    /**
-     * このタスクの状態を、指定した状態に切り替える。
-     * <p>
-     * 切り替えに伴い、作業時間の更新が行われます。
-     * 
-     * @param status 切り替え後の状態
-     */
-    public void switchStatus(Status status) {
-        this.saveWorkTime(status);
-        this.setStatus(status);
-    }
-
-    private void saveWorkTime(Status status) {
-        Date now = Now.get();
-        
-        if (status == Status.IN_WORKING) {
-            if (this.status == Status.COMPLETE) {
-                this.setCompletedDate(null);
-            }
-            
-            this.startWorkTime(now);
-            
-        } else if (status == Status.STOPPED) {
-            this.endWorktime(now);
-            
-        } else if (status == Status.COMPLETE) {
-            this.endWorktime(now);
-            this.setCompletedDate(now);
-        }
-    }
-    
-    private void startWorkTime(Date startTime) {
-        WorkTime inWorkingTime = WorkTime.createInWorkingTime(startTime);
-        this.addWorkTime(inWorkingTime);
-    }
-    
-    private void endWorktime(Date endTime) {
-        WorkTime timeInWorking = this.getWorkTimeInWorking();
-        timeInWorking.setEndTime(endTime);
-    }
-    
-    
     
     
     
@@ -186,20 +144,6 @@ public class Task {
     public void setPriority(Priority priority) {
         Validate.notNull(priority, "優先度は必須です。");
         this.priority = priority;
-    }
-    
-    /**
-     * このタスクの状態を、指定した状態に設定します。
-     * <p>
-     * {@link #switchStatus(Status)} とは異なり、このメソッドは単純に状態を変更するだけで、
-     * その他にこのオブジェクトを変更することはありません。
-     * 
-     * @param status 変更する状態
-     * @throws NullPointerException 状態が null の場合
-     */
-    void setStatus(Status status) {
-        Validate.notNull(status, "状態は必須です。");
-        this.status = status;
     }
     
     public Long getId() {
@@ -225,9 +169,10 @@ public class Task {
     public Priority getPriority() {
         return priority;
     }
-    
-    public Status getStatus() {
-        return status;
+
+    public String getStatus() {
+        // TODO 抽象化
+        return null;
     }
     
     public boolean isRankS() {
@@ -247,7 +192,7 @@ public class Task {
     }
     
     public boolean isCompleted() {
-        return this.status.isCompleted();
+        return false;
     }
     
     @Override
@@ -262,4 +207,30 @@ public class Task {
     public Task() {
         this.registeredDate = null;
     }
+
+    public Task(long id, Date registeredDate) {
+        this.setId(id);
+        this.setRegisteredDate(registeredDate);
+    }
+
+    public Task(long id, Date registeredDate, Date completedDate) {
+        this.setId(id);
+        this.setRegisteredDate(registeredDate);
+        this.setCompletedDate(completedDate);
+    }
+    
+
+
+    public Task switchToCompletedTask() {
+        throw new UnsupportedOperationException("test");
+    }
+
+    public Task switchToInWorkingTask() {
+        throw new UnsupportedOperationException("test");
+    }
+
+    public Task switchToStoppedTask() {
+        throw new UnsupportedOperationException("test");
+    }
+    
 }

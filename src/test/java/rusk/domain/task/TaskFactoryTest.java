@@ -48,7 +48,7 @@ public class TaskFactoryTest {
         assertThat(task.getPriority(), is(expectedPriority));
         
         assertThat(task.getRegisteredDate(), is(NOW));
-        assertThat(task.getStatus(), is(Status.UNSTARTED));
+        assertThat(task, is(instanceOf(UnstartedTask.class)));
         assertThat(task.getWorkTimes(), is(empty()));
     }
 

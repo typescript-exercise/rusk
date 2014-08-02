@@ -7,14 +7,11 @@ import org.hamcrest.TypeSafeMatcher;
 
 import rusk.domain.task.Task;
 
-/**
- * {@link Task} の内容を比較検証する Matcher クラス。
- */
-public class TaskMatcher extends TypeSafeMatcher<Task> {
-    
+public class TaskMatcherWithoutWorkTime extends TypeSafeMatcher<Task> {
+
     private final Task expected;
     
-    TaskMatcher(Task expected) {
+    TaskMatcherWithoutWorkTime(Task expected) {
         this.expected = expected;
     }
 
@@ -25,8 +22,7 @@ public class TaskMatcher extends TypeSafeMatcher<Task> {
                 && Objects.equals(actual.getDetail(),  this.expected.getDetail())
                 && Objects.equals(actual.getRegisteredDate(), this.expected.getRegisteredDate())
                 && Objects.equals(actual.getCompletedDate(), this.expected.getCompletedDate())
-                && Objects.equals(actual.getPriority(), this.expected.getPriority())
-                && Objects.equals(actual.getWorkTimes(), this.expected.getWorkTimes());
+                && Objects.equals(actual.getPriority(), this.expected.getPriority());
     }
 
     @Override

@@ -17,7 +17,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import rusk.domain.task.Importance;
-import rusk.domain.task.Status;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.integration_test.db.RuskIntegrationDBTester;
@@ -48,9 +47,8 @@ public class InquireTaskDetailTest {
         Task task = rule.getTest().target("task/2").request(MediaType.APPLICATION_JSON).get(Task.class);
         
         // verify
-        Task expected = new TaskBuilder(2L, "2014-01-02 15:00:00", "2014-01-03 14:10:00")
+        Task expected = TaskBuilder.completedTask(2L, "2014-01-02 15:00:00", "2014-01-03 14:10:00")
                                 .title("対象タスク")
-                                .status(Status.COMPLETE)
                                 .detail("このタスクは対象です。")
                                 .priority("2014-01-03 18:00:00", Importance.A)
                                 .addWorkTime("2014-01-02 17:00:00", "2014-01-02 17:10:00")

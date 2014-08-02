@@ -19,7 +19,6 @@ import org.junit.Test;
 import rusk.domain.EntityNotFoundException;
 import rusk.domain.task.Importance;
 import rusk.domain.task.Priority;
-import rusk.domain.task.Status;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
@@ -54,9 +53,8 @@ public class TaskRepositoryImplTest {
         Task task = repository.inquireById(1L);
         
         // verify
-        Task expected = new TaskBuilder(1L, "2014-07-01 12:00:00", "2014-07-02 11:22:33")
+        Task expected = TaskBuilder.completedTask(1L, "2014-07-01 12:00:00", "2014-07-02 11:22:33")
                                 .title("完了１")
-                                .status(Status.COMPLETE)
                                 .detail("これは完了タスクです")
                                 .priority("2014-07-01 12:50:00", Importance.S)
                                 .addWorkTime("2014-07-01 13:00:00", "2014-07-01 13:50:00")
@@ -205,15 +203,15 @@ public class TaskRepositoryImplTest {
         originalTask.setDetail("詳細更新");
         originalTask.setTitle("タイトル更新");
         originalTask.setPriority(Priority.of(DATETIME_4, Importance.C));
-        originalTask.switchStatus(Status.IN_WORKING);
+        Task switchedTask = originalTask.switchToInWorkingTask();
         
         // exercise
-        repository.saveModification(originalTask);
+        repository.saveModification(switchedTask);
         
         // verify
         Task savedTask = repository.inquireById(1L);
         
-        assertThat(savedTask, is(sameTaskOf(originalTask)));
+        assertThat(savedTask, is(sameTaskOf(switchedTask)));
     }
     
 }
