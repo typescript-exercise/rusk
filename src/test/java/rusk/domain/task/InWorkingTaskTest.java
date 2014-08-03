@@ -31,27 +31,23 @@ public class InWorkingTaskTest {
     private static final Date endTime = DATETIME_3;
     private static final Date completedTime = DATETIME_4;
     private static final Date period = DATETIME_4;
-    private static final Date shoudNotBeUsedTime = DATETIME_2;
     
     public static class インスタンス生成時のテスト {
         
         @Test
-        public void 開始時間だけの作業時間が生成されること() {
+        public void 作業中の作業時間が生成されること() {
             // setup
             new NonStrictExpectations(Now.class) {{
-                Now.get(); result = DATETIME_2;
+                Now.getForStartTime(); result = DATETIME_2;
             }};
             
             UnstartedTask baseTask = new UnstartedTask(DATETIME_1);
             
             // exercise
-            InWorkingTask task = InWorkingTask.createBy(baseTask);
+            InWorkingTask task = InWorkingTask.switchFrom(baseTask);
             
             // verify
-            List<WorkTime> workTimes = task.getWorkTimes();
-            assertThat(workTimes.size(), is(1));
-            
-            assertThat(workTimes.get(0), is(startAndEndTimeOf(DATETIME_2, null)));
+            assertThat(task.getWorkTimeInWorking(), is(startAndEndTimeOf(DATETIME_2, null)));
         }
     }
     
@@ -64,7 +60,8 @@ public class InWorkingTaskTest {
         public void setup() {
             // setup
             new NonStrictExpectations(Now.class) {{
-                Now.get(); returns(startTime, forUrgency, endTime, shoudNotBeUsedTime);
+                Now.getForUrgency(); result = forUrgency;
+                Now.getForEndTime(); result = endTime;
             }};
             
             inWorkingTask = createInWorkingTask();
@@ -98,7 +95,9 @@ public class InWorkingTaskTest {
         public void setup() {
             // setup
             new NonStrictExpectations(Now.class) {{
-                Now.get(); returns(startTime, forUrgency, endTime, completedTime, shoudNotBeUsedTime);
+                Now.getForUrgency(); result = forUrgency;
+                Now.getForCompletedDate(); result = completedTime;
+                Now.getForEndTime(); result = endTime;
             }};
 
             inWorkingTask = createInWorkingTask();
@@ -124,11 +123,28 @@ public class InWorkingTaskTest {
     }
     
     private static InWorkingTask createInWorkingTask() {
-        InWorkingTask inWorkingTask = new InWorkingTask(1L, registeredDate);
+        InWorkingTask inWorkingTask = InWorkingTask.build(1L, registeredDate);
         inWorkingTask.setTitle("title");
         inWorkingTask.setDetail("detail");
         inWorkingTask.setPriority(Priority.of(period, Importance.C));
+        inWorkingTask.addWorkTime(WorkTime.createInWorkingTime(startTime));
         
         return inWorkingTask;
+    }
+    
+    public static class 作業時間取得メソッドのテスト {
+
+        @Test
+        public void 作業時間を取得すると_現在のこのタスクの作業開始時間も一緒に取得できること() {
+            // setup
+            InWorkingTask inWorkingTask = createInWorkingTask();
+            
+            // exercise
+            List<WorkTime> workTimes = inWorkingTask.getWorkTimes();
+            
+            // verify
+            WorkTime inWorkingTime = workTimes.stream().filter(time -> !time.hasEndTime()).findFirst().get();
+            assertThat(inWorkingTime.getStartTime(), is(startTime));
+        }
     }
 }

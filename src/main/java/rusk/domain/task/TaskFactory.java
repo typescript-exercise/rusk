@@ -11,9 +11,7 @@ public class TaskFactory {
     private Task task;
     
     public static Task create(RegisterTaskForm form) {
-        Date now = Now.get();
-        
-        UnstartedTask task = new UnstartedTask(now);
+        UnstartedTask task = new UnstartedTask(Now.getForRegisteredDate());
         task.setTitle(form.title);
         task.setDetail(form.detail);
         
@@ -31,7 +29,7 @@ public class TaskFactory {
     
     public static TaskFactory inWorkingTaskWithBuilder(long id, Date registeredDate) {
         TaskFactory factory = new TaskFactory();
-        factory.task = new InWorkingTask(id, registeredDate);
+        factory.task = InWorkingTask.build(id, registeredDate);
         return factory;
     }
     

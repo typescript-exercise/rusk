@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -108,15 +107,13 @@ public class Task {
      * <p>
      * 作業中の作業時間とは、終了時間が設定されていない作業時間のことを表します。
      * <p>
-     * 該当する作業時間が存在しない場合、 Null オブジェクトが返されます。<br>
+     * このクラスでは、このメソッドは常に Null オブジェクトが返します。<br>
      * Null オブジェクトは、全てのメソッドが何も処理を行わず、値を返すメソッドは null, 0, false のいずれかを返します。
      * 
      * @return 作業中の作業時間。
      */
     public WorkTime getWorkTimeInWorking() {
-        Optional<WorkTime> result = this.workTimes.stream().filter(time -> !time.hasEndTime()).findAny();
-        
-        return result.isPresent() ? result.get() : new NullObjectWorkTime();
+        return new NullObjectWorkTime();
     }
     
     protected void overwriteBy(Task src) {
@@ -195,7 +192,6 @@ public class Task {
      */
     public Task() {
     }
-    
 
     public String getStatus() {
         throw new UnsupportedOperationException();

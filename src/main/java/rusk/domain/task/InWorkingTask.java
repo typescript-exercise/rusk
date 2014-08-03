@@ -1,12 +1,13 @@
 package rusk.domain.task;
 
 import java.util.Date;
+import java.util.List;
 
 import rusk.util.Now;
 
 public class InWorkingTask extends Task {
-
-    static InWorkingTask createBy(Task base) {
+    
+    static InWorkingTask switchFrom(Task base) {
         InWorkingTask inWorkingTask = new InWorkingTask();
         inWorkingTask.overwriteBy(base);
         inWorkingTask.startWorkTime();
@@ -14,32 +15,47 @@ public class InWorkingTask extends Task {
     }
     
     private void startWorkTime() {
-        WorkTime inWorkingTime = WorkTime.createInWorkingTime(Now.get());
-        this.addWorkTime(inWorkingTime);
+        this.addWorkTime(WorkTime.createInWorkingTime(Now.getForStartTime()));
     }
     
-    InWorkingTask(long id, Date registeredDate) {
+    static InWorkingTask build(long id, Date registeredDate) {
+        return new InWorkingTask(id, registeredDate);
+    }
+    
+    private InWorkingTask(long id, Date registeredDate) {
         super(id, registeredDate);
-        
-        WorkTime workTime = WorkTime.createInWorkingTime(Now.get());
-        this.addWorkTime(workTime);
     }
 
     @Override
     public Task switchToCompletedTask() {
-        this.endWorktime();
-        return CompletedTask.createBy(this);
-    }
-    
-    private void endWorktime() {
-        WorkTime timeInWorking = this.getWorkTimeInWorking();
-        timeInWorking.setEndTime(Now.get());
+        Task completedTask = CompletedTask.switchFrom(this);
+        this.endWorkTime(completedTask);
+        return completedTask;
     }
 
     @Override
     public Task switchToStoppedTask() {
-        this.endWorktime();
-        return StoppedTask.createBy(this);
+        Task stoppedTask = StoppedTask.switchFrom(this);
+        this.endWorkTime(stoppedTask);
+        return stoppedTask;
+    }
+
+    private void endWorkTime(Task task) {
+        List<WorkTime> workTimes = this.getWorkTimes();
+        
+        workTimes.forEach(time -> {
+            if (!time.hasEndTime()) {
+                time.setEndTime(Now.getForEndTime());
+            }
+        });
+        
+        task.setWorkTimes(workTimes);
+    }
+    
+    @Override
+    public WorkTime getWorkTimeInWorking() {
+        WorkTime inWorkingTime = this.getWorkTimes().stream().filter(time -> !time.hasEndTime()).findAny().get();
+        return WorkTime.createInWorkingTime(inWorkingTime.getStartTime());
     }
 
     @Override

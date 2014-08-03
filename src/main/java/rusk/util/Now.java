@@ -16,7 +16,31 @@ public class Now {
      * 
      * @return 現在時刻
      */
-    public static Date get() {
+    private static Date get() {
         return new Date();
+    }
+    
+    public static Date getForStartTime() {
+        return get();
+    }
+    
+    public static Date getForEndTime() {
+        return get();
+    }
+    
+    public static Date getForRegisteredDate() {
+        return get();
+    }
+    
+    public static Date getForCompletedDate() {
+        return get();
+    }
+    
+    public static Date getForInquireCompletedTaskInToday() {
+        return get();
+    }
+    
+    public static Date getForUrgency() {
+        return get();
     }
 }

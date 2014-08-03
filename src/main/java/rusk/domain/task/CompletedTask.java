@@ -10,10 +10,10 @@ public class CompletedTask extends Task {
     
     private Date completedDate;
 
-    static CompletedTask createBy(Task task) {
+    static CompletedTask switchFrom(Task task) {
         CompletedTask completedTask = new CompletedTask();
         completedTask.overwriteBy(task);
-        completedTask.setCompletedDate(Now.get());
+        completedTask.setCompletedDate(Now.getForCompletedDate());
         return completedTask;
     }
     
@@ -29,7 +29,7 @@ public class CompletedTask extends Task {
 
     @Override
     public InWorkingTask switchToInWorkingTask() {
-        InWorkingTask inWorkingTask = InWorkingTask.createBy(this);
+        InWorkingTask inWorkingTask = InWorkingTask.switchFrom(this);
         return inWorkingTask;
     }
 

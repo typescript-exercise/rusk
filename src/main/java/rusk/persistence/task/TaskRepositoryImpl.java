@@ -92,13 +92,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     
     private Task toTask(TaskTable table) {
         List<WorkTime> workTimes = this.findWorkTimeList(table.getId());
-        
-        return table.createFactory()
-                    .title(table.title)
-                    .detail(table.detail)
-                    .priority(table.period, table.getImportanceAsEnum())
-                    .workTimes(workTimes)
-                    .build();
+        return table.convertToTask(workTimes);
     }
     
     private List<WorkTime> findWorkTimeList(long taskId) {
@@ -179,20 +173,20 @@ public class TaskRepositoryImpl implements TaskRepository {
     private void updateWorkTimes(Task task) {
         List<WorkTimeTable> workTimeTables = WorkTimeTable.createBy(task);
         
-        List<WorkTimeTable> workTimeTablesForBatchUpdate = list(workTimeTables).filter(this::existsWorkTime);
+        List<WorkTimeTable> alreadyPersistedWorkTimes = list(workTimeTables).filter(this::isAlreadyPersisted);
         
-        this.provider.getPersist().updateBatch(workTimeTablesForBatchUpdate.toArray());
+        this.provider.getPersist().updateBatch(alreadyPersistedWorkTimes.toArray());
     }
     
     private void insertWorkTimes(Task task) {
         List<WorkTimeTable> workTimeTables = WorkTimeTable.createBy(task);
         
-        List<WorkTimeTable> workTimeTablesForBatchInsert = list(workTimeTables).negateFilter(this::existsWorkTime);
+        List<WorkTimeTable> notPersistedWorkTimes = list(workTimeTables).negateFilter(this::isAlreadyPersisted);
         
-        this.provider.getPersist().insertBatch(workTimeTablesForBatchInsert.toArray());
+        this.provider.getPersist().insertBatch(notPersistedWorkTimes.toArray());
     }
     
-    private boolean existsWorkTime(WorkTimeTable workTimeTable) {
+    private boolean isAlreadyPersisted(WorkTimeTable workTimeTable) {
         long count = this.provider.getPersist().read(Long.class, "SELECT COUNT(*) FROM WORK_TIME WHERE ID=?", workTimeTable.getId());
         return count != 0;
     }

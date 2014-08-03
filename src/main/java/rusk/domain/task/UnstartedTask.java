@@ -14,12 +14,12 @@ public class UnstartedTask extends Task {
 
     @Override
     public Task switchToCompletedTask() {
-        return CompletedTask.createBy(this);
+        return CompletedTask.switchFrom(this);
     }
 
     @Override
     public Task switchToInWorkingTask() {
-        InWorkingTask inWorkingTask = InWorkingTask.createBy(this);
+        InWorkingTask inWorkingTask = InWorkingTask.switchFrom(this);
         return inWorkingTask;
     }
 

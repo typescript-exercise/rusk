@@ -38,7 +38,8 @@ public class StoppedTaskTest {
         public void setup() {
             // setup
             new NonStrictExpectations(Now.class) {{
-                Now.get(); returns(forUrgency, startTime);
+                Now.getForUrgency(); result = forUrgency;
+                Now.getForStartTime(); result = startTime;
             }};
             
             stoppedTask = createStoppedTask();
@@ -69,7 +70,8 @@ public class StoppedTaskTest {
         public void setup() {
             // setup
             new NonStrictExpectations(Now.class) {{
-                Now.get(); returns(forUrgency, startTime);
+                Now.getForUrgency(); result = forUrgency;
+                Now.getForStartTime(); result = startTime;
             }};
             
             stoppedTask = createStoppedTask();

@@ -34,11 +34,11 @@ public class CompletedTaskTest {
         public void 現在時刻が完了時刻に設定されること() {
             // setup
             new NonStrictExpectations(Now.class) {{
-                Now.get(); result = DATETIME_2;
+                Now.getForCompletedDate(); result = DATETIME_2;
             }};
             
             // exercise
-            CompletedTask task = CompletedTask.createBy(baseTask);
+            CompletedTask task = CompletedTask.switchFrom(baseTask);
             
             // verify
             assertThat(task.getCompletedDate(), is(DATETIME_2));

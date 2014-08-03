@@ -157,7 +157,7 @@ public class TaskRepositoryImplTest {
     public void 指定したタスクがデータベースに登録されること() throws Exception {
         // setup
         new NonStrictExpectations(Now.class) {{
-            Now.get(); returns(DATETIME_1);
+            Now.getForRegisteredDate(); returns(DATETIME_1);
         }};
         
         RegisterTaskForm form = new RegisterTaskForm();
@@ -195,7 +195,7 @@ public class TaskRepositoryImplTest {
     public void 指定したタスクが更新できること() throws Exception {
         // setup
         new NonStrictExpectations(Now.class) {{
-            Now.get(); returns(DATETIME_1, DATETIME_4);
+            Now.getForUrgency(); returns(DATETIME_1, DATETIME_4);
         }};
         
         Task originalTask = repository.inquireById(1L);
@@ -210,6 +210,29 @@ public class TaskRepositoryImplTest {
         
         // verify
         Task savedTask = repository.inquireById(1L);
+        
+        assertThat(savedTask, is(sameTaskOf(switchedTask)));
+    }
+    
+    @Test
+    public void _指定したタスクが更新できること() throws Exception {
+        // setup
+        new NonStrictExpectations(Now.class) {{
+            Now.getForUrgency(); returns(DATETIME_1, DATETIME_4);
+        }};
+        
+        Task originalTask = repository.inquireById(5L);
+        
+        originalTask.setDetail("詳細更新");
+        originalTask.setTitle("タイトル更新");
+        originalTask.setPriority(Priority.of(DATETIME_4, Importance.C));
+        Task switchedTask = originalTask.switchToInWorkingTask();
+        
+        // exercise
+        repository.saveModification(switchedTask);
+        
+        // verify
+        Task savedTask = repository.inquireById(5L);
         
         assertThat(savedTask, is(sameTaskOf(switchedTask)));
     }

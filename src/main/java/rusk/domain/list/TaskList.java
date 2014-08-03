@@ -32,7 +32,7 @@ public class TaskList {
         taskList.uncompleteTasks = repository.inquireUncompletedTasks();
         taskList.uncompleteTasks.sort(ORDER_BY_PRIORITY_DESC);
         
-        taskList.completeTasks = repository.inquireCompleteTasks(Now.get());
+        taskList.completeTasks = repository.inquireCompleteTasks(Now.getForInquireCompletedTaskInToday());
         taskList.completeTasks.sort(ORDER_BY_PRIORITY_DESC);
         
         return taskList;

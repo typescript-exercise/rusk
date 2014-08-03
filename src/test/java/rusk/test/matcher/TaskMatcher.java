@@ -14,22 +14,45 @@ public class TaskMatcher extends TypeSafeMatcher<Task> {
     
     private final Task expected;
     
+    private String differentValueName;
+    private Object expectedValue;
+    
     TaskMatcher(Task expected) {
         this.expected = expected;
     }
 
     @Override
     protected boolean matchesSafely(Task actual) {
-        return Objects.equals(actual.getId(), this.expected.getId())
-                && Objects.equals(actual.getTitle(), this.expected.getTitle())
-                && Objects.equals(actual.getDetail(),  this.expected.getDetail())
-                && Objects.equals(actual.getRegisteredDate(), this.expected.getRegisteredDate())
-                && Objects.equals(actual.getPriority(), this.expected.getPriority())
-                && Objects.equals(actual.getWorkTimes(), this.expected.getWorkTimes());
+        if (!Objects.equals(actual.getId(), this.expected.getId())) {
+            this.setDescribe("ID", this.expected.getId());
+            return false;
+        } else if (!Objects.equals(actual.getTitle(), this.expected.getTitle())) {
+            this.setDescribe("Title", this.expected.getTitle());
+            return false;
+        } else if (!Objects.equals(actual.getDetail(),  this.expected.getDetail())) {
+            this.setDescribe("Detail", this.expected.getDetail());
+            return false;
+        } else if (!Objects.equals(actual.getRegisteredDate(), this.expected.getRegisteredDate())) {
+            this.setDescribe("RegisteredDate", this.expected.getRegisteredDate());
+            return false;
+        } else if (!Objects.equals(actual.getPriority(), this.expected.getPriority())) {
+            this.setDescribe("Priority", this.expected.getPriority());
+            return false;
+        } else if (!Objects.equals(actual.getWorkTimes(), this.expected.getWorkTimes())) {
+            this.setDescribe("WorkTimes", this.expected.getWorkTimes());
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private void setDescribe(String differentValueName, Object expectedValue) {
+        this.differentValueName = differentValueName;
+        this.expectedValue = expectedValue;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText(this.expected.toString());
+        description.appendText(this.differentValueName + " = " + this.expectedValue);
     }
 }

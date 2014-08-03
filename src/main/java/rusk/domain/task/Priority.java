@@ -63,7 +63,7 @@ public class Priority implements RankComparator, Comparable<Priority> {
     private final Rank rank;
     
     public static Priority of(Date period, Importance importance) {
-        Urgency urgency = new Urgency(Now.get(), period);
+        Urgency urgency = new Urgency(Now.getForUrgency(), period);
         return new Priority(urgency, importance);
     }
     

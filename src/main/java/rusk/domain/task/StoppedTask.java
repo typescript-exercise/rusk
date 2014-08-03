@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class StoppedTask extends Task {
 
-    static StoppedTask createBy(Task src) {
+    static StoppedTask switchFrom(Task src) {
         StoppedTask stoppedTask = new StoppedTask();
         stoppedTask.overwriteBy(src);
         return stoppedTask;
@@ -16,12 +16,12 @@ public class StoppedTask extends Task {
 
     @Override
     public Task switchToCompletedTask() {
-        return CompletedTask.createBy(this);
+        return CompletedTask.switchFrom(this);
     }
 
     @Override
     public Task switchToInWorkingTask() {
-        return InWorkingTask.createBy(this);
+        return InWorkingTask.switchFrom(this);
     }
 
     @Override

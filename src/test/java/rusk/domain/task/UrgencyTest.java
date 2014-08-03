@@ -5,24 +5,13 @@ import static org.hamcrest.Matchers.*;
 
 import java.util.Date;
 
-import mockit.NonStrictExpectations;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import rusk.util.DateUtil;
-import rusk.util.Now;
 
 public class UrgencyTest {
 
     private Date now = DateUtil.create("2014-01-01 10:00:00");
-    
-    @Before
-    public void setup() {
-        new NonStrictExpectations(Now.class) {{
-            Now.get(); result = now;
-        }};
-    }
     
     @Test
     public void 期限が基準日と同じ場合_ランクがSになること() {

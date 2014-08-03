@@ -22,7 +22,7 @@ public class TaskFactoryTest {
     @Before
     public void setup() {
         new NonStrictExpectations(Now.class) {{
-            Now.get(); result = NOW;
+            Now.getForRegisteredDate(); result = NOW;
         }};
     }
     

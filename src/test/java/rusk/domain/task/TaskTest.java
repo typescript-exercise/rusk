@@ -27,40 +27,8 @@ public class TaskTest {
         task = new Task();
     }
     
-    @Test(expected=DuplicateWorkTimeException.class)
-    public void 終了時間が設定されていない作業時間を２つ以上登録できないこと() {
-        // setup
-        WorkTime time1 = WorkTime.createInWorkingTime(DATETIME_1);
-        WorkTime time2 = WorkTime.createInWorkingTime(DATETIME_2);
-        
-        task.setWorkTimes(Arrays.asList(time1, time2));
-        
-        // exercise
-        task.getWorkTimeInWorking();
-    }
-    
     @Test
-    public void 終了時間が設定されていない作業時間を_作業中の作業時間として取得できること() {
-        // setup
-        WorkTime time1 = WorkTime.createInWorkingTime(DATETIME_3);
-        WorkTime time2 = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
-        
-        task.setWorkTimes(Arrays.asList(time1, time2));
-        
-        // exercise
-        WorkTime actual = task.getWorkTimeInWorking();
-        
-        // verify
-        assertThat(actual, is(time1));
-    }
-    
-    @Test
-    public void 終了時間が設定されていない作業時間が存在しない場合_作業中の作業時間はNullオブジェクトが取得できること() {
-        // setup
-        WorkTime time = WorkTime.createConcludedWorkTime(DATETIME_1, DATETIME_2);
-        
-        task.addWorkTime(time);
-        
+    public void 作業中の作業時間は_常にNullオブジェクトが返されること() {
         // exercise
         WorkTime actual = task.getWorkTimeInWorking();
         

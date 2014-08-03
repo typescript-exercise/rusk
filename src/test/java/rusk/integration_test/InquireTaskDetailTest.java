@@ -37,7 +37,7 @@ public class InquireTaskDetailTest {
     @Before
     public void setup() {
         new NonStrictExpectations(Now.class) {{
-            Now.get(); result = now;
+            Now.getForUrgency(); result = now;
         }};
     }
     

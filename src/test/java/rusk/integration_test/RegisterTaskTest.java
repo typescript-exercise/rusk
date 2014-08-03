@@ -44,7 +44,7 @@ public class RegisterTaskTest {
         form.setDetail("詳細内容");
         
         new NonStrictExpectations(Now.class) {{
-            Now.get(); result = DateUtil.create("2014-01-01 04:30:00");
+            Now.getForRegisteredDate(); result = DateUtil.create("2014-01-01 04:30:00");
         }};
         
         // exercise
