@@ -73,11 +73,12 @@ public class WorkTime {
     }
     
     void setEndTime(Date endTime) {
-        Validate.notNull(endTime, "終了時間は必須です。");
-        
-        this.validateStartEndTimeRelation(this.startTime, endTime.getTime());
-        
-        this.endTime = endTime.getTime();
+        if (endTime == null) {
+            this.endTime = null;
+        } else {
+            this.validateStartEndTimeRelation(this.startTime, endTime.getTime());
+            this.endTime = endTime.getTime();
+        }
     }
     
     private void validateStartEndTimeRelation(long startTime, long endTime) {
@@ -182,7 +183,7 @@ public class WorkTime {
      * このコンストラクタは、フレームワークのために宣言されています。
      */
     @Deprecated
-    public WorkTime() {
+    WorkTime() {
         this.startTime = Long.MIN_VALUE;
         this.endTime = Long.MIN_VALUE;
     }

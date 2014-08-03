@@ -190,8 +190,7 @@ public class Task {
     /**
      * @deprecated このコンストラクタはフレームワークのために存在します。
      */
-    public Task() {
-    }
+    Task() {}
 
     public String getStatus() {
         throw new UnsupportedOperationException();
