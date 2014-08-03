@@ -1,4 +1,4 @@
-package rusk.rest.task;
+package rusk.service.task;
 
 import java.util.Date;
 

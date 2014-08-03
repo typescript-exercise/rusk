@@ -3,7 +3,7 @@ package rusk.domain.task;
 import java.util.Date;
 import java.util.List;
 
-import rusk.rest.task.RegisterTaskForm;
+import rusk.service.task.RegisterTaskForm;
 import rusk.util.Now;
 
 public class TaskFactory {

@@ -22,7 +22,7 @@ import rusk.domain.task.Priority;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
-import rusk.rest.task.RegisterTaskForm;
+import rusk.service.task.RegisterTaskForm;
 import rusk.test.db.RuskDBTester;
 import rusk.test.db.TestPersistProvider;
 import rusk.util.DateUtil;
@@ -70,28 +70,9 @@ public class TaskRepositoryImplTest {
     }
     
     @Test
-    public void 作業中タスクが存在する場合はtrueを返す() {
-        // exercise
-        boolean exists = repository.existsTaskInWorking();
-        
-        // verify
-        assertThat(exists, is(true));
-    }
-    
-    @Test
-    @Fixture(resources="TaskRepositoryImple-fixuture-作業中タスクなし.yaml")
-    public void 作業中タスクが存在しない場合はfalseを返す() {
-        // exercise
-        boolean exists = repository.existsTaskInWorking();
-        
-        // verify
-        assertThat(exists, is(false));
-    }
-    
-    @Test
     public void 作業中のタスクが検索できること() {
         // exercise
-        Task task = repository.inquireTaskInWork();
+        Task task = repository.inquireTaskInWorking();
         
         // verify
         assertThat(task.getId(), is(2L));
@@ -101,7 +82,7 @@ public class TaskRepositoryImplTest {
     @Fixture(resources="TaskRepositoryImple-fixuture-作業中タスクなし.yaml")
     public void 作業中のタスクが存在しない場合_nullが返されること() {
         // exercise
-        Task task = repository.inquireTaskInWork();
+        Task task = repository.inquireTaskInWorking();
         
         // verify
         assertThat(task, is(nullValue()));

@@ -43,13 +43,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public boolean existsTaskInWorking() {
-        long count = this.provider.getPersist().read(Long.class, "SELECT COUNT(*) FROM TASK WHERE STATUS=1");
-        return count != 0;
-    }
-
-    @Override
-    public Task inquireTaskInWork() {
+    public Task inquireTaskInWorking() {
         TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1");
         return table == null ? null : this.toTask(table);
     }
@@ -189,5 +183,11 @@ public class TaskRepositoryImpl implements TaskRepository {
     private boolean isAlreadyPersisted(WorkTimeTable workTimeTable) {
         long count = this.provider.getPersist().read(Long.class, "SELECT COUNT(*) FROM WORK_TIME WHERE ID=?", workTimeTable.getId());
         return count != 0;
+    }
+
+    @Override
+    public Task inquireTaskInWorkingWithLock() {
+        TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1 FOR UPDATE");
+        return table == null ? null : this.toTask(table);
     }
 }

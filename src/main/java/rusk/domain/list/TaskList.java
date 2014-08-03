@@ -27,7 +27,7 @@ public class TaskList {
     public static TaskList getTaskList(TaskRepository repository) {
         TaskList taskList = new TaskList();
         
-        taskList.taskInWorking = repository.inquireTaskInWork();
+        taskList.taskInWorking = repository.inquireTaskInWorking();
         
         taskList.uncompleteTasks = repository.inquireUncompletedTasks();
         taskList.uncompleteTasks.sort(ORDER_BY_PRIORITY_DESC);

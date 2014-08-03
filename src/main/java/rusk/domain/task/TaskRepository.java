@@ -15,20 +15,20 @@ public interface TaskRepository {
      * @throws NullPointerException タスクが null の場合
      */
     void register(Task task);
-
+    
     /**
-     * 状態が作業中のタスクが存在するかどうかを確認する。
+     * 状態が作業中のタスクを、ロックと共に取得する。
      * 
-     * @return 作業中のタスクが存在する場合は true を返す。
+     * @return 作業中のタスク。存在しない場合は null を返す。
      */
-    boolean existsTaskInWorking();
+    Task inquireTaskInWorkingWithLock();
     
     /**
      * 状態が作業中のタスクを取得する。
      * 
      * @return 作業中のタスク。存在しない場合は null を返す。
      */
-    Task inquireTaskInWork();
+    Task inquireTaskInWorking();
     
     /**
      * 状態が未完了（未着手・中断）のタスクを全て取得する。

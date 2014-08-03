@@ -6,21 +6,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rusk.Transactional;
+import rusk.domain.task.SwitchStatusForm;
+import rusk.domain.task.SwitchTaskStatusService;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskFactory;
 import rusk.domain.task.TaskNotFoundException;
 import rusk.domain.task.TaskRepository;
-import rusk.rest.task.RegisterTaskForm;
 
 @Transactional
 public class TaskService {
     private static final Logger logger = LoggerFactory.getLogger(TaskService.class);
     
     private final TaskRepository repository;
+    private final SwitchTaskStatusService switchTaskStatusService;
     
     @Inject
-    public TaskService(TaskRepository repository) {
+    public TaskService(TaskRepository repository, SwitchTaskStatusService switchTaskStatusService) {
         this.repository = repository;
+        this.switchTaskStatusService = switchTaskStatusService;
     }
     
     /**
@@ -55,5 +58,14 @@ public class TaskService {
         logger.info("created new task. id = " + task.getId());
         
         return task;
+    }
+    
+    /**
+     * タスクの状態を変更します。
+     * 
+     * @param form タスク状態切り替えフォーム
+     */
+    public void switchTaskStatus(SwitchStatusForm form) {
+        this.switchTaskStatusService.switchTaskStatus(form);
     }
 }

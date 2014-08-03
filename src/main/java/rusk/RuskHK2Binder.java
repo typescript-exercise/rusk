@@ -8,6 +8,7 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import rusk.domain.task.SwitchTaskStatusService;
 import rusk.domain.task.TaskRepository;
 import rusk.interceptor.RuskInterceptionService;
 import rusk.persistence.task.TaskRepositoryImpl;
@@ -57,6 +58,9 @@ public class RuskHK2Binder extends AbstractBinder {
         bindAsContract(InquireTaskListService.class).in(Singleton.class);
         bindAsContract(SystemInitializeService.class).in(Singleton.class);
         bindAsContract(TaskService.class).in(Singleton.class);
+        
+        // domain service
+        bindAsContract(SwitchTaskStatusService.class).in(Singleton.class);
         
         // repository
         bind(TaskRepositoryImpl.class).to(TaskRepository.class).in(Singleton.class);
