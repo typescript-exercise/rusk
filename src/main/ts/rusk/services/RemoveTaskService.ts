@@ -4,7 +4,6 @@ angular
     'taskResource',
     function (taskResource : rusk.resource.task.TaskResource) {
         this.remove = (options) => {
-            console.log('removeTaskService');
             var id = options.id;
             var title = options.title;
             var onRemove = options.onRemove;

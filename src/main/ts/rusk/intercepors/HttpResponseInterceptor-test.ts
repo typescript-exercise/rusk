@@ -17,6 +17,11 @@ describe('HttpResponseInterceptor のテスト', () => {
         INTERNAL_SERVER_ERROR: {
             status: 500,
             config: {}
+        },
+        
+        CONFLICT: {
+            status: 409,
+            config: {}
         }
     };
 
@@ -70,6 +75,17 @@ describe('HttpResponseInterceptor のテスト', () => {
         // verify
         expect(_$location.path.calls.count()).toBe(0);
         expect(override[404]).toHaveBeenCalled();
+    });
+
+    it('レスポンスコードが 409 の場合、同時更新されていることを示すメッセージが表示される', () => {
+        // setup
+        spyOn(window, 'alert');
+        
+        // exercise
+        interceptor.responseError(RESPONSE.CONFLICT);
+        
+        // verify
+        expect(window.alert).toHaveBeenCalledWith('同時更新されています。\n画面を更新して、もう一度試してください。');
     });
     
     function spyLocationPathMethod($location) {

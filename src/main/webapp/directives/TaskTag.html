@@ -1,9 +1,17 @@
 <div class="panel" ng-class="panelClass">
   <div class="panel-heading">
     <rusk-ranked-label rank="task.priority.rank" complete="task.completed">{{task.priority.rank}}</rusk-ranked-label>
-    <a href="#/task/{{task.id}}">{{task.title}}</a>
+    
+    <a href="#/task/{{task.id}}" class="panel-title">{{task.title}}</a>
+
     <button type="button" class="close pull-right" aria-hidden="true" ng-click="remove()">&times;</button>
-    <rusk-ranked-label class="pull-right" rank="task.priority.rank" complete="task.completed">{{task.status | status}}</rusk-ranked-label>
+    
+    <div class="dropdown pull-right margin-right-10">
+      <a data-toggle="dropdown" class="btn btn-xs btn-default">{{task.status | status}}<span class="caret"></span></a>
+      <ul class="dropdown-menu">
+        <li ng-repeat="status in task.enableToSwitchStatusList"><a href="#" ng-click="switchStatus(task.id, status, $event);">{{status | status}}</a></li>
+      </ul>
+    </div>
   </div>
   <div class="panel-body">
     <div>

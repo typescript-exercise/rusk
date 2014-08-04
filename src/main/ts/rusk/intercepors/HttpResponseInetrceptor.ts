@@ -48,6 +48,9 @@ angular
             case 404:
                 return new rusk.interceptors.RedirectErrorHandler($location, '/not-found');
                 break;
+            case 409:
+                return new rusk.interceptors.AlertErrorHandler('同時更新されています。\n画面を更新して、もう一度試してください。');
+                break;
             case 500:
                 return new rusk.interceptors.RedirectErrorHandler($location, '/server-error');
                 break;
@@ -81,6 +84,18 @@ module rusk {
             
             handle() : void {
                 this.$location.path(this.url).replace();
+            }
+        }
+        
+        export class AlertErrorHandler implements ErrorHandler {
+            private message : string;
+            
+            constructor(message : string) {
+                this.message = message;
+            }
+            
+            handle() : void {
+                alert(this.message);
             }
         }
     }

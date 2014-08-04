@@ -23,6 +23,18 @@ module rusk {
                         onSuccess();
                     });
                 }
+                
+                switchStatus(params, onSuccess: Function, onNotFoundError : Function) : void {
+                    this.$http.put('rest/task/'+ params.id + '/status', {
+                        status: params.status,
+                    }, {
+                        overrideInterceptor: {
+                            404: onNotFoundError
+                        }
+                    }).success(() => {
+                        onSuccess();
+                    });
+                }
             }
         }
     }

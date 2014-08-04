@@ -48,6 +48,7 @@ public class TaskTable {
         this.setStatus(task);
         this.setPeriod(task);
         this.setRegisteredDate(task);
+        this.setCompletedDate(task);
     }
     
     private void setImportance(Task task) {
@@ -89,6 +90,12 @@ public class TaskTable {
     
     private void setRegisteredDate(Task task) {
         this.registeredDate = new Timestamp(task.getRegisteredDate().getTime());
+    }
+    
+    private void setCompletedDate(Task task) {
+        if (task instanceof CompletedTask) {
+            this.completedDate = new Timestamp(task.getCompletedDate().getTime());
+        }
     }
     
     public Task convertToTask(List<WorkTime> workTimes) {
@@ -173,11 +180,11 @@ public class TaskTable {
     public void setRegisteredDate(Timestamp registeredDate) {
         this.registeredDate = registeredDate;
     }
-    public Timestamp getCompletedDate() {
-        return completedDate;
-    }
     public void setCompletedDate(Timestamp completedDate) {
         this.completedDate = completedDate;
+    }
+    public Timestamp getCompletedDate() {
+        return completedDate;
     }
     public byte getImportance() {
         return importance;

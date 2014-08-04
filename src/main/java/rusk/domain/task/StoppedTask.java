@@ -1,6 +1,8 @@
 package rusk.domain.task;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class StoppedTask extends Task {
 
@@ -25,8 +27,13 @@ public class StoppedTask extends Task {
     }
 
     @Override
-    public String getStatus() {
-        return "STOPPED";
+    public Status getStatus() {
+        return Status.STOPPED;
+    }
+    
+    @Override
+    public List<Status> getEnableToSwitchStatusList() {
+        return Arrays.asList(Status.IN_WORKING, Status.COMPLETE);
     }
     
     @SuppressWarnings("deprecation")

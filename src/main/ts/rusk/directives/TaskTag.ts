@@ -1,14 +1,15 @@
 angular
 .module('rusk')
 .directive('ruskTaskTag', [
-    'removeTaskService',
-    (removeTaskService) => {
+    'removeTaskService', 'taskResource',
+    (removeTaskService, taskResource : rusk.resource.task.TaskResource) => {
     return {
         restrict: 'E',
         replace: true,
         scope: {
             task: '=',
-            onRemove: '&'
+            onRemove: '&',
+            onSwitchStatus: '&'
         },
         templateUrl: 'directives/TaskTag.html',
         link: ($scope, $element, $attr) => {
@@ -24,12 +25,33 @@ angular
                     'panel-default': complete
                 },
                 
+                btnClass: {
+                    'btn-danger': !complete && task.rankS,
+                    'btn-warning': !complete && task.rankA,
+                    'btn-success': !complete && task.rankB,
+                    'btn-info': !complete && task.rankC,
+                    'btn-default': complete
+                },
+                
                 remove: () => {
                     removeTaskService.remove({
                         id: task.id,
                         title: task.title,
                         onRemove: $scope.onRemove
                     });
+                },
+                
+                switchStatus: (id : number, status : string, event) => {
+                    taskResource.switchStatus({
+                        id: id,
+                        status: status
+                    }, function onSuccess() {
+                        $scope.onSwitchStatus();
+                    }, function onNotFoundError() {
+                        alert('指定されたタスクは既に削除されています。');
+                    });
+                    
+                    event.preventDefault();
                 }
             });
         }

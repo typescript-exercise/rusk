@@ -1,7 +1,9 @@
 package rusk.domain.task;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import rusk.util.Now;
 
@@ -54,13 +56,23 @@ public class InWorkingTask extends Task {
     
     @Override
     public WorkTime getWorkTimeInWorking() {
-        WorkTime inWorkingTime = this.getWorkTimes().stream().filter(time -> !time.hasEndTime()).findAny().get();
-        return WorkTime.createInWorkingTime(inWorkingTime.getStartTime());
+        Optional<WorkTime> workTimeInWorking = this.getWorkTimes().stream().filter(time -> !time.hasEndTime()).findAny();
+        
+        if (workTimeInWorking.isPresent()) {
+            return WorkTime.createInWorkingTime(workTimeInWorking.get().getStartTime());
+        } else {
+            throw new IllegalStateException("作業中の作業時間が存在しません。");
+        }
     }
 
     @Override
-    public String getStatus() {
-        return "IN_WORKING";
+    public Status getStatus() {
+        return Status.IN_WORKING;
+    }
+    
+    @Override
+    public List<Status> getEnableToSwitchStatusList() {
+        return Arrays.asList(Status.STOPPED, Status.COMPLETE);
     }
     
     @SuppressWarnings("deprecation")

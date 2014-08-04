@@ -1,6 +1,8 @@
 package rusk.domain.task;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class UnstartedTask extends Task {
     
@@ -24,7 +26,12 @@ public class UnstartedTask extends Task {
     }
 
     @Override
-    public String getStatus() {
-        return "UNSTARTED";
+    public Status getStatus() {
+        return Status.UNSTARTED;
+    }
+    
+    @Override
+    public List<Status> getEnableToSwitchStatusList() {
+        return Arrays.asList(Status.IN_WORKING, Status.COMPLETE);
     }
 }

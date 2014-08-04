@@ -10,7 +10,7 @@ import org.dbunit.dataset.IDataSet;
 import org.junit.Rule;
 import org.junit.Test;
 
-import rusk.domain.task.StatusForm;
+import rusk.domain.task.Status;
 import rusk.domain.task.SwitchStatusForm;
 import rusk.integration_test.db.RuskIntegrationDBTester;
 import rusk.integration_test.jersey.JerseyTestRule;
@@ -34,7 +34,7 @@ public class SwitchTaskStatusTest {
         }};
         
         SwitchStatusForm form = new SwitchStatusForm();
-        form.status = StatusForm.IN_WORKING;
+        form.status = Status.IN_WORKING;
         Entity<SwitchStatusForm> entiry = Entity.entity(form, MediaType.APPLICATION_JSON);
         
         // exercise

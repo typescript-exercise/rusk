@@ -3,7 +3,7 @@ package rusk.domain.task;
 public class SwitchStatusForm {
     
     public long id;
-    public StatusForm status;
+    public Status status;
     
     public long getId() {
         return id;
@@ -11,10 +11,10 @@ public class SwitchStatusForm {
     public void setId(long id) {
         this.id = id;
     }
-    public StatusForm getStatus() {
+    public Status getStatus() {
         return status;
     }
-    public void setStatus(StatusForm status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

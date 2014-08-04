@@ -116,6 +116,7 @@ public class Task {
         return new NullObjectWorkTime();
     }
     
+    
     protected void overwriteBy(Task src) {
         this.id = src.id;
         this.title = src.title;
@@ -192,19 +193,27 @@ public class Task {
      */
     Task() {}
 
-    public String getStatus() {
+    public Date getCompletedDate() {
+        return null;
+    }
+    
+    public Status getStatus() {
+        throw new UnsupportedOperationException();
+    }
+    
+    public List<Status> getEnableToSwitchStatusList() {
         throw new UnsupportedOperationException();
     }
 
     public Task switchToCompletedTask() {
-        throw new UnsupportedOperationException();
+        throw new UnexpectedSwitchStatusException();
     }
 
     public Task switchToInWorkingTask() {
-        throw new UnsupportedOperationException();
+        throw new UnexpectedSwitchStatusException();
     }
 
     public Task switchToStoppedTask() {
-        throw new UnsupportedOperationException();
+        throw new UnexpectedSwitchStatusException();
     }
 }

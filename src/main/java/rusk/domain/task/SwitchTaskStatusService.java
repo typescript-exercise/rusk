@@ -25,11 +25,11 @@ public class SwitchTaskStatusService {
     }
     
     private boolean shouldStopCurrentInWorkingTask(Task currentInWorkingTask, SwitchStatusForm form) {
-        return currentInWorkingTask != null && form.status == StatusForm.IN_WORKING;
+        return currentInWorkingTask != null && form.status == Status.IN_WORKING;
     }
 
     private void stop(Task currentInWorkingTask) {
-        Task stoppedTask = StatusForm.STOPPED.switchTaskStatus(currentInWorkingTask);
+        Task stoppedTask = Status.STOPPED.switchTaskStatus(currentInWorkingTask);
         this.repository.saveModification(stoppedTask);
     }
 

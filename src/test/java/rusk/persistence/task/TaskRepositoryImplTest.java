@@ -196,7 +196,7 @@ public class TaskRepositoryImplTest {
     }
     
     @Test
-    public void _指定したタスクが更新できること() throws Exception {
+    public void 指定したタスクを作業中に更新できること() throws Exception {
         // setup
         new NonStrictExpectations(Now.class) {{
             Now.getForUrgency(); returns(DATETIME_1, DATETIME_4);
@@ -218,4 +218,26 @@ public class TaskRepositoryImplTest {
         assertThat(savedTask, is(sameTaskOf(switchedTask)));
     }
     
+    @Test
+    public void 指定したタスクを完了に更新できること() throws Exception {
+        // setup
+        new NonStrictExpectations(Now.class) {{
+            Now.getForUrgency(); returns(DATETIME_1, DATETIME_4);
+        }};
+        
+        Task originalTask = repository.inquireById(5L);
+        
+        originalTask.setDetail("詳細更新ー完了");
+        originalTask.setTitle("タイトル更新―完了");
+        originalTask.setPriority(Priority.of(DATETIME_4, Importance.B));
+        Task switchedTask = originalTask.switchToCompletedTask();
+        
+        // exercise
+        repository.saveModification(switchedTask);
+        
+        // verify
+        Task savedTask = repository.inquireById(5L);
+        
+        assertThat(savedTask, is(sameTaskOf(switchedTask)));
+    }
 }

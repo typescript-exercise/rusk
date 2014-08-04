@@ -1,7 +1,7 @@
 package rusk.domain.task;
 
 
-public enum StatusForm {
+public enum Status {
     UNSTARTED {
         @Override
         public Task switchTaskStatus(Task task) {

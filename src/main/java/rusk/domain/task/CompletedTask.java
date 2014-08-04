@@ -1,6 +1,8 @@
 package rusk.domain.task;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
@@ -39,10 +41,16 @@ public class CompletedTask extends Task {
     }
 
     @Override
-    public String getStatus() {
-        return "COMPLETE";
+    public Status getStatus() {
+        return Status.COMPLETE;
     }
     
+    @Override
+    public List<Status> getEnableToSwitchStatusList() {
+        return Arrays.asList(Status.IN_WORKING);
+    }
+
+    @Override
     public Date getCompletedDate() {
         return new Date(this.completedDate.getTime());
     }
