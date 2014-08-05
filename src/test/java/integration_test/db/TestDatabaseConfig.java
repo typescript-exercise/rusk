@@ -1,4 +1,4 @@
-package rusk.integration_test.db;
+package integration_test.db;
 
 import rusk.persistence.framework.DatabaseConfig;
 

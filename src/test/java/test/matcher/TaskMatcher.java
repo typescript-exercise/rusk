@@ -1,4 +1,4 @@
-package rusk.test.matcher;
+package test.matcher;
 
 import java.util.Objects;
 

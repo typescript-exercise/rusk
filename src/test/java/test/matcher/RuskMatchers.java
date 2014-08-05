@@ -1,4 +1,4 @@
-package rusk.test.matcher;
+package test.matcher;
 
 import static org.hamcrest.Matchers.*;
 

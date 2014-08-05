@@ -1,4 +1,4 @@
-package rusk.test.db;
+package test.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

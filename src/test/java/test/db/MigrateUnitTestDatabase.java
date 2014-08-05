@@ -1,4 +1,4 @@
-package rusk.integration_test.db;
+package test.db;
 
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
@@ -9,18 +9,16 @@ import org.slf4j.LoggerFactory;
  * <p>
  * データベースの定義が変更された場合は、このクラスを手動で実行してからテストを実行してください。
  */
-public class MigrateIntegrationTestDatabase {
+public class MigrateUnitTestDatabase {
     
-    private static final Logger logger = LoggerFactory.getLogger(MigrateIntegrationTestDatabase.class);
+    private static final Logger logger = LoggerFactory.getLogger(MigrateUnitTestDatabase.class);
     
     public static void main(String[] args) {
-        TestDatabaseConfig config = new TestDatabaseConfig();
-        
         Flyway flyway = new Flyway();
-        flyway.setDataSource(config.getUrl(), config.getUser(), config.getPassword());
+        flyway.setDataSource(TestDatabaseConfig.URL, TestDatabaseConfig.USER, TestDatabaseConfig.PASS);
         flyway.clean();
         flyway.migrate();
         
-        logger.info("success to migrate integration test database.");
+        logger.info("success to migrate unit test database.");
     }
 }

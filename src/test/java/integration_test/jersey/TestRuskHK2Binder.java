@@ -1,7 +1,7 @@
-package rusk.integration_test.jersey;
+package integration_test.jersey;
 
+import integration_test.db.TestDatabaseConfig;
 import rusk.RuskHK2Binder;
-import rusk.integration_test.db.TestDatabaseConfig;
 
 /**
  * 結合テスト用の HK2 バインダー

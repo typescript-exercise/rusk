@@ -1,7 +1,9 @@
-package rusk.integration_test;
+package integration_test;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import integration_test.db.RuskIntegrationDBTester;
+import integration_test.jersey.JerseyTestRule;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -11,9 +13,6 @@ import jp.classmethod.testing.database.Fixture;
 import org.dbunit.dataset.IDataSet;
 import org.junit.Rule;
 import org.junit.Test;
-
-import rusk.integration_test.db.RuskIntegrationDBTester;
-import rusk.integration_test.jersey.JerseyTestRule;
 
 /**
  * タスク削除のテスト

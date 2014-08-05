@@ -1,4 +1,4 @@
-package rusk.integration_test.jersey;
+package integration_test.jersey;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;

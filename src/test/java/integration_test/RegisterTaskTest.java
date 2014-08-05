@@ -1,7 +1,9 @@
-package rusk.integration_test;
+package integration_test;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import integration_test.db.RuskIntegrationDBTester;
+import integration_test.jersey.JerseyTestRule;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -19,8 +21,6 @@ import rusk.common.util.DateUtil;
 import rusk.common.util.Now;
 import rusk.domain.task.Importance;
 import rusk.domain.task.form.RegisterTaskForm;
-import rusk.integration_test.db.RuskIntegrationDBTester;
-import rusk.integration_test.jersey.JerseyTestRule;
 
 /**
  * タスク登録テスト

@@ -1,4 +1,4 @@
-package rusk.test.db;
+package test.db;
 
 import org.dbunit.dataset.IDataSet;
 

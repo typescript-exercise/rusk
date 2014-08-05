@@ -1,4 +1,4 @@
-package rusk.test.db;
+package test.db;
 
 /**
  * テスト用の DB 接続情報

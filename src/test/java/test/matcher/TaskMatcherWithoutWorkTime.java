@@ -1,4 +1,4 @@
-package rusk.test.matcher;
+package test.matcher;
 
 import java.util.Objects;
 
@@ -7,11 +7,11 @@ import org.hamcrest.TypeSafeMatcher;
 
 import rusk.domain.task.Task;
 
-public class TaskMatcherWithoutWorkTimeAndCompletedTime extends TypeSafeMatcher<Task> {
+public class TaskMatcherWithoutWorkTime extends TypeSafeMatcher<Task> {
 
     private final Task expected;
     
-    TaskMatcherWithoutWorkTimeAndCompletedTime(Task expected) {
+    TaskMatcherWithoutWorkTime(Task expected) {
         this.expected = expected;
     }
 

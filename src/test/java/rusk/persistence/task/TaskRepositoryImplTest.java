@@ -2,7 +2,7 @@ package rusk.persistence.task;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static rusk.test.matcher.RuskMatchers.*;
+import static test.matcher.RuskMatchers.*;
 
 import java.util.Date;
 import java.util.List;
@@ -25,8 +25,8 @@ import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
 import rusk.domain.task.form.RegisterTaskForm;
-import rusk.test.db.RuskDBTester;
-import rusk.test.db.TestPersistProvider;
+import test.db.RuskDBTester;
+import test.db.TestPersistProvider;
 
 @Fixture(resources="TaskRepositoryImple-fixuture.yaml")
 public class TaskRepositoryImplTest {

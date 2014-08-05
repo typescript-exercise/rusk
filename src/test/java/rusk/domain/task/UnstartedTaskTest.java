@@ -2,7 +2,7 @@ package rusk.domain.task;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static rusk.test.matcher.RuskMatchers.*;
+import static test.matcher.RuskMatchers.*;
 
 import java.util.Date;
 

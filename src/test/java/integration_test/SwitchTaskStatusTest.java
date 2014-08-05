@@ -1,4 +1,7 @@
-package rusk.integration_test;
+package integration_test;
+
+import integration_test.db.RuskIntegrationDBTester;
+import integration_test.jersey.JerseyTestRule;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -14,8 +17,6 @@ import rusk.common.util.DateUtil;
 import rusk.common.util.Now;
 import rusk.domain.task.Status;
 import rusk.domain.task.form.SwitchStatusForm;
-import rusk.integration_test.db.RuskIntegrationDBTester;
-import rusk.integration_test.jersey.JerseyTestRule;
 
 @Fixture(resources="switch-task-status.yaml")
 public class SwitchTaskStatusTest {

@@ -1,7 +1,7 @@
-package rusk.integration_test.db;
+package integration_test.db;
 
 import jp.classmethod.testing.database.JdbcDatabaseConnectionManager;
-import rusk.test.db.RuskDBTester;
+import test.db.RuskDBTester;
 
 /**
  * Rusk 開発用の DbUnitTester

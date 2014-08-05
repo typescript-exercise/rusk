@@ -1,10 +1,11 @@
-package rusk.test.db;
+package test.db;
+
+import integration_test.db.MigrateIntegrationTestDatabase;
 
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rusk.integration_test.db.MigrateIntegrationTestDatabase;
 import rusk.persistence.framework.DatabaseConfig;
 import rusk.persistence.framework.ProductionDatabaseConfig;
 
