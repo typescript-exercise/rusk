@@ -1,6 +1,6 @@
 package rusk.integration_test.db;
 
-import rusk.system.db.DatabaseConfig;
+import rusk.persistence.framework.DatabaseConfig;
 
 /**
  * 

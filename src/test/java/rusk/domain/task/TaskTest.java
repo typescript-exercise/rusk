@@ -10,7 +10,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import rusk.util.DateUtil;
+import rusk.common.util.DateUtil;
+import rusk.domain.task.exception.DuplicateWorkTimeException;
 
 public class TaskTest {
 

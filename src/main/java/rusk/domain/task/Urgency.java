@@ -8,8 +8,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
-import rusk.util.DateUtil;
-import rusk.util.Immutable;
+import rusk.common.util.DateUtil;
+import rusk.common.util.Immutable;
 
 /**
  * 緊急度

@@ -3,7 +3,7 @@ package rusk.domain.task;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import rusk.util.Immutable;
+import rusk.common.util.Immutable;
 
 /**
  * 重要度

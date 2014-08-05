@@ -10,9 +10,9 @@ import mockit.NonStrictExpectations;
 import org.junit.Before;
 import org.junit.Test;
 
-import rusk.service.task.RegisterTaskForm;
-import rusk.util.DateUtil;
-import rusk.util.Now;
+import rusk.common.util.DateUtil;
+import rusk.common.util.Now;
+import rusk.domain.task.form.RegisterTaskForm;
 
 public class TaskFactoryTest {
     

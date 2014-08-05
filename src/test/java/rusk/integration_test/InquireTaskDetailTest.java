@@ -16,13 +16,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import rusk.common.util.DateUtil;
+import rusk.common.util.Now;
 import rusk.domain.task.Importance;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.integration_test.db.RuskIntegrationDBTester;
 import rusk.integration_test.jersey.JerseyTestRule;
-import rusk.util.DateUtil;
-import rusk.util.Now;
 
 @Fixture(resources="inquire-task-detail.yaml")
 public class InquireTaskDetailTest {

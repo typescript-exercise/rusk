@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 
-import rusk.util.Now;
+import rusk.common.util.Now;
 
 public class CompletedTask extends Task {
     

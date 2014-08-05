@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import rusk.util.Now;
+import rusk.common.util.Now;
 
 public class InWorkingTask extends Task {
     

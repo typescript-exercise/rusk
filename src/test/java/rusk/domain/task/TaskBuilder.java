@@ -3,7 +3,7 @@ package rusk.domain.task;
 import java.util.Date;
 import java.util.List;
 
-import rusk.util.DateUtil;
+import rusk.common.util.DateUtil;
 
 /**
  * {@link Task} のインスタンスを簡潔な記述で生成できるようにするためのビルダークラス。

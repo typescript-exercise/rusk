@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import rusk.util.DateUtil;
+import rusk.common.util.DateUtil;
 
 @RunWith(Enclosed.class)
 public class WorkTimeTest {

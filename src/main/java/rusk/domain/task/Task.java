@@ -10,6 +10,9 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import rusk.domain.task.exception.DuplicateWorkTimeException;
+import rusk.domain.task.exception.UnexpectedSwitchStatusException;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

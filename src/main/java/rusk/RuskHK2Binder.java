@@ -8,22 +8,22 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rusk.domain.task.InquireTaskListService;
-import rusk.domain.task.SwitchTaskStatusService;
+import rusk.application.facade.system.SystemInitializeFacade;
+import rusk.application.facade.task.TaskFacade;
+import rusk.application.interceptor.RuskInterceptionService;
 import rusk.domain.task.TaskRepository;
-import rusk.interceptor.RuskInterceptionService;
+import rusk.domain.task.service.InquireTaskListService;
+import rusk.domain.task.service.SwitchTaskStatusService;
+import rusk.persistence.framework.DatabaseConfig;
+import rusk.persistence.framework.HK2PersistProvider;
+import rusk.persistence.framework.PersistProvider;
+import rusk.persistence.framework.ProductionDatabaseConfig;
+import rusk.persistence.framework.RuskConnection;
+import rusk.persistence.framework.RuskConnectionPool;
+import rusk.persistence.migration.DatabaseMigration;
 import rusk.persistence.task.TaskRepositoryImpl;
-import rusk.rest.task.TaskListResource;
-import rusk.rest.task.TaskResource;
-import rusk.service.system.SystemInitializeService;
-import rusk.service.task.TaskService;
-import rusk.system.db.DatabaseConfig;
-import rusk.system.db.DatabaseMigration;
-import rusk.system.db.HK2PersistProvider;
-import rusk.system.db.PersistProvider;
-import rusk.system.db.ProductionDatabaseConfig;
-import rusk.system.db.RuskConnection;
-import rusk.system.db.RuskConnectionPool;
+import rusk.rest.resource.task.TaskListResource;
+import rusk.rest.resource.task.TaskResource;
 
 /**
  * HK2 の設定。
@@ -55,8 +55,8 @@ public class RuskHK2Binder extends AbstractBinder {
         bind(HK2PersistProvider.class).to(PersistProvider.class).in(Singleton.class);
         
         // service
-        bindAsContract(SystemInitializeService.class).in(Singleton.class);
-        bindAsContract(TaskService.class).in(Singleton.class);
+        bindAsContract(SystemInitializeFacade.class).in(Singleton.class);
+        bindAsContract(TaskFacade.class).in(Singleton.class);
         
         // domain service
         bindAsContract(InquireTaskListService.class).in(Singleton.class);

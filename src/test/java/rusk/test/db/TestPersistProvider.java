@@ -10,7 +10,7 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import rusk.system.db.PersistProvider;
+import rusk.persistence.framework.PersistProvider;
 
 /**
  * テストデータベースに接続した{@link Persist} インスタンスを取得するためのルールクラス。

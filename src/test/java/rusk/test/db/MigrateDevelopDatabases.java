@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rusk.integration_test.db.MigrateIntegrationTestDatabase;
-import rusk.system.db.DatabaseConfig;
-import rusk.system.db.ProductionDatabaseConfig;
+import rusk.persistence.framework.DatabaseConfig;
+import rusk.persistence.framework.ProductionDatabaseConfig;
 
 public class MigrateDevelopDatabases {
 

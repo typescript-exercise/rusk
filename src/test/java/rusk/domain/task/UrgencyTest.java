@@ -7,7 +7,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import rusk.util.DateUtil;
+import rusk.common.util.DateUtil;
 
 public class UrgencyTest {
 

@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import rusk.util.DateUtil;
-import rusk.util.Now;
+import rusk.common.util.DateUtil;
+import rusk.common.util.Now;
 
 @RunWith(Enclosed.class)
 public class StoppedTaskTest {

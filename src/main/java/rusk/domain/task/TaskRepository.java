@@ -3,6 +3,8 @@ package rusk.domain.task;
 import java.util.Date;
 import java.util.List;
 
+import rusk.domain.task.exception.TaskNotFoundException;
+
 /**
  * {@link Task} を永続化層とやり取りするためのインターフェース。
  */

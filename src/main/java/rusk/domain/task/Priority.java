@@ -7,8 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import rusk.util.Immutable;
-import rusk.util.Now;
+import rusk.common.util.Immutable;
+import rusk.common.util.Now;
 
 /**
  * 優先度

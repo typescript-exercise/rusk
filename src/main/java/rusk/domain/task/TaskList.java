@@ -2,9 +2,12 @@ package rusk.domain.task;
 
 import java.util.List;
 
+import rusk.common.util.Dto;
+
 /**
  * タスク一覧
  */
+@Dto
 public class TaskList {
     
     public Task taskInWorking;

@@ -1,7 +1,7 @@
 package rusk.persistence.task;
 
 import static java.util.stream.Collectors.*;
-import static rusk.util.LamdaUtil.*;
+import static rusk.common.util.LamdaUtil.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -15,12 +15,12 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import rusk.common.util.DateUtil;
 import rusk.domain.task.Task;
-import rusk.domain.task.TaskNotFoundException;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.WorkTime;
-import rusk.system.db.PersistProvider;
-import rusk.util.DateUtil;
+import rusk.domain.task.exception.TaskNotFoundException;
+import rusk.persistence.framework.PersistProvider;
 
 /**
  * {@link TaskRepository} の実装クラス。
