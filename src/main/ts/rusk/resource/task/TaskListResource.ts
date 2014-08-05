@@ -1,6 +1,6 @@
 module rusk {
     export module resource {
-        export module list {
+        export module task {
             export class TaskListResource {
                 private $http : ng.IHttpService;
                 
@@ -23,5 +23,5 @@ angular
 .module('rusk')
 .factory('taskListResource', [
     '$http',
-    ($http) => new rusk.resource.list.TaskListResource($http)
+    ($http) => new rusk.resource.task.TaskListResource($http)
 ]);

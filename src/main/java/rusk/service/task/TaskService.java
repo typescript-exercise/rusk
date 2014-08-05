@@ -6,10 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rusk.Transactional;
+import rusk.domain.task.InquireTaskListService;
 import rusk.domain.task.SwitchStatusForm;
 import rusk.domain.task.SwitchTaskStatusService;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskFactory;
+import rusk.domain.task.TaskList;
 import rusk.domain.task.TaskNotFoundException;
 import rusk.domain.task.TaskRepository;
 
@@ -19,11 +21,13 @@ public class TaskService {
     
     private final TaskRepository repository;
     private final SwitchTaskStatusService switchTaskStatusService;
+    private final InquireTaskListService inquireTaskListService;
     
     @Inject
-    public TaskService(TaskRepository repository, SwitchTaskStatusService switchTaskStatusService) {
+    public TaskService(TaskRepository repository, SwitchTaskStatusService switchTaskStatusService, InquireTaskListService inquireTaskListService) {
         this.repository = repository;
         this.switchTaskStatusService = switchTaskStatusService;
+        this.inquireTaskListService = inquireTaskListService;
     }
     
     /**
@@ -33,6 +37,15 @@ public class TaskService {
      */
     public Task inquire(long id) {
         return this.repository.inquireById(id);
+    }
+    
+    /**
+     * タスク一覧を取得する。
+     * 
+     * @return タスク一覧
+     */
+    public TaskList inquireTaskList() {
+        return this.inquireTaskListService.inquireTaskList();
     }
 
     /**
