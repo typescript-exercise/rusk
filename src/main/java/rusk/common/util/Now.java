@@ -1,5 +1,6 @@
 package rusk.common.util;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -42,5 +43,9 @@ public class Now {
     
     public static Date getForUrgency() {
         return get();
+    }
+
+    public static Timestamp getForUpdateDate() {
+        return new Timestamp(get().getTime());
     }
 }

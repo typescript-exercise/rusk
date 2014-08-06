@@ -35,6 +35,7 @@ public class TaskTable {
     public Timestamp completedDate;
     public byte importance;
     public Timestamp period;
+    public Timestamp updateDate;
     
     private List<WorkTime> workTimes;
     
@@ -49,8 +50,9 @@ public class TaskTable {
         this.setPeriod(task);
         this.setRegisteredDate(task);
         this.setCompletedDate(task);
+        this.setUpdateDate(task);
     }
-    
+
     private void setImportance(Task task) {
         switch (task.getPriority().getImportance()) {
         case C:
@@ -98,6 +100,10 @@ public class TaskTable {
         }
     }
     
+    private void setUpdateDate(Task task) {
+        this.updateDate = new Timestamp(task.getUpdateDate().getTime());
+    }
+    
     public Task convertToTask(List<WorkTime> workTimes) {
         this.copyAndSetWorkTimes(workTimes);
         return this.buildTask();
@@ -112,6 +118,7 @@ public class TaskTable {
                                     .detail(this.detail)
                                     .priority(this.period, this.getImportanceAsEnum())
                                     .workTimes(this.workTimes)
+                                    .updateDate(this.updateDate)
                                     .build();
     }
 
@@ -199,6 +206,14 @@ public class TaskTable {
         this.period = period;
     }
     
+    public Timestamp getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Timestamp updateDate) {
+        this.updateDate = updateDate;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);

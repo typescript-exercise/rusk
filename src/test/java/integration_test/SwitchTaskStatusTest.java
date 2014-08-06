@@ -32,6 +32,7 @@ public class SwitchTaskStatusTest {
         new NonStrictExpectations(Now.class) {{
             Now.getForEndTime(); result = DateUtil.create("2014-07-10 12:40:00");
             Now.getForStartTime(); result = DateUtil.create("2014-07-10 12:40:01");
+            Now.getForUpdateDate(); returns(DateUtil.createTimestamp("2014-07-10 12:40:02"), DateUtil.createTimestamp("2014-07-10 12:40:03"));
         }};
         
         SwitchStatusForm form = new SwitchStatusForm();

@@ -1,5 +1,6 @@
 package rusk.domain.task;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -11,9 +12,11 @@ public class TaskFactory {
     private Task task;
     
     public static Task create(RegisterTaskForm form) {
-        UnstartedTask task = new UnstartedTask(Now.getForRegisteredDate());
+        Date now = Now.getForRegisteredDate();
+        UnstartedTask task = new UnstartedTask(now);
         task.setTitle(form.title);
         task.setDetail(form.detail);
+        task.setUpdateDate(now);
         
         Priority priority = Priority.of(form.period, form.importance);
         task.setPriority(priority);
@@ -62,6 +65,11 @@ public class TaskFactory {
     
     public TaskFactory workTimes(List<WorkTime> workTimes) {
         this.task.setWorkTimes(workTimes);
+        return this;
+    }
+
+    public TaskFactory updateDate(Timestamp updateDate) {
+        this.task.setUpdateDate(updateDate);
         return this;
     }
     

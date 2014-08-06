@@ -1,5 +1,6 @@
 package rusk.common.util;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -40,6 +41,10 @@ public class DateUtil extends DateUtils {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public static Timestamp createTimestamp(String textDate) {
+        return new Timestamp(create(textDate).getTime());
     }
     
     private DateUtil() {}

@@ -25,6 +25,7 @@ public class Task {
     private Date registeredDate;
     private Priority priority;
     private List<WorkTime> workTimes = new ArrayList<>();
+    private Date updateDate;
     
     protected Task(Date registeredDate) {
         this.setRegisteredDate(registeredDate);
@@ -128,6 +129,7 @@ public class Task {
         this.registeredDate = src.getRegisteredDate();
         this.priority = src.getPriority();
         this.workTimes = src.getWorkTimes();
+        this.updateDate = src.getUpdateDate();
     }
     
     
@@ -165,6 +167,19 @@ public class Task {
     
     public Priority getPriority() {
         return priority;
+    }
+    
+    public Date getUpdateDate() {
+        if (this.updateDate == null) {
+            return null;
+        } else {
+            return new Date(this.updateDate.getTime());
+        }
+    }
+    
+    void setUpdateDate(Date updateDate) {
+        Validate.notNull(updateDate, "更新日は必須です。");
+        this.updateDate = new Date(updateDate.getTime());
     }
     
     public boolean isRankS() {

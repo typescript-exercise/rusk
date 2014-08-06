@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import rusk.common.util.DateUtil;
+import rusk.common.util.Now;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.WorkTime;
@@ -161,6 +162,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     private void updateTask(Task task) {
         TaskTable taskTable = new TaskTable(task);
+        taskTable.updateDate = Now.getForUpdateDate();
         this.provider.getPersist().update(taskTable);
     }
 

@@ -138,7 +138,7 @@ public class TaskRepositoryImplTest {
     public void 指定したタスクがデータベースに登録されること() throws Exception {
         // setup
         new NonStrictExpectations(Now.class) {{
-            Now.getForRegisteredDate(); returns(DATETIME_1);
+            Now.getForRegisteredDate(); result = DATETIME_1;
         }};
         
         RegisterTaskForm form = new RegisterTaskForm();
