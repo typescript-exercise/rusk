@@ -5,13 +5,13 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import rusk.domain.task.exception.UnexpectedSwitchStatusException;
+import rusk.domain.ConcurrentUpdateException;
 
 @Provider
-public class UnexpectedSwitchStatusMapper implements ExceptionMapper<UnexpectedSwitchStatusException> {
+public class ConcurrentUpdateExceptionMapper implements ExceptionMapper<ConcurrentUpdateException> {
 
     @Override
-    public Response toResponse(UnexpectedSwitchStatusException exception) {
+    public Response toResponse(ConcurrentUpdateException exception) {
         return Response.status(Status.CONFLICT).build();
     }
 }

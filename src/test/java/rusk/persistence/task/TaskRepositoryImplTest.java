@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import rusk.common.util.DateUtil;
 import rusk.common.util.Now;
+import rusk.domain.ConcurrentUpdateException;
 import rusk.domain.EntityNotFoundException;
 import rusk.domain.task.Importance;
 import rusk.domain.task.Priority;
@@ -187,7 +188,7 @@ public class TaskRepositoryImplTest {
         Task switchedTask = originalTask.switchToInWorkingTask();
         
         // exercise
-        repository.saveModification(switchedTask);
+        repository.saveModification(switchedTask, switchedTask.getUpdateDate());
         
         // verify
         Task savedTask = repository.inquireById(1L);
@@ -210,7 +211,7 @@ public class TaskRepositoryImplTest {
         Task switchedTask = originalTask.switchToInWorkingTask();
         
         // exercise
-        repository.saveModification(switchedTask);
+        repository.saveModification(switchedTask, switchedTask.getUpdateDate());
         
         // verify
         Task savedTask = repository.inquireById(5L);
@@ -233,11 +234,36 @@ public class TaskRepositoryImplTest {
         Task switchedTask = originalTask.switchToCompletedTask();
         
         // exercise
-        repository.saveModification(switchedTask);
+        repository.saveModification(switchedTask, switchedTask.getUpdateDate());
         
         // verify
         Task savedTask = repository.inquireById(5L);
         
         assertThat(savedTask, is(sameTaskOf(switchedTask)));
+    }
+    
+    @Test
+    public void 指定したタスクの最終更新日付が取得できる() {
+        // exercise
+        Date updateDate = repository.inquireUpdateDateById(1L);
+        
+        // verify
+        assertThat(updateDate, is(DateUtil.create("2014-07-01 12:00:00")));
+    }
+    
+    @Test(expected=ConcurrentUpdateException.class)
+    public void 更新を行う時_渡された最終更新日時が_永続化されているタスクの最終更新日時よりも過去の場合_同時更新例外が発生すること() {
+        // setup
+        final Date lastUpdateDate = DateUtil.createTimestamp("2014-07-15 15:00:00");
+        final Date storedUpdateDate = DateUtil.addMilliseconds(lastUpdateDate, 1);
+        
+        new NonStrictExpectations(repository) {{
+            repository.inquireUpdateDateById(1L); result = storedUpdateDate;
+        }};
+        
+        Task task = TaskBuilder.task(1L);
+        
+        // exercise
+        repository.saveModification(task, lastUpdateDate);
     }
 }

@@ -14,9 +14,34 @@ import rusk.common.util.DateUtil;
 public class TaskBuilder {
     
     private final Task task;
+    
+    @SuppressWarnings("deprecation")
+    public static Task task(long id) {
+        return new Task() {
+            public Long getId() {
+                return id;
+            }
+        };
+    }
 
+    public static TaskBuilder with(Task inWorkingTask) {
+        return new TaskBuilder(inWorkingTask);
+    }
+
+    public static TaskBuilder inWorkingTask(long id, String registeredDate, String startTime) {
+        Task task = InWorkingTask.build(id, DateUtil.create(registeredDate));
+        task.addWorkTime(WorkTime.createInWorkingTime(DateUtil.create(startTime)));
+        
+        return new TaskBuilder(task);
+    }
+    
     public static TaskBuilder completedTask(long id, String registeredDate, String completedDate) {
         Task task = new CompletedTask(id, DateUtil.create(registeredDate), DateUtil.create(completedDate));
+        return new TaskBuilder(task);
+    }
+    
+    public static TaskBuilder unstartedTask(long id, String registeredDate) {
+        Task task = new UnstartedTask(id, DateUtil.create(registeredDate));
         return new TaskBuilder(task);
     }
     
@@ -52,6 +77,16 @@ public class TaskBuilder {
     
     public TaskBuilder workTimes(List<WorkTime> workTimes) {
         this.task.setWorkTimes(workTimes);
+        return this;
+    }
+    
+    public TaskBuilder updateDate(String updateDate) {
+        this.task.setUpdateDate(DateUtil.create(updateDate));
+        return this;
+    }
+    
+    public TaskBuilder updateDate(Date updateDate) {
+        this.task.setUpdateDate(updateDate);
         return this;
     }
     

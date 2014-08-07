@@ -37,6 +37,9 @@ public class SwitchTaskStatusTest {
         
         SwitchStatusForm form = new SwitchStatusForm();
         form.status = Status.IN_WORKING;
+        form.lastUpdateDate = DateUtil.create("2014-07-10 12:00:00");
+        form.inWorkingTaskId = 1L;
+        form.inWorkingTaskLastUpdateDate = DateUtil.create("2014-07-10 12:00:00");
         Entity<SwitchStatusForm> entiry = Entity.entity(form, MediaType.APPLICATION_JSON);
         
         // exercise

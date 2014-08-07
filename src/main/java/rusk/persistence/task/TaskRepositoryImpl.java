@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import rusk.common.util.DateUtil;
 import rusk.common.util.Now;
+import rusk.domain.ConcurrentUpdateException;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.WorkTime;
@@ -154,10 +155,19 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public void saveModification(Task task) {
+    public void saveModification(Task task, Date lastUpdateDate) {
+        this.verifyConcurrentUpdate(task, lastUpdateDate);
         this.updateTask(task);
         this.updateWorkTimes(task);
         this.insertWorkTimes(task);
+    }
+
+    private void verifyConcurrentUpdate(Task task, Date lastUpdateDate) {
+        Date currentUpdateDate = this.inquireUpdateDateById(task.getId());
+        
+        if (lastUpdateDate.getTime() < currentUpdateDate.getTime()) {
+            throw new ConcurrentUpdateException();
+        }
     }
 
     private void updateTask(Task task) {
@@ -191,5 +201,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     public Task inquireTaskInWorkingWithLock() {
         TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1 FOR UPDATE");
         return table == null ? null : this.toTask(table);
+    }
+
+    public Date inquireUpdateDateById(long id) {
+        return this.provider.getPersist().read(Date.class, "SELECT UPDATE_DATE FROM TASK WHERE ID=?", id);
     }
 }
