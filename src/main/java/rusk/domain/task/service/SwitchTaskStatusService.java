@@ -22,7 +22,10 @@ public class SwitchTaskStatusService {
     public void switchTaskStatus(SwitchStatusForm form) {
         Task currentInWorkingTask = this.repository.inquireTaskInWorkingWithLock();
         this.verifyConcurrentUpdateForInWorkingTask(currentInWorkingTask, form);
-        this.stopCurrentInWorkingTaskIfNeed(currentInWorkingTask, form);
+        
+        if (this.shouldStopCurrentInWorkingTask(currentInWorkingTask, form.status)) {
+            this.switchStatus(currentInWorkingTask, Status.STOPPED, form.inWorkingTaskLastUpdateDate);
+        }
         
         Task targetTask = this.repository.inquireWithLock(form.id);
         this.verifyConcurrentUpdate(targetTask, form.getLastUpdateDate());
@@ -56,19 +59,9 @@ public class SwitchTaskStatusService {
             throw new ConcurrentUpdateException();
         }
     }
-
-    private void stopCurrentInWorkingTaskIfNeed(Task currentInWorkingTask, SwitchStatusForm form) {
-        if (this.shouldStopCurrentInWorkingTask(currentInWorkingTask, form.status)) {
-            this.stop(currentInWorkingTask, form.inWorkingTaskLastUpdateDate);
-        }
-    }
     
     private boolean shouldStopCurrentInWorkingTask(Task currentInWorkingTask, Status toStatus) {
         return currentInWorkingTask != null && toStatus == Status.IN_WORKING;
-    }
-
-    private void stop(Task task, Date lastUpdateDate) {
-        this.switchStatus(task, Status.STOPPED, lastUpdateDate);
     }
 
     private void switchStatus(Task task, Status toStatus, Date lastUpdateDate) {

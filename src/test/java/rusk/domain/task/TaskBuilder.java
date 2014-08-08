@@ -28,6 +28,13 @@ public class TaskBuilder {
         return new TaskBuilder(inWorkingTask);
     }
 
+    public static TaskBuilder inWorkingTask(long id, Date registeredDate, Date startTime) {
+        Task task = InWorkingTask.build(id, registeredDate);
+        task.addWorkTime(WorkTime.createInWorkingTime(startTime));
+        
+        return new TaskBuilder(task);
+    }
+
     public static TaskBuilder inWorkingTask(long id, String registeredDate, String startTime) {
         Task task = InWorkingTask.build(id, DateUtil.create(registeredDate));
         task.addWorkTime(WorkTime.createInWorkingTime(DateUtil.create(startTime)));
