@@ -31,6 +31,10 @@ module rusk {
                     this.importance.setValue('B');
                     this.detail.clear();
                 }
+                
+                isValid() : boolean {
+                    return this.form.isValid();
+                }
             }
         }
     }

@@ -20,14 +20,16 @@ angular
             });
             
             $scope.register = () => {
-                var task = form.getTask();
-                
-                taskResource.register(task)
-                    .success(() => {
-                        form.reset();
-                        modal.close();
-                        $scope.onRegistered();
-                    });
+                if (form.isValid()) {
+                    var task = form.getTask();
+                    
+                    taskResource.register(task)
+                        .success(() => {
+                            form.reset();
+                            modal.close();
+                            $scope.onRegistered();
+                        });
+                }
             }
         }
     };
@@ -39,7 +41,7 @@ angular
         var detail = new rusk.view.primitive.TextArea($scope, $element.find('#detail'), 'detail');
         
         var validateOptions = rusk.config.validation.TaskValidateOptionBuilder.create().title().period().importance().detail().build();
-        var form = new rusk.view.primitive.Form($element.find('#register-task'), validateOptions);
+        var form = new rusk.view.primitive.Form($element.find('form'), validateOptions);
         
         return new rusk.view.form.RegisterTaskForm({
             title: title,

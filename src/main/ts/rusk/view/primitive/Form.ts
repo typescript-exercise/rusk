@@ -6,8 +6,11 @@ module rusk {
                 
                 constructor($element, validationRules) {
                     this.$element = $element;
-                    
                     this.$element.validate(validationRules);
+                }
+                
+                isValid() : boolean {
+                    return this.$element.valid();
                 }
             }
         }
