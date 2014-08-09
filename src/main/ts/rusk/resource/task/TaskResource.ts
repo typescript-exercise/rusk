@@ -27,6 +27,7 @@ module rusk {
                 switchStatus(params, onSuccess: Function, onNotFoundError : Function) : void {
                     this.$http.put('rest/task/'+ params.id + '/status', {
                         status: params.status,
+                        lastUpdateDate: params.lastUpdateDate
                     }, {
                         overrideInterceptor: {
                             404: onNotFoundError

@@ -42,9 +42,10 @@ angular
                 },
                 
                 switchStatus: (task, status : string, event) => {
+                    
                     taskResource.switchStatus({
                         id: task.id,
-                        lastUpdateDate: task.lastUpdateDate,
+                        lastUpdateDate: task.updateDate,
                         status: status
                     }, function onSuccess() {
                         $scope.onSwitchStatus();
