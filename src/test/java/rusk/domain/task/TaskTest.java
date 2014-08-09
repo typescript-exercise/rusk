@@ -22,10 +22,17 @@ public class TaskTest {
     
     private Task task;
     
-    @SuppressWarnings("deprecation")
     @Before
     public void setup() {
-        task = new Task();
+        task = new Task(DATETIME_1) {
+            @Override
+            public Status getStatus() {
+                return null;
+            }
+            @Override
+            public List<Status> getEnableToSwitchStatusList() {
+                return null;
+            }};
     }
     
     @Test

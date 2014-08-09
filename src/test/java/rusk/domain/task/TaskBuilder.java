@@ -15,11 +15,20 @@ public class TaskBuilder {
     
     private final Task task;
     
-    @SuppressWarnings("deprecation")
     public static Task task(long id) {
-        return new Task() {
+        return new Task(DateUtil.create("2014-01-01 12:00:00")) {
             public Long getId() {
                 return id;
+            }
+
+            @Override
+            public Status getStatus() {
+                return null;
+            }
+
+            @Override
+            public List<Status> getEnableToSwitchStatusList() {
+                return null;
             }
         };
     }
@@ -29,14 +38,14 @@ public class TaskBuilder {
     }
 
     public static TaskBuilder inWorkingTask(long id, Date registeredDate, Date startTime) {
-        Task task = InWorkingTask.build(id, registeredDate);
+        Task task = new InWorkingTask(id, registeredDate);
         task.addWorkTime(WorkTime.createInWorkingTime(startTime));
         
         return new TaskBuilder(task);
     }
 
     public static TaskBuilder inWorkingTask(long id, String registeredDate, String startTime) {
-        Task task = InWorkingTask.build(id, DateUtil.create(registeredDate));
+        Task task = new InWorkingTask(id, DateUtil.create(registeredDate));
         task.addWorkTime(WorkTime.createInWorkingTime(DateUtil.create(startTime)));
         
         return new TaskBuilder(task);

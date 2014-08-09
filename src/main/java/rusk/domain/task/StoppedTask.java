@@ -1,19 +1,24 @@
 package rusk.domain.task;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class StoppedTask extends Task {
+    
+    @JsonCreator
+    StoppedTask(@JsonProperty("id") long id, @JsonProperty("registeredDate") Date registeredDate) {
+        super(id, registeredDate);
+    }
 
     static StoppedTask switchFrom(Task src) {
-        StoppedTask stoppedTask = new StoppedTask();
+        StoppedTask stoppedTask = new StoppedTask(src.getId(), src.getRegisteredDate());
         stoppedTask.overwriteBy(src);
         return stoppedTask;
-    }
-    
-    StoppedTask(long id, Date registeredDate) {
-        super(id, registeredDate);
     }
 
     @Override
@@ -33,9 +38,6 @@ public class StoppedTask extends Task {
     
     @Override
     public List<Status> getEnableToSwitchStatusList() {
-        return Arrays.asList(Status.IN_WORKING, Status.COMPLETE);
+        return new ArrayList<>(Arrays.asList(Status.IN_WORKING, Status.COMPLETE));
     }
-    
-    @SuppressWarnings("deprecation")
-    private StoppedTask() {}
 }

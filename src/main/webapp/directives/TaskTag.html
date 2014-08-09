@@ -9,7 +9,7 @@
     <div class="dropdown pull-right margin-right-10">
       <a data-toggle="dropdown" class="btn btn-xs btn-default">{{task.status | status}}<span class="caret"></span></a>
       <ul class="dropdown-menu">
-        <li ng-repeat="status in task.enableToSwitchStatusList"><a href="#" ng-click="switchStatus(task.id, status, $event);">{{status | status}}</a></li>
+        <li ng-repeat="status in task.enableToSwitchStatusList"><a href="#" ng-click="switchStatus(task, status, $event);">{{status | status}}</a></li>
       </ul>
     </div>
   </div>

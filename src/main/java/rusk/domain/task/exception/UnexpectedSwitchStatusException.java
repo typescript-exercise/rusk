@@ -1,6 +1,6 @@
 package rusk.domain.task.exception;
 
-import rusk.domain.ConcurrentUpdateException;
+import rusk.application.exception.ConcurrentUpdateException;
 
 /**
  * 同時更新などが原因で、本来は実行できない状態の変更が行われたことを表す例外。

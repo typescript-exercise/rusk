@@ -5,7 +5,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import rusk.domain.ConcurrentUpdateException;
+import rusk.application.exception.ConcurrentUpdateException;
 
 @Provider
 public class ConcurrentUpdateExceptionMapper implements ExceptionMapper<ConcurrentUpdateException> {

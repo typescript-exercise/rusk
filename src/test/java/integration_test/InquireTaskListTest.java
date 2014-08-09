@@ -41,14 +41,14 @@ public class InquireTaskListTest {
         TaskList taskList = rule.getTest().target("task-list").request().get(TaskList.class);
         
         // verify
-        Task task = taskList.getTaskInWorking();
+        Task task = taskList.taskInWorking;
         assertThat(task.getId(), is(1L));
         
-        List<Long> uncompletedTaskIds = taskList.getUncompleteTasks().stream().map(t -> t.getId()).collect(Collectors.toList());
+        List<Long> uncompletedTaskIds = taskList.uncompleteTasks.stream().map(t -> t.getId()).collect(Collectors.toList());
 
         assertThat(uncompletedTaskIds, is(contains(3L, 2L, 4L, 8L)));
         
-        List<Long> completedTaskIds = taskList.getCompleteTasks().stream().map(t -> t.getId()).collect(Collectors.toList());
+        List<Long> completedTaskIds = taskList.completeTasks.stream().map(t -> t.getId()).collect(Collectors.toList());
         
         assertThat(completedTaskIds, is(contains(7L, 5L)));
     }

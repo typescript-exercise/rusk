@@ -6,7 +6,6 @@ import static test.matcher.RuskMatchers.*;
 
 import java.util.Date;
 
-import mockit.Mocked;
 import mockit.NonStrictExpectations;
 
 import org.junit.Before;
@@ -27,8 +26,7 @@ public class CompletedTaskTest {
     
     public static class コピー生成したときのテスト {
         
-        @Mocked
-        private InWorkingTask baseTask;
+        private Task baseTask;
         
         @Test
         public void 現在時刻が完了時刻に設定されること() {
@@ -36,6 +34,8 @@ public class CompletedTaskTest {
             new NonStrictExpectations(Now.class) {{
                 Now.getForCompletedDate(); result = DATETIME_2;
             }};
+            
+            baseTask = TaskBuilder.inWorkingTask(10L, DATETIME_1, DATETIME_2).build();
             
             // exercise
             CompletedTask task = CompletedTask.switchFrom(baseTask);

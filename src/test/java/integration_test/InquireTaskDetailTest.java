@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import rusk.common.util.DateUtil;
 import rusk.common.util.Now;
+import rusk.domain.task.CompletedTask;
 import rusk.domain.task.Importance;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
@@ -44,7 +45,7 @@ public class InquireTaskDetailTest {
     @Test
     public void 指定したIDのタスクが取得できること() {
         // exercise
-        Task task = rule.getTest().target("task/2").request(MediaType.APPLICATION_JSON).get(Task.class);
+        Task task = rule.getTest().target("task/2").request(MediaType.APPLICATION_JSON).get(CompletedTask.class);
         
         // verify
         Task expected = TaskBuilder.completedTask(2L, "2014-01-02 15:00:00", "2014-01-03 14:10:00")

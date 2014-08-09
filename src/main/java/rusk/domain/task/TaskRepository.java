@@ -3,7 +3,6 @@ package rusk.domain.task;
 import java.util.Date;
 import java.util.List;
 
-import rusk.domain.ConcurrentUpdateException;
 import rusk.domain.task.exception.TaskNotFoundException;
 
 /**
@@ -24,14 +23,14 @@ public interface TaskRepository {
      * 
      * @return 作業中のタスク。存在しない場合は null を返す。
      */
-    Task inquireTaskInWorkingWithLock();
+    InWorkingTask inquireTaskInWorkingWithLock();
     
     /**
      * 状態が作業中のタスクを取得する。
      * 
      * @return 作業中のタスク。存在しない場合は null を返す。
      */
-    Task inquireTaskInWorking();
+    InWorkingTask inquireTaskInWorking();
     
     /**
      * 状態が未完了（未着手・中断）のタスクを全て取得する。
@@ -79,10 +78,8 @@ public interface TaskRepository {
      * 指定したタスクオブジェクトが持つ情報で、永続化されている同一のタスク情報を上書きする。
      * 
      * @param task 更新情報を持ったタスク
-     * @param lastUpdateDate 更新対象のタスクを最初に取得した時の更新日時
      * @throws NullPointerException タスクが null の場合
      * @throws TaskNotFoundException 指定したタスクが存在しない場合
-     * @throws ConcurrentUpdateException タスクが同時更新されている場合
      */
-    void saveModification(Task task, Date lastUpdateDate);
+    void saveModification(Task task);
 }

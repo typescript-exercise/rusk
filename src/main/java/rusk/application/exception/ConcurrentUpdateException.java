@@ -1,4 +1,4 @@
-package rusk.domain;
+package rusk.application.exception;
 
 /**
  * 更新対象のデータが同時更新されている際にスローされる例外

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import rusk.common.util.DateUtil;
 import rusk.common.util.Now;
-import rusk.domain.ConcurrentUpdateException;
+import rusk.domain.task.InWorkingTask;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.WorkTime;
@@ -45,9 +45,15 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public Task inquireTaskInWorking() {
+    public InWorkingTask inquireTaskInWorking() {
         TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1");
-        return table == null ? null : this.toTask(table);
+        return table == null ? null : (InWorkingTask)this.toTask(table);
+    }
+
+    @Override
+    public InWorkingTask inquireTaskInWorkingWithLock() {
+        TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1 FOR UPDATE");
+        return table == null ? null : (InWorkingTask)this.toTask(table);
     }
     
     private TaskTable readTaskTable(String sql, Object... parameters) {
@@ -155,19 +161,10 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public void saveModification(Task task, Date lastUpdateDate) {
-        this.verifyConcurrentUpdate(task, lastUpdateDate);
+    public void saveModification(Task task) {
         this.updateTask(task);
         this.updateWorkTimes(task);
         this.insertWorkTimes(task);
-    }
-
-    private void verifyConcurrentUpdate(Task task, Date lastUpdateDate) {
-        Date currentUpdateDate = this.inquireUpdateDateById(task.getId());
-        
-        if (lastUpdateDate.getTime() < currentUpdateDate.getTime()) {
-            throw new ConcurrentUpdateException();
-        }
     }
 
     private void updateTask(Task task) {
@@ -195,12 +192,6 @@ public class TaskRepositoryImpl implements TaskRepository {
     private boolean isAlreadyPersisted(WorkTimeTable workTimeTable) {
         long count = this.provider.getPersist().read(Long.class, "SELECT COUNT(*) FROM WORK_TIME WHERE ID=?", workTimeTable.getId());
         return count != 0;
-    }
-
-    @Override
-    public Task inquireTaskInWorkingWithLock() {
-        TaskTable table = this.readTaskTable("SELECT * FROM TASK WHERE STATUS=1 FOR UPDATE");
-        return table == null ? null : this.toTask(table);
     }
 
     public Date inquireUpdateDateById(long id) {

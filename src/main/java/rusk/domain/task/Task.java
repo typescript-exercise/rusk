@@ -13,11 +13,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import rusk.domain.task.exception.DuplicateWorkTimeException;
 import rusk.domain.task.exception.UnexpectedSwitchStatusException;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Task {
+@JsonTypeInfo(use=Id.CLASS)
+public abstract class Task {
     
     private Long id;
     private String title;
@@ -206,24 +208,14 @@ public class Task {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
-    
-    /**
-     * @deprecated このコンストラクタはフレームワークのために存在します。
-     */
-    Task() {}
 
     public Date getCompletedDate() {
         return null;
     }
     
-    public Status getStatus() {
-        throw new UnsupportedOperationException();
-    }
+    abstract public Status getStatus();
     
-    @JsonIgnore
-    public List<Status> getEnableToSwitchStatusList() {
-        throw new UnsupportedOperationException();
-    }
+    abstract public List<Status> getEnableToSwitchStatusList();
 
     public Task switchToCompletedTask() {
         throw new UnexpectedSwitchStatusException();

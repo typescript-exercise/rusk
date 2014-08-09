@@ -38,10 +38,10 @@ public class RegisterTaskTest {
         // setup
         RegisterTaskForm form = new RegisterTaskForm();
         
-        form.setTitle("タスク登録");
-        form.setPeriod(DateUtil.create("2014-01-01 13:14:15"));
-        form.setImportance(Importance.B);
-        form.setDetail("詳細内容");
+        form.title = "タスク登録";
+        form.period = DateUtil.create("2014-01-01 13:14:15");
+        form.importance = Importance.B;
+        form.detail = "詳細内容";
         
         new NonStrictExpectations(Now.class) {{
             Now.getForRegisteredDate(); result = DateUtil.create("2014-01-01 04:30:00");

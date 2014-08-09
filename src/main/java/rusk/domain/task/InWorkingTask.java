@@ -1,5 +1,6 @@
 package rusk.domain.task;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -7,10 +8,18 @@ import java.util.Optional;
 
 import rusk.common.util.Now;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class InWorkingTask extends Task {
     
+    @JsonCreator
+    InWorkingTask(@JsonProperty("id") long id, @JsonProperty("registeredDate") Date registeredDate) {
+        super(id, registeredDate);
+    }
+    
     static InWorkingTask switchFrom(Task base) {
-        InWorkingTask inWorkingTask = new InWorkingTask();
+        InWorkingTask inWorkingTask = new InWorkingTask(base.getId(), base.getRegisteredDate());
         inWorkingTask.overwriteBy(base);
         inWorkingTask.startWorkTime();
         return inWorkingTask;
@@ -18,14 +27,6 @@ public class InWorkingTask extends Task {
     
     private void startWorkTime() {
         this.addWorkTime(WorkTime.createInWorkingTime(Now.getForStartTime()));
-    }
-    
-    static InWorkingTask build(long id, Date registeredDate) {
-        return new InWorkingTask(id, registeredDate);
-    }
-    
-    private InWorkingTask(long id, Date registeredDate) {
-        super(id, registeredDate);
     }
 
     @Override
@@ -72,9 +73,6 @@ public class InWorkingTask extends Task {
     
     @Override
     public List<Status> getEnableToSwitchStatusList() {
-        return Arrays.asList(Status.STOPPED, Status.COMPLETE);
+        return new ArrayList<>(Arrays.asList(Status.STOPPED, Status.COMPLETE));
     }
-    
-    @SuppressWarnings("deprecation")
-    private InWorkingTask() {}
 }

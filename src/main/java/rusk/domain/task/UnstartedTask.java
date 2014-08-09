@@ -1,8 +1,12 @@
 package rusk.domain.task;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UnstartedTask extends Task {
     
@@ -10,8 +14,9 @@ public class UnstartedTask extends Task {
         super(registeredDate);
     }
 
-    UnstartedTask(long id, Date registereddate) {
-        super(id, registereddate);
+    @JsonCreator
+    UnstartedTask(@JsonProperty("id") long id, @JsonProperty("registeredDate") Date registeredDate) {
+        super(id, registeredDate);
     }
 
     @Override
@@ -32,6 +37,7 @@ public class UnstartedTask extends Task {
     
     @Override
     public List<Status> getEnableToSwitchStatusList() {
-        return Arrays.asList(Status.IN_WORKING, Status.COMPLETE);
+        return new ArrayList<>(Arrays.asList(Status.IN_WORKING, Status.COMPLETE));
     }
+    
 }

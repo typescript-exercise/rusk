@@ -41,7 +41,7 @@ public class InWorkingTaskTest {
                 Now.getForStartTime(); result = DATETIME_2;
             }};
             
-            UnstartedTask baseTask = new UnstartedTask(DATETIME_1);
+            UnstartedTask baseTask = new UnstartedTask(10L, DATETIME_1);
             
             // exercise
             InWorkingTask task = InWorkingTask.switchFrom(baseTask);
@@ -123,7 +123,7 @@ public class InWorkingTaskTest {
     }
     
     private static InWorkingTask createInWorkingTask() {
-        InWorkingTask inWorkingTask = InWorkingTask.build(1L, registeredDate);
+        InWorkingTask inWorkingTask = new InWorkingTask(1L, registeredDate);
         inWorkingTask.setTitle("title");
         inWorkingTask.setDetail("detail");
         inWorkingTask.setPriority(Priority.of(period, Importance.C));

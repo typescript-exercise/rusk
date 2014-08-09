@@ -5,9 +5,9 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import rusk.application.exception.ConcurrentUpdateException;
 import rusk.application.interceptor.Transactional;
-import rusk.domain.ConcurrentUpdateException;
-import rusk.domain.task.Status;
+import rusk.domain.task.InWorkingTask;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskFactory;
 import rusk.domain.task.TaskList;
@@ -82,32 +82,14 @@ public class TaskFacade {
      * @param form タスク状態切り替えフォーム
      */
     public void switchTaskStatus(SwitchStatusForm form) {
-        this.verifyConcurrentUpdate(form);
-        this.switchTaskStatusService.switchTaskStatus(form);
-    }
-
-    private void verifyConcurrentUpdate(SwitchStatusForm form) {
-        this.verifyConcurrentUpdateForCurrentInWorkingTask(form);
-        this.verifyConcurrentUpdateForTargetTask(form);
-    }
-
-    private void verifyConcurrentUpdateForCurrentInWorkingTask(SwitchStatusForm form) {
-        if (form.status == Status.IN_WORKING) {
-            Task inWorkingTask = this.repository.inquireTaskInWorkingWithLock();
-            if (inWorkingTask != null) {
-                if (form.inWorkingTaskId != inWorkingTask.getId()) {
-                    throw new ConcurrentUpdateException();
-                }
-                
-                if (form.inWorkingTaskLastUpdateDate.getTime() < inWorkingTask.getUpdateDate().getTime()) {
-                    throw new ConcurrentUpdateException();
-                }
-            }
-        }
-    }
-
-    private void verifyConcurrentUpdateForTargetTask(SwitchStatusForm form) {
+        InWorkingTask inWorkingTask = this.repository.inquireTaskInWorkingWithLock();
         Task storedTask = this.repository.inquireWithLock(form.id);
+        
+        this.verifyConcurrentUpdate(storedTask, form);
+        this.switchTaskStatusService.switchTaskStatus(storedTask, inWorkingTask, form.status);
+    }
+
+    private void verifyConcurrentUpdate(Task storedTask, SwitchStatusForm form) {
         if (form.lastUpdateDate.getTime() < storedTask.getUpdateDate().getTime()) {
             throw new ConcurrentUpdateException();
         }

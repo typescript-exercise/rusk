@@ -32,7 +32,7 @@ public class TaskFactory {
     
     public static TaskFactory inWorkingTaskWithBuilder(long id, Date registeredDate) {
         TaskFactory factory = new TaskFactory();
-        factory.task = InWorkingTask.build(id, registeredDate);
+        factory.task = new InWorkingTask(id, registeredDate);
         return factory;
     }
     

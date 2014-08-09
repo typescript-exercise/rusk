@@ -31,10 +31,10 @@ public class TaskFactoryTest {
         // setup
         RegisterTaskForm form = new RegisterTaskForm();
         
-        form.setTitle("title");
-        form.setDetail("detail");
-        form.setImportance(Importance.C);
-        form.setPeriod(PERIOD);
+        form.title = "title";
+        form.detail = "detail";
+        form.importance = Importance.C;
+        form.period = PERIOD;
         
         // exercise
         Task task = TaskFactory.create(form);
