@@ -1,5 +1,8 @@
 package rusk.application.facade.task;
 
+import java.util.Date;
+import java.util.function.BiConsumer;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -13,9 +16,11 @@ import rusk.domain.task.TaskFactory;
 import rusk.domain.task.TaskList;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.exception.TaskNotFoundException;
+import rusk.domain.task.form.ModifyTaskForm;
 import rusk.domain.task.form.RegisterTaskForm;
 import rusk.domain.task.form.SwitchStatusForm;
 import rusk.domain.task.service.InquireTaskListService;
+import rusk.domain.task.service.ModifyTaskService;
 import rusk.domain.task.service.SwitchTaskStatusService;
 
 @Transactional
@@ -25,12 +30,14 @@ public class TaskFacade {
     private final TaskRepository repository;
     private final SwitchTaskStatusService switchTaskStatusService;
     private final InquireTaskListService inquireTaskListService;
+    private final ModifyTaskService modifyTaskService;
     
     @Inject
-    public TaskFacade(TaskRepository repository, SwitchTaskStatusService switchTaskStatusService, InquireTaskListService inquireTaskListService) {
+    public TaskFacade(TaskRepository repository, SwitchTaskStatusService switchTaskStatusService, InquireTaskListService inquireTaskListService, ModifyTaskService modifyTaskService) {
         this.repository = repository;
         this.switchTaskStatusService = switchTaskStatusService;
         this.inquireTaskListService = inquireTaskListService;
+        this.modifyTaskService = modifyTaskService;
     }
     
     /**
@@ -82,15 +89,32 @@ public class TaskFacade {
      * @param form タスク状態切り替えフォーム
      */
     public void switchTaskStatus(SwitchStatusForm form) {
-        InWorkingTask inWorkingTask = this.repository.inquireTaskInWorkingWithLock();
-        Task storedTask = this.repository.inquireWithLock(form.id);
-        
-        this.verifyConcurrentUpdate(storedTask, form);
-        this.switchTaskStatusService.switchTaskStatus(storedTask, inWorkingTask, form.status);
+        this.modifyTaskWithLock(form.id, form.lastUpdateDate, (storedTask, inWorkingTask) -> {
+            this.switchTaskStatusService.switchTaskStatus(storedTask, inWorkingTask, form.status);
+        });
     }
 
-    private void verifyConcurrentUpdate(Task storedTask, SwitchStatusForm form) {
-        if (form.lastUpdateDate.getTime() < storedTask.getUpdateDate().getTime()) {
+    /**
+     * タスクを更新します。
+     * 
+     * @param form 更新情報
+     */
+    public void modify(ModifyTaskForm form) {
+        this.modifyTaskWithLock(form.id, form.lastUpdateDate, (storedTask, inWorkingTask) -> {
+            this.modifyTaskService.modify(storedTask, form, inWorkingTask);
+        });
+    }
+    
+    private void modifyTaskWithLock(long id, Date lastUpdateDate, BiConsumer<Task, InWorkingTask> consumer) {
+        InWorkingTask inWorkingTask = this.repository.inquireTaskInWorkingWithLock();
+        Task storedTask = this.repository.inquireWithLock(id);
+
+        this.verifyConcurrentUpdate(storedTask, lastUpdateDate);
+        consumer.accept(storedTask, inWorkingTask);
+    }
+
+    private void verifyConcurrentUpdate(Task storedTask, Date lastUpdateDate) {
+        if (lastUpdateDate.getTime() < storedTask.getUpdateDate().getTime()) {
             throw new ConcurrentUpdateException();
         }
     }

@@ -13,6 +13,7 @@ import rusk.application.facade.task.TaskFacade;
 import rusk.application.interceptor.RuskInterceptionService;
 import rusk.domain.task.TaskRepository;
 import rusk.domain.task.service.InquireTaskListService;
+import rusk.domain.task.service.ModifyTaskService;
 import rusk.domain.task.service.SwitchTaskStatusService;
 import rusk.persistence.framework.DatabaseConfig;
 import rusk.persistence.framework.HK2PersistProvider;
@@ -54,13 +55,14 @@ public class RuskHK2Binder extends AbstractBinder {
         bindAsContract(RuskConnection.class).in(RequestScoped.class);
         bind(HK2PersistProvider.class).to(PersistProvider.class).in(Singleton.class);
         
-        // service
+        // facade
         bindAsContract(SystemInitializeFacade.class).in(Singleton.class);
         bindAsContract(TaskFacade.class).in(Singleton.class);
         
-        // domain service
+        // service
         bindAsContract(InquireTaskListService.class).in(Singleton.class);
         bindAsContract(SwitchTaskStatusService.class).in(Singleton.class);
+        bindAsContract(ModifyTaskService.class).in(Singleton.class);
         
         // repository
         bind(TaskRepositoryImpl.class).to(TaskRepository.class).in(Singleton.class);

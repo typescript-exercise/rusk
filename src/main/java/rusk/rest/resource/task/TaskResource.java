@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import rusk.application.facade.task.TaskFacade;
 import rusk.domain.task.Task;
+import rusk.domain.task.form.ModifyTaskForm;
 import rusk.domain.task.form.RegisterTaskForm;
 import rusk.domain.task.form.SwitchStatusForm;
 import rusk.rest.RuskConfig;
@@ -65,5 +66,13 @@ public class TaskResource {
     public void switchStatus(@PathParam("id") long id, SwitchStatusForm form) {
         form.id = id;
         this.taskService.switchTaskStatus(form);
+    }
+    
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void modify(@PathParam("id") long id, ModifyTaskForm form) {
+        form.id = id;
+        this.taskService.modify(form);
     }
 }
