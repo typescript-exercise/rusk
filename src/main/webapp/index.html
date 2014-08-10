@@ -9,10 +9,33 @@
     <link rel="stylesheet" href="styles/app/rusk.css" />
   </head>
   <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="nav-header">
+          <a class="navbar-brand" ng-href="#/">Rusk</a>
+          
+          <button class="navbar-toggle" data-toggle="collapse" data-target="#header-menu">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </button>
+        </div>
+        
+        <div class="collapse navbar-collapse" id="header-menu">
+            <ul class="nav navbar-nav">
+                <li><a class="cursor" data-toggle="modal" data-target="#register-task">新規登録</a></li>
+            </ul>
+        </div>
+      </div>
+    </nav>
+    
     <div class="container">
       <div ng-view>
       </div>
     </div>
+
+    <rusk-register-task id="register-task" on-registered="moveToTopPage()"></rusk-register-task>
     
     <script src="scripts/vendor/jquery/jquery.min.js"></script>
     <script src="scripts/vendor/datetimepicker/jquery.datetimepicker.js"></script>

@@ -1,5 +1,5 @@
 body {
-  padding-top: 2em;
+  padding-top: 70px;
   padding-bottom: 2em;
 }
 
@@ -22,4 +22,8 @@ textarea {
 
 .margin-left-10 {
   margin-left: 10px;
+}
+
+.cursor {
+  cursor: pointer;
 }
