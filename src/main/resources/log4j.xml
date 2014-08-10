@@ -21,7 +21,7 @@
   </appender>
   
   <logger name="rusk">
-    <level value ="debug" />
+    <level value ="${rusk.log.level}" />
   </logger>
   
   <root>

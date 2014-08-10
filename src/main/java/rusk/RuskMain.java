@@ -28,6 +28,8 @@ public class RuskMain {
      * @param args コマンドライン引数
      */
     public static void main(String[] args) throws Exception {
+        setupLogLevel();
+        
         WebAppContext war = new WebAppContext();
         war.setContextPath(CONTEXT_PATH);
         
@@ -42,6 +44,14 @@ public class RuskMain {
         startWebBrowser(url);
         
         server.join();
+    }
+
+    private static void setupLogLevel() throws IOException {
+        if (isRelease()) {
+            System.setProperty("rusk.log.level", "info");
+        } else {
+            System.setProperty("rusk.log.level", "debug");
+        }
     }
     
     /**
