@@ -1,11 +1,13 @@
 package rusk.domain.task;
 
+import rusk.domain.task.exception.UnexpectedSwitchStatusException;
+
 
 public enum Status {
     UNSTARTED {
         @Override
         public Task switchTaskStatus(Task task) {
-            throw new UnsupportedOperationException();
+            throw new UnexpectedSwitchStatusException();
         }
     },
     STOPPED {

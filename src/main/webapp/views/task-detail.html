@@ -1,4 +1,4 @@
-<form class="container well" ng-if="task">
+<form class="container well" ng-if="task" ng-submit="modify()" id="task-detail">
   <div class="row form-group" ng-init="init()">
     <div class="col-md-2 col-sm-4 col-xs-12">
       <label class="form-label">優先度</label>
@@ -28,11 +28,8 @@
         <div class="col-xs-6">
           <div class="form-group">
             <label for="status" class="form-label">状態</label>
-            <select id="status" name="status" class="form-control" ng-model="task.status">
-              <option value="UNSTARTED">未着手</option>
-              <option value="IN_WORKING">作業中</option>
-              <option value="STOPPED">中断</option>
-              <option value="COMPLETE">完了</option>
+            <select ng-model="task.status" id="status" name="status" class="form-control" 
+                    ng-options="(status | status) for status in task.enableToSwitchStatusList">
             </select>
           </div>
         </div>
@@ -96,8 +93,14 @@
         <textarea id="detail" name="detail" class="form-control" ng-model="task.detail"></textarea>
       </div>
     </div>
+    
+    <div class="col-xs-12">
+      <div class="form-group text-right">
+        <button type="submit" class="btn btn-primary btn-lg btn-block visible-sm visible-xs">更新</button>
+        <button type="submit" class="btn btn-primary btn-lg hidden-sm hidden-xs">更新</button>
+      </div>
+    </div>
   </div>
-  
 </form>
 <div ng-if="!task">
   <h1>タスクを読み込んでいます...</h1>

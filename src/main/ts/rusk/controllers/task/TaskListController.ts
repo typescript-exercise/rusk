@@ -8,7 +8,6 @@ angular
         inquireTaskList();
         
         function inquireTaskList() {
-        console.log('inquireTaskList');
             taskListResource.inquire( taskList => {
                 $scope.taskList = taskList;
                 $scope.inWorking = taskList.taskInWorking;

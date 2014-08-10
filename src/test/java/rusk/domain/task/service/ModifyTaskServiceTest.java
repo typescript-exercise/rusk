@@ -32,7 +32,7 @@ public class ModifyTaskServiceTest {
     @Before
     public void setup() {
         switchTaskStatusService = new SwitchTaskStatusService(repository);
-        service = new ModifyTaskService(switchTaskStatusService);
+        service = new ModifyTaskService(repository, switchTaskStatusService);
     }
     
     @Test
@@ -91,6 +91,37 @@ public class ModifyTaskServiceTest {
             
             assertThat(list.get(0).getId(), is(11L));
             assertThat(list.get(0).getStatus(), is(Status.STOPPED));
+        }};
+    }
+    
+    @Test
+    public void 状態が変更されていない場合は_それ以外の項目の変更だけがリポジトリに保存されること() {
+        // setup
+        Task task = TaskBuilder.unstartedTask(10L, "2014-08-01 15:10:10").build();
+        InWorkingTask inWorkingTask = (InWorkingTask)TaskBuilder.inWorkingTask(11L, "2014-08-01 15:10:10", "2014-08-01 15:30:00").build();
+        
+        ModifyTaskForm form = new ModifyTaskForm();
+        form.title = "更新後タイトル";
+        form.status = Status.UNSTARTED;
+        form.period = DateUtil.create("2014-08-10 10:15:10");
+        form.importance = Importance.B;
+        form.detail = "更新後詳細";
+        
+        // exercise
+        service.modify(task, form, inWorkingTask);
+        
+        // verify
+        new Verifications() {{
+            Task task;
+            
+            repository.saveModification(task = withCapture());
+
+            assertThat(task.getId(), is(10L));
+            assertThat(task.getTitle(), is(form.title));
+            assertThat(task.getStatus(), is(Status.UNSTARTED));
+            assertThat(task.getPriority().getUrgency().getPeriod(), is(form.period));
+            assertThat(task.getPriority().getImportance(), is(form.importance));
+            assertThat(task.getDetail(), is(form.detail));
         }};
     }
 

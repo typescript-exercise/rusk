@@ -11,6 +11,13 @@ module rusk {
                     this.$scope = $scope;
                     this.name = name;
                     
+                    this.initializeAutosize();
+                }
+                
+                private initializeAutosize() : void {
+                    // AngularJS のタイミング的に、この時点では値が設定されておらず、テキストエリアのサイズが調整できない
+                    // なので、この場で強制的に値を設定している。
+                    this.$element.val(this.$scope[this.name]);
                     this.$element.autosize();
                 }
                 

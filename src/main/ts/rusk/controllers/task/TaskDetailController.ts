@@ -3,6 +3,7 @@ angular
 .controller('TaskDetailController', [
     '$scope', '$routeParams', '$location', 'taskResource', 'removeTaskService',
     ($scope, $routeParams, $location : ng.ILocationService, taskResource : rusk.resource.task.TaskResource, removeTaskService) => {
+        var form : rusk.view.form.TaskDetailForm;
         
         taskResource.inquire($routeParams.id)
             .success((task) => {
@@ -10,7 +11,7 @@ angular
             });
         
         $scope.init = () => {
-            var detailForm = createTaskDetailForm($scope);
+            form = createTaskDetailForm($scope);
         };
         
         $scope.remove = () => {
@@ -23,15 +24,41 @@ angular
             });
         };
         
+        $scope.modify = () => {
+            if (!form.isValid()) {
+                return;
+            }
+            
+            var params = _.extend({
+                              id: $scope.task.id,
+                              lastUpdateDate: $scope.task.updateDate
+                          }, form.getParams());
+            
+            taskResource.modify(params, 
+                function onSuccess() {
+                    toastr.success('「' + $scope.task.title + '」を更新しました。');
+                    $location.path('/');
+                },
+                function onNotFoundError() {
+                    alert('このタスクは既に削除されています。');
+                });
+        };
+        
         function createTaskDetailForm($scope) : rusk.view.form.TaskDetailForm {
-            var title = new rusk.view.primitive.TextBox($scope, $('#title'), 'title');
-            var status = new rusk.view.primitive.SelectBox($scope, 'status');
+            
+            var title = new rusk.view.primitive.TextBox($scope.task, $('#title'), 'title');
+            
+            appendCurrentTaskStatus($scope);
+            var status = new rusk.view.primitive.SelectBox($scope.task, 'status');
+            
             var period = new rusk.view.primitive.DateTime($('#period'), {
                 defaultDate: $scope.task.priority.urgency.period,
                 minDate: $scope.task.registeredDate
             });
-            var importance = new rusk.view.primitive.SelectBox($scope, 'importance');
-            var detail = new rusk.view.primitive.TextArea($scope, $('#detail'), 'detail');
+            
+            var importance = new rusk.view.primitive.SelectBox($scope.task.priority, 'importance');
+            
+            var detail = new rusk.view.primitive.TextArea($scope.task, $('#detail'), 'detail');
             
             var validateOptions = rusk.config.validation.TaskValidateOptionBuilder.create().title().period().importance().detail().build();
             var form = new rusk.view.primitive.Form($('#task-detail'), validateOptions);
@@ -44,6 +71,10 @@ angular
                 detail: detail,
                 form: form
             });
+        }
+        
+        function appendCurrentTaskStatus($scope) {
+            $scope.task.enableToSwitchStatusList.unshift($scope.task.status);
         }
     }
 ]);

@@ -17,6 +17,20 @@ module rusk {
                     this.detail = formElements.detail;
                     this.form = formElements.form;
                 }
+                
+                isValid() : boolean {
+                    return this.form.isValid();
+                }
+                
+                getParams() {
+                    return {
+                        title: this.title.getValue(),
+                        detail: this.detail.getValue(),
+                        status: this.status.getValue(),
+                        period: this.period.getValue(),
+                        importance: this.importance.getValue()
+                    };
+                }
             }
         }
     }

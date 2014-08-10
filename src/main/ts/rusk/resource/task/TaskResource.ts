@@ -36,6 +36,18 @@ module rusk {
                         onSuccess();
                     });
                 }
+                
+                modify(params, onSuccess: Function, onNotFoundError : Function) : void {
+                    console.dir(params);
+                    
+                    this.$http.put('rest/task/'+ params.id, params, {
+                        overrideInterceptor: {
+                            404: onNotFoundError
+                        }
+                    }).success(() => {
+                        onSuccess();
+                    });
+                }
             }
         }
     }
