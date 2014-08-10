@@ -54,6 +54,13 @@ tasks.war.doFirst {
     tasks.grunt.execute()
 }
 
+tasks.war.doLast {
+    copy {
+        from 'build/libs/rusk.war'
+        into 'dist/'
+    }
+}
+
 apply plugin: 'eclipse'
 import org.gradle.plugins.ide.eclipse.model.SourceFolder 
 
