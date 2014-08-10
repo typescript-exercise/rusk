@@ -45,7 +45,7 @@ war {
             it.isDirectory() ? it : project.zipTree(it)
         }
     }
-    from fileTree(dir: 'build/classes/main', include: '**/Main.class')
+    from fileTree(dir: 'build/classes/main', include: '**/*Main.class')
     
     manifest.attributes 'Main-Class': mainClass, 'Rusk-Release' : 'true'
 }
