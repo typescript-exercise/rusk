@@ -3,34 +3,31 @@ module rusk {
         export module primitive {
             export class TextArea {
                 private $element;
-                private $scope;
-                private name : string;
+                private value : ValueAccessor<string>;
                 
-                constructor($scope, $element, name : string) {
+                constructor($element, value : ValueAccessor<string>) {
                     this.$element = $element;
-                    this.$scope = $scope;
-                    this.name = name;
-                    
+                    this.value = value;
                     this.initializeAutosize();
                 }
                 
                 private initializeAutosize() : void {
                     // AngularJS のタイミング的に、この時点では値が設定されておらず、テキストエリアのサイズが調整できない
                     // なので、この場で強制的に値を設定している。
-                    this.$element.val(this.$scope[this.name]);
+                    this.$element.val(this.value.getValue());
                     this.$element.autosize();
                 }
                 
                 setValue(value : string) : void {
-                    this.$scope[this.name] = value;
+                    this.value.setValue(value);
                 }
                 
                 getValue() : string {
-                    return this.$scope[this.name];
+                    return this.value.getValue();
                 }
                 
                 clear() : void {
-                    this.$scope[this.name] = '';
+                    this.value.clear();
                 }
             }
         }

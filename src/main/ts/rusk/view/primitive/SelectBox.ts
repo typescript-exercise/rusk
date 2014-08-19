@@ -2,20 +2,18 @@ module rusk {
     export module view {
         export module primitive {
             export class SelectBox {
-                private $scope;
-                private name : string;
+                private value : ValueAccessor<string>;
                 
-                constructor($scope, name : string) {
-                    this.$scope = $scope;
-                    this.name = name;
+                constructor(value : ValueAccessor<string>) {
+                    this.value = value;
                 }
                 
                 setValue(value : string) : void {
-                    this.$scope[this.name] = value;
+                    this.value.setValue(value);
                 }
                 
                 getValue() : string {
-                    return this.$scope[this.name];
+                    return this.value.getValue();
                 }
             }
         }

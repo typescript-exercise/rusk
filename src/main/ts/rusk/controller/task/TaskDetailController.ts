@@ -46,19 +46,19 @@ angular
         
         function createTaskDetailForm($scope) : rusk.view.form.TaskDetailForm {
             
-            var title = new rusk.view.primitive.TextBox($scope.task, $('#title'), 'title');
+            var title = new rusk.view.primitive.TextBox($('#title'), new rusk.view.primitive.AngularScopeValue($scope.task, 'title'));
             
             appendCurrentTaskStatus($scope);
-            var status = new rusk.view.primitive.SelectBox($scope.task, 'status');
+            var status = new rusk.view.primitive.SelectBox(new rusk.view.primitive.AngularScopeValue($scope.task, 'status'));
             
             var period = new rusk.view.primitive.DateTime($('#period'), {
                 defaultDate: $scope.task.priority.urgency.period,
                 minDate: $scope.task.registeredDate
             });
             
-            var importance = new rusk.view.primitive.SelectBox($scope.task.priority, 'importance');
+            var importance = new rusk.view.primitive.SelectBox(new rusk.view.primitive.AngularScopeValue($scope.task.priority, 'importance'));
             
-            var detail = new rusk.view.primitive.TextArea($scope.task, $('#detail'), 'detail');
+            var detail = new rusk.view.primitive.TextArea($('#detail'), new rusk.view.primitive.AngularScopeValue($scope.task, 'detail'));
             
             var validateOptions = rusk.view.form.TaskValidateOptionBuilder.create().title().period().importance().detail().build();
             var form = new rusk.view.primitive.Form($('#task-detail'), validateOptions);

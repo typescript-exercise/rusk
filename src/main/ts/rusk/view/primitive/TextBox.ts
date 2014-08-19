@@ -3,21 +3,19 @@ module rusk {
         export module primitive {
             export class TextBox {
                 private $element;
-                private $scope;
-                private name : string;
+                private value : ValueAccessor<string>;
                 
-                constructor($scope, $element, name : string) {
+                constructor($element, value : ValueAccessor<string>) {
                     this.$element = $element;
-                    this.$scope = $scope;
-                    this.name = name;
+                    this.value = value;
                 }
                 
                 getValue() : string {
-                    return this.$scope[this.name];
+                    return this.value.getValue();
                 }
                 
                 clear() : void {
-                    this.$scope[this.name] = '';
+                    this.value.clear();
                 }
                 
                 focus() : void {
