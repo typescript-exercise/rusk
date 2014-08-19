@@ -40,7 +40,7 @@ angular
         var importance = new rusk.view.primitive.SelectBox($scope, 'importance');
         var detail = new rusk.view.primitive.TextArea($scope, $element.find('#detail'), 'detail');
         
-        var validateOptions = rusk.config.validation.TaskValidateOptionBuilder.create().title().period().importance().detail().build();
+        var validateOptions = rusk.view.form.TaskValidateOptionBuilder.create().title().period().importance().detail().build();
         var form = new rusk.view.primitive.Form($element.find('form'), validateOptions);
         
         return new rusk.view.form.RegisterTaskForm({

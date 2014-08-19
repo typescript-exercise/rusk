@@ -2,7 +2,7 @@ angular
 .module('rusk')
 .factory('HttpResponseInterceptor',[
     '$q', '$location', 'ErrorHandlerFactory',
-    ($q : ng.IQService, $location : ng.ILocationService, ErrorHandlerFactory : rusk.interceptors.ErrorHandlerFactory) => {
+    ($q : ng.IQService, $location : ng.ILocationService, ErrorHandlerFactory : rusk.interceptor.ErrorHandlerFactory) => {
         return {
             responseError: function(response) {
                 var errorHandler = ErrorHandlerFactory.createErrorHandler(response.status, response.config);
@@ -17,7 +17,7 @@ angular
     '$location',
     ($location) => {
         return {
-            createErrorHandler: (status : number, config : any) : rusk.interceptors.ErrorHandler => {
+            createErrorHandler: (status : number, config : any) : rusk.interceptor.ErrorHandler => {
                 if (isDefinedOrverrideHandler(status, config)) {
                     return createOrverrideHandler(status, config);
                 } else {
@@ -34,25 +34,25 @@ angular
             }
         }
         
-        function createOrverrideHandler(status : number, config) : rusk.interceptors.ErrorHandler {
+        function createOrverrideHandler(status : number, config) : rusk.interceptor.ErrorHandler {
             return {
                 handle: config.overrideInterceptor[status]
             };
         }
         
-        function createOriginalErrorHandler(status : number) : rusk.interceptors.ErrorHandler {
+        function createOriginalErrorHandler(status : number) : rusk.interceptor.ErrorHandler {
             switch (status) {
             case 400:
-                return new rusk.interceptors.RedirectErrorHandler($location, '/bad-request');
+                return new rusk.interceptor.RedirectErrorHandler($location, '/bad-request');
                 break;
             case 404:
-                return new rusk.interceptors.RedirectErrorHandler($location, '/not-found');
+                return new rusk.interceptor.RedirectErrorHandler($location, '/not-found');
                 break;
             case 409:
-                return new rusk.interceptors.AlertErrorHandler('同時更新されています。\n画面を更新して、もう一度試してください。');
+                return new rusk.interceptor.AlertErrorHandler('同時更新されています。\n画面を更新して、もう一度試してください。');
                 break;
             case 500:
-                return new rusk.interceptors.RedirectErrorHandler($location, '/server-error');
+                return new rusk.interceptor.RedirectErrorHandler($location, '/server-error');
                 break;
             default:
                 return  { 
@@ -63,7 +63,7 @@ angular
     }]);
 
 module rusk {
-    export module interceptors {
+    export module interceptor {
         export interface ErrorHandlerFactory {
             createErrorHandler(status : number, config : any) : ErrorHandler;
         }

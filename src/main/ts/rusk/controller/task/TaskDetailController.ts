@@ -60,7 +60,7 @@ angular
             
             var detail = new rusk.view.primitive.TextArea($scope.task, $('#detail'), 'detail');
             
-            var validateOptions = rusk.config.validation.TaskValidateOptionBuilder.create().title().period().importance().detail().build();
+            var validateOptions = rusk.view.form.TaskValidateOptionBuilder.create().title().period().importance().detail().build();
             var form = new rusk.view.primitive.Form($('#task-detail'), validateOptions);
             
             return new rusk.view.form.TaskDetailForm({

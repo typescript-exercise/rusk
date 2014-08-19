@@ -1,6 +1,6 @@
 module rusk {
-    export module config {
-        export module validation {
+    export module view {
+        export module form {
             export class TaskValidateOptionBuilder {
                 private option = {};
                 

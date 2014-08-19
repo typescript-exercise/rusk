@@ -1,7 +1,5 @@
 module rusk {
     export module model {
-        export var systemInitialized : boolean = false;
-        
         export module list {
             export interface TaskList {
                 completeTasks : Array<rusk.model.task.Task>;
