@@ -36,14 +36,16 @@ angular
                                   lastUpdateDate: $scope.task.updateDate
                               }, form.getParams());
                 
-                taskResource.modify(params, 
-                    function onSuccess() {
+                taskResource.modify({
+                    putData: params,
+                    onSuccess: () => {
                         toastr.success('「' + $scope.task.title + '」を更新しました。');
                         $location.path('/');
                     },
-                    function onNotFoundError() {
+                    onNotFoundError: () => {
                         alert('このタスクは既に削除されています。');
-                    });
+                    }
+                });
             }
         });
         

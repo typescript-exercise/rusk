@@ -46,11 +46,13 @@ angular
                     taskResource.switchStatus({
                         id: task.id,
                         lastUpdateDate: task.updateDate,
-                        status: status
-                    }, function onSuccess() {
-                        $scope.onSwitchStatus();
-                    }, function onNotFoundError() {
-                        alert('指定されたタスクは既に削除されています。');
+                        status: status,
+                        onSuccess: () => {
+                            $scope.onSwitchStatus();
+                        },
+                        onNotFoundError: () => {
+                            alert('指定されたタスクは既に削除されています。');
+                        }
                     });
                     
                     event.preventDefault();

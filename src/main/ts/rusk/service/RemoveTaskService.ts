@@ -9,17 +9,19 @@ angular
             var onRemove = options.onRemove;
             
             if (confirm('「' + title + '」を削除します。よろしいですか？')) {
-                taskResource.remove(id,
-                    function onSuccess() {
+                taskResource.remove({
+                    id: id,
+                    onSuccess: () => {
                         toastr.success('「' + title + '」を削除しました。');
                         
                         if (_.isFunction(onRemove)) {
                             onRemove();
                         }
                     },
-                    function onNotFoundError() {
+                    onNotFoundError: () => {
                         alert('指定したタスクは、既に削除されています。');
-                    });
+                    }
+                });
             }
         }
     }

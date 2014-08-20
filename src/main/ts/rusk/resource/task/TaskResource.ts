@@ -12,41 +12,67 @@ module rusk {
                     return this.$http.post('rest/task', task);
                 }
                 
+                inquireList(param : {onLoadComplete : (taskList : rusk.model.list.TaskList) => void}) : void {
+                    this.$http.get('rest/task-list', {}).success(param.onLoadComplete);
+                }
+                
                 inquire(id : number) : ng.IHttpPromise<any> {
                     return this.$http.get('rest/task/' + id);
                 }
                 
-                remove(id : number, onSuccess: Function, onNotFoundError : Function) : void {
-                    this.$http.delete('rest/task/' + id, {overrideInterceptor: {
-                        404: onNotFoundError
+                remove(param : {
+                    id : number;
+                    onSuccess: Function;
+                    onNotFoundError: Function;
+                }) : void {
+                    this.$http.delete('rest/task/' + param.id, {overrideInterceptor: {
+                        404: param.onNotFoundError
                     }}).success(() => {
-                        onSuccess();
+                        param.onSuccess();
                     });
                 }
                 
-                switchStatus(params, onSuccess: Function, onNotFoundError : Function) : void {
-                    this.$http.put('rest/task/'+ params.id + '/status', {
-                        status: params.status,
-                        lastUpdateDate: params.lastUpdateDate
-                    }, {
-                        overrideInterceptor: {
-                            404: onNotFoundError
-                        }
-                    }).success(() => {
-                        onSuccess();
-                    });
-                }
-                
-                modify(params, onSuccess: Function, onNotFoundError : Function) : void {
-                    console.dir(params);
+                switchStatus(param: {
+                    id: number;
+                    status: string;
+                    lastUpdateDate: number;
+                    onSuccess: Function;
+                    onNotFoundError : Function;
+                }) : void {
+                    var putData = {
+                        status: param.status,
+                        lastUpdateDate: param.lastUpdateDate
+                    };
                     
-                    this.$http.put('rest/task/'+ params.id, params, {
+                    var conf = {
                         overrideInterceptor: {
-                            404: onNotFoundError
+                            404: param.onNotFoundError
                         }
-                    }).success(() => {
-                        onSuccess();
-                    });
+                    };
+                    
+                    this.$http
+                        .put('rest/task/'+ param.id + '/status', putData, conf)
+                        .success(() => {
+                            param.onSuccess();
+                        });
+                }
+                
+                modify(param: {
+                    putData: any;
+                    onSuccess: Function;
+                    onNotFoundError : Function;
+                }) : void {
+                    var conf = {
+                        overrideInterceptor: {
+                            404: param.onNotFoundError
+                        }
+                    };
+                    
+                    this.$http
+                        .put('rest/task/'+ param.putData.id, param.putData, conf)
+                        .success(() => {
+                            param.onSuccess();
+                        });
                 }
             }
         }
