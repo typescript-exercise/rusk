@@ -70,7 +70,7 @@ public class ModifyTaskServiceTest {
     @Test
     public void 作業中タスクがnullでなく_かつ更新後の状態が作業中の場合_作業中タスクが中断に更新されること() {
         // setup
-        Task task = TaskBuilder.unstartedTask(10L, "2014-08-01 15:10:10").build();
+        Task task = TaskBuilder.unstartedTask(10L, "2014-08-01 15:10:10");
         InWorkingTask inWorkingTask = (InWorkingTask)TaskBuilder.inWorkingTask(11L, "2014-08-01 15:10:10", "2014-08-01 15:30:00").build();
         
         ModifyTaskForm form = new ModifyTaskForm();
@@ -97,7 +97,7 @@ public class ModifyTaskServiceTest {
     @Test
     public void 状態が変更されていない場合は_それ以外の項目の変更だけがリポジトリに保存されること() {
         // setup
-        Task task = TaskBuilder.unstartedTask(10L, "2014-08-01 15:10:10").build();
+        Task task = TaskBuilder.unstartedTask(10L, "2014-08-01 15:10:10");
         InWorkingTask inWorkingTask = (InWorkingTask)TaskBuilder.inWorkingTask(11L, "2014-08-01 15:10:10", "2014-08-01 15:30:00").build();
         
         ModifyTaskForm form = new ModifyTaskForm();

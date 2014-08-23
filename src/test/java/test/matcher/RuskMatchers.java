@@ -2,6 +2,7 @@ package test.matcher;
 
 import static org.hamcrest.Matchers.*;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.hamcrest.Matcher;
@@ -11,16 +12,16 @@ import rusk.domain.task.WorkTime;
 
 public final class RuskMatchers {
     
+    public static Without without(TaskPropertyMatcher... matchers) {
+        return new Without(Arrays.asList(matchers));
+    }
+    
+    public static TaskMatcher sameTaskOf(Task expected, Without without) {
+        return new TaskMatcher(expected, without);
+    }
+    
     public static TaskMatcher sameTaskOf(Task expected) {
-        return new TaskMatcher(expected);
-    }
-    
-    public static TaskMatcherWithoutWorkTimeAndCompletedTime sameTaskWithoutWorkTimeAndCompletedTime(Task expected) {
-        return new TaskMatcherWithoutWorkTimeAndCompletedTime(expected);
-    }
-    
-    public static TaskMatcherWithoutWorkTime sameTaskWithoutWorkTime(Task expected) {
-        return new TaskMatcherWithoutWorkTime(expected);
+        return sameTaskOf(expected, Without.EMPTY);
     }
     
     public static Matcher<WorkTime> startAndEndTimeOf(Date startTime, Date endTime) {

@@ -35,7 +35,7 @@ public class SwitchTaskStatusServiceTest {
     @Test
     public void 変更後の状態のタスクがリポジトリに保存されること() {
         // setup
-        Task targetTask = TaskBuilder.unstartedTask(10L, "2014-01-01 11:00:00").build();
+        Task targetTask = TaskBuilder.unstartedTask(10L, "2014-01-01 11:00:00");
         InWorkingTask inWorkingTask = null;
         Status toStatus = Status.COMPLETE;
         
@@ -56,7 +56,7 @@ public class SwitchTaskStatusServiceTest {
     @Test
     public void 変更後の状態が作業中の場合で_現在作業中のタスクが存在する場合_現在作業中のタスクが中断になってリポジトリに保存されること() {
         // setup
-        Task targetTask = TaskBuilder.unstartedTask(10L, "2014-01-01 11:00:00").build();
+        Task targetTask = TaskBuilder.unstartedTask(10L, "2014-01-01 11:00:00");
         InWorkingTask inWorkingTask = (InWorkingTask)TaskBuilder.inWorkingTask(11L, "2014-01-01 11:00:00", "2014-01-01 11:00:00").build();
         Status toStatus = Status.IN_WORKING;
         
@@ -77,7 +77,7 @@ public class SwitchTaskStatusServiceTest {
     @Test
     public void 変更後の状態が作業中でない場合で_現在作業中のタスクが存在する場合_現在作業中のタスクは変更されないこと() {
         // setup
-        Task targetTask = TaskBuilder.unstartedTask(10L, "2014-01-01 11:00:00").build();
+        Task targetTask = TaskBuilder.unstartedTask(10L, "2014-01-01 11:00:00");
         InWorkingTask inWorkingTask = (InWorkingTask)TaskBuilder.inWorkingTask(11L, "2014-01-01 11:00:00", "2014-01-01 11:00:00").build();
         Status toStatus = Status.COMPLETE;
         

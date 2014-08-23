@@ -179,7 +179,7 @@ public class TaskRepositoryImplTest {
             Now.getForUrgency(); returns(DATETIME_1, DATETIME_4);
         }};
         
-        Task originalTask = repository.inquireById(1L);
+        Task originalTask = repository.inquireById(3L);
         
         originalTask.setDetail("詳細更新");
         originalTask.setTitle("タイトル更新");
@@ -190,7 +190,7 @@ public class TaskRepositoryImplTest {
         repository.saveModification(switchedTask);
         
         // verify
-        Task savedTask = repository.inquireById(1L);
+        Task savedTask = repository.inquireById(3L);
         
         assertThat(savedTask, is(sameTaskOf(switchedTask)));
     }

@@ -3,6 +3,7 @@ package rusk.domain.task;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static test.matcher.RuskMatchers.*;
+import static test.matcher.TaskPropertyMatcher.*;
 
 import java.util.Date;
 
@@ -53,7 +54,7 @@ public class CompletedTaskTest {
         @Before
         public void setup() {
             // setup
-            completedTask = new CompletedTask(1L, DATETIME_1, DATETIME_4);
+            completedTask = (CompletedTask) TaskBuilder.completedTask(1L, DATETIME_1, DATETIME_4).build();
             
             // exercise
             inWorkingTask = completedTask.switchToInWorkingTask();
@@ -66,9 +67,32 @@ public class CompletedTaskTest {
         }
         
         @Test
-        public void 完了時間以外は_作業中のときと同じ値が設定されること() {
+        public void 完了時間と作業時間以外は_作業中のときと同じ値が設定されること() {
             // verify
-            assertThat(inWorkingTask, is(sameTaskWithoutWorkTimeAndCompletedTime(completedTask)));
+            assertThat(inWorkingTask, is(sameTaskOf(completedTask, without(WORK_TIMES, COMPLETED_DATE))));
+        }
+    }
+    
+    public static class その他のテスト {
+        
+        @Test
+        public void 緊急度のランクは_C_に変更されて設定されること() {
+            // setup
+            Date period = DATETIME_3;
+            
+            Urgency urgency = new Urgency(DATETIME_1, period);
+            Priority priority = new Priority(urgency, Importance.A);
+            
+            CompletedTask task = new CompletedTask(1L, DATETIME_1, DATETIME_2);
+            
+            // exercise
+            task.setPriority(priority);
+            
+            // verify
+            Urgency actual = task.getPriority().getUrgency();
+            
+            assertThat(actual.getPeriod(), is(period));
+            assertThat(actual.getRank(), is(Rank.C));
         }
     }
 }

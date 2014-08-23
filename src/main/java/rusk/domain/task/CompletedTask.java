@@ -38,6 +38,17 @@ public class CompletedTask extends Task {
         InWorkingTask inWorkingTask = InWorkingTask.switchFrom(this);
         return inWorkingTask;
     }
+    
+    @Override
+    public void setPriority(Priority priority) {
+        Importance importance = priority.getImportance();
+        Date period = priority.getUrgency().getPeriod();
+        
+        CompletedUrgency completedUrgency = new CompletedUrgency(period);
+        Priority completedPrioriry = new Priority(completedUrgency, importance);
+        
+        super.setPriority(completedPrioriry);
+    }
 
     @Override
     public boolean isCompleted() {

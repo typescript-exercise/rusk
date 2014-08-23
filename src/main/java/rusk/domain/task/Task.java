@@ -129,7 +129,7 @@ public abstract class Task {
         this.title = src.title;
         this.detail = src.detail;
         this.registeredDate = src.getRegisteredDate();
-        this.priority = src.getPriority();
+        this.setPriority(src.getPriority());
         this.workTimes = src.getWorkTimes();
         this.updateDate = src.getUpdateDate();
     }

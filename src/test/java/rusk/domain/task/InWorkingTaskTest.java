@@ -3,6 +3,7 @@ package rusk.domain.task;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static test.matcher.RuskMatchers.*;
+import static test.matcher.TaskPropertyMatcher.*;
 
 import java.util.Date;
 import java.util.List;
@@ -41,7 +42,7 @@ public class InWorkingTaskTest {
                 Now.getForStartTime(); result = DATETIME_2;
             }};
             
-            UnstartedTask baseTask = new UnstartedTask(10L, DATETIME_1);
+            UnstartedTask baseTask = TaskBuilder.unstartedTask(10L, DATETIME_1);
             
             // exercise
             InWorkingTask task = InWorkingTask.switchFrom(baseTask);
@@ -82,7 +83,7 @@ public class InWorkingTaskTest {
         @Test
         public void 作業時間以外は_作業中のときと同じ値が設定されていること() {
             // verify
-            assertThat(stoppedTask, is(sameTaskWithoutWorkTime(inWorkingTask)));
+            assertThat(stoppedTask, is(sameTaskOf(inWorkingTask, without(WORK_TIMES))));
         }
     }
     
@@ -116,9 +117,9 @@ public class InWorkingTaskTest {
         }
         
         @Test
-        public void 作業時間と完了時間以外は_作業中のときと同じ値が設定されていること() {
+        public void 作業時間_完了時間_優先度以外は_作業中のときと同じ値が設定されていること() {
             // verify
-            assertThat(completedTask, is(sameTaskWithoutWorkTimeAndCompletedTime(inWorkingTask)));
+            assertThat(completedTask, is(sameTaskOf(inWorkingTask, without(WORK_TIMES, COMPLETED_DATE, PRIORITY))));
         }
     }
     

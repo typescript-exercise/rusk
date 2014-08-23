@@ -3,6 +3,7 @@ package rusk.domain.task;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static test.matcher.RuskMatchers.*;
+import static test.matcher.TaskPropertyMatcher.*;
 
 import java.util.Date;
 
@@ -57,7 +58,7 @@ public class StoppedTaskTest {
         @Test
         public void 作業時間以外は_中断時と同じ値が設定されていること() {
             // verify
-            assertThat(inWorkingTask, is(sameTaskWithoutWorkTime(stoppedTask)));
+            assertThat(inWorkingTask, is(sameTaskOf(stoppedTask, without(WORK_TIMES))));
         }
     }
     
@@ -87,9 +88,9 @@ public class StoppedTaskTest {
         }
         
         @Test
-        public void 中断時と同じ値が設定されていること() {
+        public void 優先度と完了日時以外は中断時と同じ値が設定されていること() {
             // verify
-            assertThat(completedTask, is(sameTaskOf(stoppedTask)));
+            assertThat(completedTask, is(sameTaskOf(stoppedTask, without(PRIORITY, COMPLETED_DATE))));
         }
     }
     

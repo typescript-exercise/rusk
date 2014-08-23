@@ -3,6 +3,7 @@ package rusk.domain.task;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static test.matcher.RuskMatchers.*;
+import static test.matcher.TaskPropertyMatcher.*;
 
 import java.util.Date;
 
@@ -44,7 +45,7 @@ public class UnstartedTaskTest {
         @Test
         public void 作業時間以外は_未着手のときと同じ値が設定されていること() {
             // verify
-            assertThat(inWorkingTask, is(sameTaskWithoutWorkTime(unstartedTask)));
+            assertThat(inWorkingTask, is(sameTaskOf(unstartedTask, without(WORK_TIMES))));
         }
     }
     
@@ -69,9 +70,9 @@ public class UnstartedTaskTest {
         }
         
         @Test
-        public void 未着手のときと同じ値が設定されていること() {
+        public void 完了日時と優先度以外は_未着手のときと同じ値が設定されていること() {
             // verify
-            assertThat(completedTask, is(sameTaskOf(unstartedTask)));
+            assertThat(completedTask, is(sameTaskOf(unstartedTask, without(PRIORITY, COMPLETED_DATE))));
         }
     }
     

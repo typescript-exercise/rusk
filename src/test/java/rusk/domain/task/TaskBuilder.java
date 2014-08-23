@@ -41,24 +41,39 @@ public class TaskBuilder {
         Task task = new InWorkingTask(id, registeredDate);
         task.addWorkTime(WorkTime.createInWorkingTime(startTime));
         
+        Date period = DateUtil.create("2014-01-01 10:00:00");
+        task.setPriority(Priority.of(period, Importance.A));
+        
         return new TaskBuilder(task);
     }
 
     public static TaskBuilder inWorkingTask(long id, String registeredDate, String startTime) {
         Task task = new InWorkingTask(id, DateUtil.create(registeredDate));
         task.addWorkTime(WorkTime.createInWorkingTime(DateUtil.create(startTime)));
+        task.setPriority(Priority.of(DateUtil.create("2014-01-01 10:00:00"), Importance.A));
         
         return new TaskBuilder(task);
     }
     
     public static TaskBuilder completedTask(long id, String registeredDate, String completedDate) {
-        Task task = new CompletedTask(id, DateUtil.create(registeredDate), DateUtil.create(completedDate));
+        return completedTask(id, DateUtil.create(registeredDate), DateUtil.create(completedDate));
+    }
+    
+    public static TaskBuilder completedTask(long id, Date registeredDate, Date completedDate) {
+        Task task = new CompletedTask(id, registeredDate, completedDate);
+        task.setPriority(Priority.of(DateUtil.create("2014-01-01 10:00:00"), Importance.A));
         return new TaskBuilder(task);
     }
     
-    public static TaskBuilder unstartedTask(long id, String registeredDate) {
-        Task task = new UnstartedTask(id, DateUtil.create(registeredDate));
-        return new TaskBuilder(task);
+    public static UnstartedTask unstartedTask(long id, String registeredDate) {
+        return unstartedTask(id, DateUtil.create(registeredDate));
+    }
+    
+    public static UnstartedTask unstartedTask(long id, Date registeredDate) {
+        UnstartedTask task = new UnstartedTask(id, registeredDate);
+        task.setPriority(Priority.of(DateUtil.addHours(registeredDate, 1), Importance.A));
+        
+        return task;
     }
     
     private TaskBuilder(Task task) {

@@ -34,6 +34,7 @@ public class InquireTaskListTest {
     public void test() {
         // setup
         new NonStrictExpectations(Now.class) {{
+            Now.getForUrgency(); result = DateUtil.create("2014-07-15 12:10:00");
             Now.getForInquireCompletedTaskInToday(); result = DateUtil.create("2014-07-15 12:00:00");
         }};
         
