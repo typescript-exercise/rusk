@@ -1,102 +1,72 @@
-angular
-.module('rusk')
-.factory('HttpResponseInterceptor',[
-    '$q', '$location', 'ErrorHandlerFactory',
-    ($q : ng.IQService, $location : ng.ILocationService, ErrorHandlerFactory : rusk.interceptor.ErrorHandlerFactory) => {
-        return {
-            responseError: function(response) {
-                var errorHandler = ErrorHandlerFactory.createErrorHandler(response.status, response.config);
-                
-                errorHandler.handle();
-                
-                return $q.reject(response);
-            }
-        };
-    }])
-.factory('ErrorHandlerFactory', [
-    '$location',
-    ($location) => {
-        return {
-            createErrorHandler: (status : number, config : any) : rusk.interceptor.ErrorHandler => {
-                if (isDefinedOrverrideHandler(status, config)) {
-                    return createOrverrideHandler(status, config);
+/// <reference path="./ErrorHandler.ts" />
+
+module ruks {
+    import ErrorHandlerFactory = rusk.interceptor.ErrorHandlerFactory;
+    import ErrorHandler = rusk.interceptor.ErrorHandler;
+    import RedirectErrorHandler = rusk.interceptor.RedirectErrorHandler;
+    import AlertErrorHandler = rusk.interceptor.AlertErrorHandler;
+    
+    angular
+    .module('rusk')
+    .factory('HttpResponseInterceptor',[
+        '$q', '$location', 'ErrorHandlerFactory',
+        ($q : ng.IQService, $location : ng.ILocationService, ErrorHandlerFactory : ErrorHandlerFactory) => {
+            return {
+                responseError: function(response) {
+                    var errorHandler = ErrorHandlerFactory.createErrorHandler(response.status, response.config);
+                    
+                    errorHandler.handle();
+                    
+                    return $q.reject(response);
+                }
+            };
+        }])
+    .factory('ErrorHandlerFactory', [
+        '$location',
+        ($location) => {
+            return {
+                createErrorHandler: (status : number, config : any) : ErrorHandler => {
+                    if (isDefinedOrverrideHandler(status, config)) {
+                        return createOrverrideHandler(status, config);
+                    } else {
+                        return createOriginalErrorHandler(status);
+                    }
+                }
+            };
+            
+            function isDefinedOrverrideHandler(status : number, config) : boolean {
+                if (config && config.overrideInterceptor) {
+                    return _.isFunction(config.overrideInterceptor[status]);
                 } else {
-                    return createOriginalErrorHandler(status);
+                    return false;
                 }
             }
-        };
-        
-        function isDefinedOrverrideHandler(status : number, config) : boolean {
-            if (config && config.overrideInterceptor) {
-                return _.isFunction(config.overrideInterceptor[status]);
-            } else {
-                return false;
-            }
-        }
-        
-        function createOrverrideHandler(status : number, config) : rusk.interceptor.ErrorHandler {
-            return {
-                handle: config.overrideInterceptor[status]
-            };
-        }
-        
-        function createOriginalErrorHandler(status : number) : rusk.interceptor.ErrorHandler {
-            switch (status) {
-            case 400:
-                return new rusk.interceptor.RedirectErrorHandler($location, '/bad-request');
-                break;
-            case 404:
-                return new rusk.interceptor.RedirectErrorHandler($location, '/not-found');
-                break;
-            case 409:
-                return new rusk.interceptor.AlertErrorHandler('同時更新されています。\n画面を更新して、もう一度試してください。');
-                break;
-            case 500:
-                return new rusk.interceptor.RedirectErrorHandler($location, '/server-error');
-                break;
-            default:
-                return  { 
-                    handle: () : void => {}
-                }; 
-            }
-        }
-    }]);
-
-module rusk {
-    export module interceptor {
-        export interface ErrorHandlerFactory {
-            createErrorHandler(status : number, config : any) : ErrorHandler;
-        }
-        
-        export interface ErrorHandler {
-            handle() : void;
-        }
-        
-        export class RedirectErrorHandler implements ErrorHandler {
             
-            private $location : ng.ILocationService;
-            private url : string;
-            
-            constructor($location : ng.ILocationService, url : string) {
-                this.$location = $location;
-                this.url = url;
+            function createOrverrideHandler(status : number, config) : ErrorHandler {
+                return {
+                    handle: config.overrideInterceptor[status]
+                };
             }
             
-            handle() : void {
-                this.$location.path(this.url).replace();
+            function createOriginalErrorHandler(status : number) : ErrorHandler {
+                switch (status) {
+                case 400:
+                    return new RedirectErrorHandler($location, '/bad-request');
+                    break;
+                case 404:
+                    return new RedirectErrorHandler($location, '/not-found');
+                    break;
+                case 409:
+                    return new AlertErrorHandler('同時更新されています。\n画面を更新して、もう一度試してください。');
+                    break;
+                case 500:
+                    return new RedirectErrorHandler($location, '/server-error');
+                    break;
+                default:
+                    return  { 
+                        handle: () : void => {}
+                    }; 
+                }
             }
-        }
-        
-        export class AlertErrorHandler implements ErrorHandler {
-            private message : string;
-            
-            constructor(message : string) {
-                this.message = message;
-            }
-            
-            handle() : void {
-                alert(this.message);
-            }
-        }
-    }
+        }]);
 }

@@ -1,6 +1,10 @@
+/// <reference path="../../model/models.ts" />
+
 module rusk {
     export module resource {
         export module task {
+            import TaskList = rusk.model.list.TaskList;
+            
             export class TaskResource {
                 private $http : ng.IHttpService;
                 
@@ -12,7 +16,7 @@ module rusk {
                     return this.$http.post('rest/task', task);
                 }
                 
-                inquireList(param : {onLoadComplete : (taskList : rusk.model.list.TaskList) => void}) : void {
+                inquireList(param : {onLoadComplete : (taskList : TaskList) => void}) : void {
                     this.$http.get('rest/task-list', {}).success(param.onLoadComplete);
                 }
                 

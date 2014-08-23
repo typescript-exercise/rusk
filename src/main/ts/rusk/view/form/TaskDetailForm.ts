@@ -1,6 +1,19 @@
+/// <reference path="../primitive/TextBox.ts" />
+/// <reference path="../primitive/DateTime.ts" />
+/// <reference path="../primitive/SelectBox.ts" />
+/// <reference path="../primitive/TextArea.ts" />
+/// <reference path="../primitive/Form.ts" />
+/// <reference path="../primitive/AngularScopeValue.ts" />
+
 module rusk {
     export module view {
         export module form {
+            import TextBox = primitive.TextBox;
+            import DateTime = primitive.DateTime;
+            import SelectBox = primitive.SelectBox;
+            import TextArea = primitive.TextArea;
+            import Form = primitive.Form;
+            import AngularScopeValue = primitive.AngularScopeValue;
             
             export interface TaskDetailFormConstructParameter {
                 task: any;
@@ -31,12 +44,12 @@ module rusk {
             }
             
             export class TaskDetailForm {
-                private title : primitive.TextBox;
-                private status : primitive.SelectBox;
-                private period : primitive.DateTime;
-                private importance : primitive.SelectBox;
-                private detail : primitive.TextArea;
-                private form : primitive.Form;
+                private title : TextBox;
+                private status : SelectBox;
+                private period : DateTime;
+                private importance : SelectBox;
+                private detail : TextArea;
+                private form : Form;
                 
                 constructor(param : TaskDetailFormConstructParameter) {
                     this.initTitle(param);
@@ -50,38 +63,38 @@ module rusk {
                 private initTitle(param : TaskDetailFormConstructParameter) {
                     var $element = $(param.title.selector);
                     var accessor = this.createAccessor(param.task, param.title.name);
-                    this.title = new primitive.TextBox($element, accessor);
+                    this.title = new TextBox($element, accessor);
                 }
                 
                 private initStatus(param : TaskDetailFormConstructParameter) {
                     var accessor = this.createAccessor(param.task, param.status.name);
-                    this.status = new primitive.SelectBox(accessor);
+                    this.status = new SelectBox(accessor);
                 }
                 
                 private initPeriod(param : TaskDetailFormConstructParameter) {
                     var $element = $(param.period.selector);
-                    this.period = new primitive.DateTime($element, param.period.options);
+                    this.period = new DateTime($element, param.period.options);
                 }
                 
                 private initImportance(param : TaskDetailFormConstructParameter) {
                     var accessor = this.createAccessor(param.task.priority, param.importance.name);
-                    this.importance = new primitive.SelectBox(accessor);
+                    this.importance = new SelectBox(accessor);
                 }
                 
                 private initDetail(param : TaskDetailFormConstructParameter) {
                     var $element = $(param.detail.selector);
                     var accessor = this.createAccessor(param.task, param.detail.name);
-                    this.detail = new primitive.TextArea($element, accessor);
+                    this.detail = new TextArea($element, accessor);
                 }
                 
                 private initForm(param : TaskDetailFormConstructParameter) {
                     var $element = $(param.form.selector);
                     var validateOptions = TaskValidateOptionBuilder.create().title().period().importance().detail().build();
-                    this.form = new primitive.Form($element, validateOptions);
+                    this.form = new Form($element, validateOptions);
                 }
                 
-                private createAccessor(scope, name) : primitive.AngularScopeValue {
-                    return new primitive.AngularScopeValue(scope, name)
+                private createAccessor(scope, name) : AngularScopeValue {
+                    return new AngularScopeValue(scope, name)
                 }
                 
                 isValid() : boolean {

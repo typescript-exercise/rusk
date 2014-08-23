@@ -1,6 +1,20 @@
+/// <reference path="../primitive/TextBox.ts" />
+/// <reference path="../primitive/DateTime.ts" />
+/// <reference path="../primitive/SelectBox.ts" />
+/// <reference path="../primitive/TextArea.ts" />
+/// <reference path="../primitive/Form.ts" />
+/// <reference path="../primitive/AngularScopeValue.ts" />
+
 module rusk {
     export module view {
         export module form {
+            import TextBox = primitive.TextBox;
+            import DateTime = primitive.DateTime;
+            import SelectBox = primitive.SelectBox;
+            import TextArea = primitive.TextArea;
+            import Form = primitive.Form;
+            import AngularScopeValue = primitive.AngularScopeValue;
+            
             export interface RegisterTaskFormConstructParameter {
                 baseEelement: any;
                 scope: any;
@@ -24,11 +38,11 @@ module rusk {
             }
             
             export class RegisterTaskForm {
-                private title : primitive.TextBox;
-                private period : primitive.DateTime;
-                private importance : primitive.SelectBox;
-                private detail : primitive.TextArea;
-                private form : primitive.Form;
+                private title : TextBox;
+                private period : DateTime;
+                private importance : SelectBox;
+                private detail : TextArea;
+                private form : Form;
                 
                 constructor(param : RegisterTaskFormConstructParameter) {
                     this.initTitle(param);
@@ -41,33 +55,33 @@ module rusk {
                 private initTitle(param : RegisterTaskFormConstructParameter) {
                     var $element = param.baseEelement.find(param.title.selector);
                     var accessor = this.createAccessor(param, param.title.name);
-                    this.title = new primitive.TextBox($element, accessor);
+                    this.title = new TextBox($element, accessor);
                 }
                 
                 private initPeriod(param : RegisterTaskFormConstructParameter) {
                     var $element = param.baseEelement.find(param.period.selector);
-                    this.period = new primitive.DateTime($element);
+                    this.period = new DateTime($element);
                 }
                 
                 private initImportance(param : RegisterTaskFormConstructParameter) {
                     var accessor = this.createAccessor(param, param.importance.name);
-                    this.importance = new primitive.SelectBox(accessor);
+                    this.importance = new SelectBox(accessor);
                 }
                 
                 private initDetail(param : RegisterTaskFormConstructParameter) {
                     var $element = param.baseEelement.find(param.detail.selector);
                     var accessor = this.createAccessor(param, param.detail.name);
-                    this.detail = new primitive.TextArea($element, accessor);
+                    this.detail = new TextArea($element, accessor);
                 }
                 
                 private initForm(param : RegisterTaskFormConstructParameter) {
                     var $element = param.baseEelement.find(param.form.selector);
                     var validateOptions = TaskValidateOptionBuilder.create().title().period().importance().detail().build();
-                    this.form = new primitive.Form($element, validateOptions);
+                    this.form = new Form($element, validateOptions);
                 }
                 
-                private createAccessor(param, name) : primitive.AngularScopeValue {
-                    return new primitive.AngularScopeValue(param.scope, name);
+                private createAccessor(param, name) : AngularScopeValue {
+                    return new AngularScopeValue(param.scope, name);
                 }
                 
                 getTask() {

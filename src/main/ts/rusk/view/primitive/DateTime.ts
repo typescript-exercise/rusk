@@ -1,6 +1,10 @@
+/// <reference path="../../model/FixdIntervalDate.ts" />
+
 module rusk {
     export module view {
         export module primitive {
+            import FixdIntervalDate = rusk.model.FixdIntervalDate;
+            
             export class DateTime {
                 private $element;
                 
@@ -10,8 +14,8 @@ module rusk {
                     var defaultDate = options ? new Date(options.defaultDate) : new Date();
                     var minDate = options ? new Date(options.minDate) : new Date();
                     
-                    var enableDefaultDate = new rusk.model.FixdIntervalDate(defaultDate);
-                    var enableMinDate = new rusk.model.FixdIntervalDate(minDate);
+                    var enableDefaultDate = new FixdIntervalDate(defaultDate);
+                    var enableMinDate = new FixdIntervalDate(minDate);
                     
                     this.$element.datetimepicker({
                         mask: true,
@@ -39,7 +43,7 @@ module rusk {
                 }
                 
                 setValue(date : Date) : void {
-                    var enableDate = new rusk.model.FixdIntervalDate(date);
+                    var enableDate = new FixdIntervalDate(date);
                     this.$element.val(rusk.formatDate(enableDate.getDate(), 'yyyy/MM/dd HH:mm'));
                 }
             }
