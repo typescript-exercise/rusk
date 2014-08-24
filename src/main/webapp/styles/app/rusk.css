@@ -27,3 +27,15 @@ textarea {
 .cursor {
   cursor: pointer;
 }
+
+#work-times-table {
+  max-width: 500px;
+}
+
+#work-times-table thead tr th {
+  text-align: center;
+}
+
+#work-time-summary {
+  text-align: right;
+}

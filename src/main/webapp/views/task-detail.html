@@ -79,7 +79,7 @@
             <label for="duration" class="form-label">作業時間</label>
             <p ng-show="task.totalWorkTime">
               <span class="h4">{{task.totalWorkTime | timeDuration}}</span>
-              <a href="#" class="btn btn-default btn-xs disabled">内訳</a>
+              <a ng-href="#/task/{{task.id}}/work-times" class="btn btn-default btn-xs">内訳</a>
             </p>
             <p ng-show="!task.totalWorkTime">-</p>
           </div>

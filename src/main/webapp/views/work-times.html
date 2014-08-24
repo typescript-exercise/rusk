@@ -1,0 +1,34 @@
+<div ng-if="task">
+  <div ng-if="task.workTimes.length !== 0">
+    <table id="work-times-table" class="table table-bordered table-striped container">
+      <caption class="h2">{{task.title}}</caption>
+      <caption class="h3">作業時間内訳</caption>
+      <thead>
+        <tr>
+          <th></th>
+          <th>開始時間</th>
+          <th>終了時間</th>
+          <th>作業時間</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="workTime in task.workTimes">
+          <td>{{$index + 1}}</td>
+          <td>{{workTime.startTime | date:'yyyy/MM/dd HH:mm'}}</td>
+          <td>{{workTime.endTime | date:'yyyy/MM/dd HH:mm'}}</td>
+          <td>{{workTime.duration | timeDuration}}</td>
+        </tr>
+        <tr>
+          <td id="work-time-summary" colspan="3">合計</td>
+          <td>{{task.totalWorkTime | timeDuration}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div ng-if="task.workTimes.length === 0">
+    <h1>作業時間が存在しません。</h1>
+  </div>
+</div>
+<div ng-if="!task">
+  <h1>読み込んでいます...</h1>
+</div>

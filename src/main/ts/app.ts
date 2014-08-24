@@ -14,6 +14,10 @@ angular
             controller: 'TaskDetailController',
             templateUrl: 'views/task-detail.html'
         })
+        .when('/task/:id/work-times', {
+            controller: 'WorkTimeController',
+            templateUrl: 'views/work-times.html'
+        })
         .when('/server-error', {
             templateUrl: 'views/server-error.html'
         })
