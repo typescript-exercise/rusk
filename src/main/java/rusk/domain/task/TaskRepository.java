@@ -82,4 +82,12 @@ public interface TaskRepository {
      * @throws TaskNotFoundException 指定したタスクが存在しない場合
      */
     void saveModification(Task task);
+    
+    /**
+     * 指定した作業時間と重複する作業時間が既に存在するかどうかを確認する。
+     * 
+     * @param workTime 重複を確認する作業時間
+     * @return 重複する作業時間が存在する場合は true
+     */
+    boolean existsDuplicatedWorkTime(WorkTime workTime);
 }

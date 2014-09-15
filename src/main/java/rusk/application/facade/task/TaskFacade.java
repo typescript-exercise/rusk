@@ -15,8 +15,10 @@ import rusk.domain.task.Task;
 import rusk.domain.task.TaskFactory;
 import rusk.domain.task.TaskList;
 import rusk.domain.task.TaskRepository;
+import rusk.domain.task.WorkTime;
 import rusk.domain.task.exception.TaskNotFoundException;
 import rusk.domain.task.form.ModifyTaskForm;
+import rusk.domain.task.form.ModifyWorkTimeForm;
 import rusk.domain.task.form.RegisterTaskForm;
 import rusk.domain.task.form.SwitchStatusForm;
 import rusk.domain.task.service.InquireTaskListService;
@@ -116,6 +118,19 @@ public class TaskFacade {
     private void verifyConcurrentUpdate(Task storedTask, Date lastUpdateDate) {
         if (lastUpdateDate.getTime() < storedTask.getUpdateDate().getTime()) {
             throw new ConcurrentUpdateException();
+        }
+    }
+    
+    /**
+     * 作業時間を新規に追加する。
+     * 
+     * @param form 登録情報
+     */
+    public void registerWorkTime(ModifyWorkTimeForm form) {
+        // 全作業時間との整合性チェックを行うので、 WorkTime.class で同期を取る。
+        synchronized (WorkTime.class) {
+            Task task = this.repository.inquireWithLock(form.taskId);
+            this.modifyTaskService.registerWorkTime(task, form);
         }
     }
 }

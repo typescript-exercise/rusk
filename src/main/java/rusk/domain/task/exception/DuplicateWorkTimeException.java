@@ -10,6 +10,10 @@ import rusk.domain.task.WorkTime;
 public class DuplicateWorkTimeException extends RuntimeException {
     private static final long serialVersionUID = 1L;
     
+    public DuplicateWorkTimeException(WorkTime duplicate) {
+        super("work time is duplicated. duplicate = " + format(duplicate));
+    }
+    
     public DuplicateWorkTimeException(WorkTime already, WorkTime duplicate) {
         super("work time is duplicated. already = " + format(already) + ", duplicate = " + format(duplicate));
     }

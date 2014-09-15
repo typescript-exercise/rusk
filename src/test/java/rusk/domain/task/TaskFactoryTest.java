@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import rusk.common.util.DateUtil;
 import rusk.common.util.Now;
+import rusk.domain.task.form.ModifyWorkTimeForm;
 import rusk.domain.task.form.RegisterTaskForm;
 
 public class TaskFactoryTest {
@@ -52,4 +53,19 @@ public class TaskFactoryTest {
         assertThat(task.getWorkTimes(), is(empty()));
     }
 
+    @Test
+    public void 指定したフォームの情報を元に作業時間が生成されること() {
+        // setup
+        ModifyWorkTimeForm form = new ModifyWorkTimeForm();
+        
+        form.startTime = DateUtil.create("2014-07-08 11:12:31");
+        form.endTime = DateUtil.create("2014-07-09 12:21:51");
+        
+        // exercise
+        WorkTime workTime = TaskFactory.create(form);
+        
+        // verify
+        assertThat(workTime.getStartTime(), is(form.startTime));
+        assertThat(workTime.getEndTime(), is(form.endTime));
+    }
 }

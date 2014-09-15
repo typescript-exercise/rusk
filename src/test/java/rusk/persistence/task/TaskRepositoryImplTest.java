@@ -24,6 +24,7 @@ import rusk.domain.task.Priority;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
+import rusk.domain.task.WorkTime;
 import rusk.domain.task.form.RegisterTaskForm;
 import test.db.RuskDBTester;
 import test.db.TestPersistProvider;
@@ -248,5 +249,75 @@ public class TaskRepositoryImplTest {
         
         // verify
         assertThat(updateDate, is(DateUtil.create("2014-07-01 12:00:00")));
+    }
+    
+    @Test
+    public void 既存の作業時間と重複しない場合_falseを返す() throws Exception {
+        // setup
+        Date startTime = DateUtil.create("2014-07-01 12:59:58");
+        Date endTime = DateUtil.create("2014-07-01 12:59:59");
+        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
+        
+        // exercise
+        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        
+        // verify
+        assertThat(actual, is(false));
+    }
+    
+    @Test
+    public void 終了時間が既存の作業時間の開始時間と重なる場合_trueを返す() throws Exception {
+        // setup
+        Date startTime = DateUtil.create("2014-07-01 12:59:58");
+        Date endTime = DateUtil.create("2014-07-01 13:00:00");
+        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
+        
+        // exercise
+        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        
+        // verify
+        assertThat(actual, is(true));
+    }
+    
+    @Test
+    public void 指定した作業時間が_既存の作業時間の間に収まる場合_trueを返す() throws Exception {
+        // setup
+        Date startTime = DateUtil.create("2014-07-01 13:01:00");
+        Date endTime = DateUtil.create("2014-07-01 13:49:00");
+        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
+        
+        // exercise
+        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        
+        // verify
+        assertThat(actual, is(true));
+    }
+    
+    @Test
+    public void 開始時間が既存の作業時間の終了時間と重なる場合_trueを返す() throws Exception {
+        // setup
+        Date startTime = DateUtil.create("2014-07-01 13:50:00");
+        Date endTime = DateUtil.create("2014-07-01 13:50:30");
+        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
+        
+        // exercise
+        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        
+        // verify
+        assertThat(actual, is(true));
+    }
+    
+    @Test
+    public void 指定した作業時間の終了時間が_既存の終了時間未設定の作業時間の開始時間より未来の場合_trueを返す() throws Exception {
+        // setup
+        Date startTime = DateUtil.create("2014-07-01 13:50:30");
+        Date endTime = DateUtil.create("2014-07-01 13:52:00");
+        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
+        
+        // exercise
+        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        
+        // verify
+        assertThat(actual, is(true));
     }
 }

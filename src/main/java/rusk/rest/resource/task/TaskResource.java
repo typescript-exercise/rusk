@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import rusk.application.facade.task.TaskFacade;
 import rusk.domain.task.Task;
 import rusk.domain.task.form.ModifyTaskForm;
+import rusk.domain.task.form.ModifyWorkTimeForm;
 import rusk.domain.task.form.RegisterTaskForm;
 import rusk.domain.task.form.SwitchStatusForm;
 import rusk.rest.RuskConfig;
@@ -74,5 +75,13 @@ public class TaskResource {
     public void modify(@PathParam("id") long id, ModifyTaskForm form) {
         form.id = id;
         this.taskService.modify(form);
+    }
+    
+    @POST
+    @Path("{id}/work-time")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void registerWorkTime(@PathParam("id") long id, ModifyWorkTimeForm form) {
+        form.taskId = id;
+        this.taskService.registerWorkTime(form);
     }
 }

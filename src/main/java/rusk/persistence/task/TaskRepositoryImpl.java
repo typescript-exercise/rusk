@@ -197,4 +197,21 @@ public class TaskRepositoryImpl implements TaskRepository {
     public Date inquireUpdateDateById(long id) {
         return this.provider.getPersist().read(Date.class, "SELECT UPDATE_DATE FROM TASK WHERE ID=?", id);
     }
+
+    @Override
+    public boolean existsDuplicatedWorkTime(WorkTime workTime) {
+        String sql = "SELECT COUNT(*)"
+                   + "   FROM WORK_TIME"
+                   + "  WHERE (END_TIME IS NOT NULL"
+                   + "        AND (START_TIME<=? AND ?<=END_TIME)"
+                   + "         OR (START_TIME <=? AND ?<=END_TIME))"
+                   + "     OR (END_TIME IS NULL"
+                   + "        AND START_TIME<=?)";
+        
+        Date startTime = workTime.getStartTime();
+        Date endTime = workTime.getEndTime();
+        
+        long cnt = this.provider.getPersist().read(Long.class, sql, startTime, startTime, endTime, endTime, endTime);
+        return cnt != 0;
+    }
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import rusk.common.util.Now;
+import rusk.domain.task.form.ModifyWorkTimeForm;
 import rusk.domain.task.form.RegisterTaskForm;
 
 public class TaskFactory {
@@ -75,6 +76,10 @@ public class TaskFactory {
     
     public Task build() {
         return this.task;
+    }
+
+    public static WorkTime create(ModifyWorkTimeForm form) {
+        return WorkTime.createConcludedWorkTime(form.startTime, form.endTime);
     }
 
     private TaskFactory() {}
