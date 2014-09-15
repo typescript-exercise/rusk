@@ -50,13 +50,27 @@ public class ModifyTaskService {
      * @param form 追加する作業時間の情報
      */
     public void registerWorkTime(Task task, ModifyWorkTimeForm form) {
-        WorkTime newWorkTime = TaskFactory.create(form);
-        
-        if (this.repository.existsDuplicatedWorkTime(newWorkTime)) {
-            throw new DuplicateWorkTimeException(newWorkTime);
+        if (this.repository.existsDuplicatedWorkTime(form.startTime, form.endTime)) {
+            throw new DuplicateWorkTimeException(TaskFactory.create(form));
         }
         
-        task.addWorkTime(newWorkTime);
+        task.addWorkTime(TaskFactory.create(form));
+        
+        this.repository.saveModification(task);
+    }
+    
+    /**
+     * 指定したタスクの作業時間を更新する。
+     * 
+     * @param task 作業時間を更新するタスク
+     * @param form 更新する作業時間の情報
+     */
+    public void modifyWorkTime(Task task, ModifyWorkTimeForm form) {
+        if (this.repository.existsDuplicatedWorkTime(form.workTimeId, form.startTime, form.endTime)) {
+            throw new DuplicateWorkTimeException(TaskFactory.create(form));
+        }
+        
+        task.modifyWorkTime(TaskFactory.create(form));
         
         this.repository.saveModification(task);
     }

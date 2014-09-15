@@ -133,4 +133,22 @@ public class TaskFacade {
             this.modifyTaskService.registerWorkTime(task, form);
         }
     }
+    
+    /**
+     * 作業時間を更新する。
+     * 
+     * @param form 更新情報
+     */
+    public void modifyWorkTime(ModifyWorkTimeForm form) {
+        synchronized (WorkTime.class) {
+            Task task = this.repository.inquireWithLock(form.taskId);
+            
+            WorkTime workTime = task.getWorkTime(form.workTimeId);
+            if (form.lastUpdateDate.getTime() < workTime.getUpdateDate().getTime()) {
+                throw new ConcurrentUpdateException();
+            }
+            
+            this.modifyTaskService.modifyWorkTime(task, form);
+        }
+    }
 }

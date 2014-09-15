@@ -19,6 +19,19 @@ public class WorkTime {
     private long id;
     private long startTime;
     private Long endTime; // 終了日時は null 可のため、型を Long にしている
+    private long updateDate;
+    
+    /**
+     * 指定した作業時間と同じフィールドを持つコピーを作成する。
+     * 
+     * @param original コピー元の作業時間
+     */
+    WorkTime(WorkTime original) {
+        this.id = original.id;
+        this.startTime = original.startTime;
+        this.endTime = original.endTime;
+        this.updateDate = original.updateDate;
+    }
     
     /**
      * 新規に作業中の作業時間を作成します。
@@ -34,7 +47,7 @@ public class WorkTime {
         this.setStartTime(startTime);
     }
     
-    private void setStartTime(Date startTime) {
+    void setStartTime(Date startTime) {
         Validate.notNull(startTime, "開始時間は必須です。");
         
         this.startTime = startTime.getTime();
@@ -47,13 +60,14 @@ public class WorkTime {
      * @param startTime 開始時間
      * @return 再構築された作業中の作業時間
      */
-    public static WorkTime deserializeInWorkingTime(long id, Date startTime) {
-        return new WorkTime(id, startTime);
+    public static WorkTime deserializeInWorkingTime(long id, Date startTime, Date updateDate) {
+        return new WorkTime(id, startTime, updateDate);
     }
 
-    private WorkTime(long id, Date startTime) {
+    private WorkTime(long id, Date startTime, Date updateDate) {
         this.id = id;
         this.setStartTime(startTime);
+        this.setUpdateDate(updateDate);
     }
     
     /**
@@ -95,14 +109,15 @@ public class WorkTime {
      * @param endTime 終了時間
      * @return 再構築された完了した作業時間
      */
-    public static WorkTime deserializeConcludedWorkTime(long id, Date startTime, Date endTime) {
-        return new WorkTime(id, startTime, endTime);
+    public static WorkTime deserializeConcludedWorkTime(long id, Date startTime, Date endTime, Date updateDate) {
+        return new WorkTime(id, startTime, endTime, updateDate);
     }
     
-    private WorkTime(long id, Date startTime, Date endTime) {
+    private WorkTime(long id, Date startTime, Date endTime, Date updateDate) {
         this.id = id;
         this.setStartTime(startTime);
         this.setEndTime(endTime);
+        this.setUpdateDate(updateDate);
     }
 
     /**
@@ -158,6 +173,15 @@ public class WorkTime {
     
     public long getId() {
         return id;
+    }
+
+    public Date getUpdateDate() {
+        return new Date(this.updateDate);
+    }
+
+    void setUpdateDate(Date updateDate) {
+        Validate.notNull(updateDate, "更新日時に null は設定できません");
+        this.updateDate = updateDate.getTime();
     }
 
     @Override

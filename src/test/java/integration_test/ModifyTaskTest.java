@@ -35,7 +35,7 @@ public class ModifyTaskTest {
         // setup
         new NonStrictExpectations(Now.class) {{
             Now.getForCompletedDate(); result = DateUtil.create("2014-08-10 12:00:01");
-            Now.getForUpdateDate(); result = DateUtil.createTimestamp("2014-08-10 12:00:02");
+            Now.getForTaskUpdateDate(); result = DateUtil.createTimestamp("2014-08-10 12:00:02");
         }};
         
         ModifyTaskForm form = new ModifyTaskForm();

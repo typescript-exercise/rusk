@@ -5,13 +5,16 @@ import static java.util.stream.Collectors.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import rusk.common.util.Now;
 import rusk.domain.task.exception.DuplicateWorkTimeException;
 import rusk.domain.task.exception.UnexpectedSwitchStatusException;
+import rusk.domain.task.exception.WorkTimeNotFoundException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -227,5 +230,44 @@ public abstract class Task {
 
     public Task switchToStoppedTask() {
         throw new UnexpectedSwitchStatusException();
+    }
+    
+    /**
+     * 指定した作業時間を更新する。
+     * <p>
+     * ID が一致する作業時間が更新されます。
+     * 
+     * @param modifiedWorkTime 更新する作業時間。
+     * @throws WorkTimeNotFoundException 指定した作業時間が存在しない場合
+     * @throws DuplicateWorkTimeException 作業時間が重複する場合
+     */
+    public void modifyWorkTime(WorkTime modifiedWorkTime) {
+        Validate.notNull(modifiedWorkTime, "作業時間に null は渡せません。");
+        
+        boolean removed = this.workTimes.removeIf(workTime -> workTime.getId() == modifiedWorkTime.getId());
+        
+        if (removed) {
+            modifiedWorkTime.setUpdateDate(Now.getForWorkTimeUpdateDate());
+            this.addWorkTime(modifiedWorkTime);
+        } else {
+            throw new WorkTimeNotFoundException("作業時間が存在しません。 id=" + modifiedWorkTime.getId());
+        }
+    }
+
+    /**
+     * 指定した ID の作業時間のコピーを取得する。
+     * 
+     * @param workTimeId 作業時間ID
+     * @return 作業時間
+     * @throws WorkTimeNotFoundException 指定した作業時間が存在しない場合
+     */
+    public WorkTime getWorkTime(long workTimeId) {
+        Optional<WorkTime> found = this.workTimes.stream().filter(w -> w.getId() == workTimeId).findFirst();
+        
+        if (found.isPresent()) {
+            return new WorkTime(found.get());
+        } else {
+            throw new WorkTimeNotFoundException("作業時間が存在しません。 id=" + workTimeId);
+        }
     }
 }

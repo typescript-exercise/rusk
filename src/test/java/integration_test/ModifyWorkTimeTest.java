@@ -41,7 +41,7 @@ public class ModifyWorkTimeTest {
         
         // verify
         IDataSet expected = dbTester.loadDataSet("modify-work-time-add-expected.yaml");
-        dbTester.verifyTable("WORK_TIME", expected, "ID");
+        dbTester.verifyTable("WORK_TIME", expected, "ID", "UPDATE_DATE");
     }
     
     @Test
@@ -59,4 +59,40 @@ public class ModifyWorkTimeTest {
         // verify
         assertThat(response.getStatus(), is(Status.BAD_REQUEST.getStatusCode()));
     }
+    
+    @Test
+    public void 更新時のテスト() throws Exception {
+        // setup
+        ModifyWorkTimeForm form = new ModifyWorkTimeForm();
+        form.startTime = DateUtil.create("2014-01-01 15:10:00");
+        form.endTime = DateUtil.create("2014-01-01 16:20:00");
+        form.lastUpdateDate = DateUtil.create("2014-01-01 16:30:02");
+        
+        Entity<ModifyWorkTimeForm> entity = Entity.entity(form, MediaType.APPLICATION_JSON);
+        
+        // exercise
+        rule.getTest().target("task/1/work-time/1").request().put(entity);
+        
+        // verify
+        IDataSet expected = dbTester.loadDataSet("modify-work-time-modify-expected.yaml");
+        dbTester.verifyTable("WORK_TIME", expected, "UPDATE_DATE");
+    }
+    
+    @Test
+    public void 同時更新されていた場合は409が返されること() throws Exception {
+        // setup
+        ModifyWorkTimeForm form = new ModifyWorkTimeForm();
+        form.startTime = DateUtil.create("2014-01-01 15:10:00");
+        form.endTime = DateUtil.create("2014-01-01 16:20:00");
+        form.lastUpdateDate = DateUtil.create("2014-01-01 16:30:00");
+        
+        Entity<ModifyWorkTimeForm> entity = Entity.entity(form, MediaType.APPLICATION_JSON);
+        
+        // exercise
+        Response response = rule.getTest().target("task/1/work-time/1").request().put(entity);
+        
+        // verify
+        assertThat(response.getStatus(), is(Status.CONFLICT.getStatusCode()));
+    }
+    
 }

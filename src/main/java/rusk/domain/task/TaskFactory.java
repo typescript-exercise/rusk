@@ -79,7 +79,11 @@ public class TaskFactory {
     }
 
     public static WorkTime create(ModifyWorkTimeForm form) {
-        return WorkTime.createConcludedWorkTime(form.startTime, form.endTime);
+        if (form.workTimeId == null) {
+            return WorkTime.createConcludedWorkTime(form.startTime, form.endTime);
+        } else {
+            return WorkTime.deserializeConcludedWorkTime(form.workTimeId, form.startTime, form.endTime, form.lastUpdateDate);
+        }
     }
 
     private TaskFactory() {}

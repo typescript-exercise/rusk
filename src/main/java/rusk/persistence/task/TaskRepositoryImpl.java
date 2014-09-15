@@ -112,9 +112,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     
     private WorkTime toWorkTime(WorkTimeTable table) {
         if (table.hasEndTime()) {
-            return WorkTime.deserializeConcludedWorkTime(table.id, table.startTime, table.endTime);
+            return WorkTime.deserializeConcludedWorkTime(table.id, table.startTime, table.endTime, table.updateDate);
         } else {
-            return WorkTime.deserializeInWorkingTime(table.id, table.startTime);
+            return WorkTime.deserializeInWorkingTime(table.id, table.startTime, table.updateDate);
         }
     }
 
@@ -169,7 +169,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     private void updateTask(Task task) {
         TaskTable taskTable = new TaskTable(task);
-        taskTable.updateDate = Now.getForUpdateDate();
+        taskTable.updateDate = Now.getForTaskUpdateDate();
         this.provider.getPersist().update(taskTable);
     }
 
@@ -198,20 +198,27 @@ public class TaskRepositoryImpl implements TaskRepository {
         return this.provider.getPersist().read(Date.class, "SELECT UPDATE_DATE FROM TASK WHERE ID=?", id);
     }
 
+    private static final String EXISTS_DUPLICATE_WORK_TIME_SQL_BASE = "SELECT COUNT(*)"
+                                                                    + "   FROM WORK_TIME"
+                                                                    + "  WHERE ("
+                                                                    + "           (END_TIME IS NOT NULL"
+                                                                    + "            AND (START_TIME<=? AND ?<=END_TIME)"
+                                                                    + "             OR (START_TIME <=? AND ?<=END_TIME))"
+                                                                    + "        OR (END_TIME IS NULL"
+                                                                    + "            AND START_TIME<=?)"
+                                                                    + "        )";
+    
     @Override
-    public boolean existsDuplicatedWorkTime(WorkTime workTime) {
-        String sql = "SELECT COUNT(*)"
-                   + "   FROM WORK_TIME"
-                   + "  WHERE (END_TIME IS NOT NULL"
-                   + "        AND (START_TIME<=? AND ?<=END_TIME)"
-                   + "         OR (START_TIME <=? AND ?<=END_TIME))"
-                   + "     OR (END_TIME IS NULL"
-                   + "        AND START_TIME<=?)";
-        
-        Date startTime = workTime.getStartTime();
-        Date endTime = workTime.getEndTime();
-        
-        long cnt = this.provider.getPersist().read(Long.class, sql, startTime, startTime, endTime, endTime, endTime);
+    public boolean existsDuplicatedWorkTime(Date startTime, Date endTime) {
+        long cnt = this.provider.getPersist().read(Long.class, EXISTS_DUPLICATE_WORK_TIME_SQL_BASE, startTime, startTime, endTime, endTime, endTime);
+        return cnt != 0;
+    }
+
+    @Override
+    public boolean existsDuplicatedWorkTime(long originalId, Date startTime, Date endTime) {
+        String sql = EXISTS_DUPLICATE_WORK_TIME_SQL_BASE + " AND ID<>?";
+     
+        long cnt = this.provider.getPersist().read(Long.class, sql, startTime, startTime, endTime, endTime, endTime, originalId);
         return cnt != 0;
     }
 }

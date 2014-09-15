@@ -24,7 +24,6 @@ import rusk.domain.task.Priority;
 import rusk.domain.task.Task;
 import rusk.domain.task.TaskBuilder;
 import rusk.domain.task.TaskFactory;
-import rusk.domain.task.WorkTime;
 import rusk.domain.task.form.RegisterTaskForm;
 import test.db.RuskDBTester;
 import test.db.TestPersistProvider;
@@ -256,10 +255,9 @@ public class TaskRepositoryImplTest {
         // setup
         Date startTime = DateUtil.create("2014-07-01 12:59:58");
         Date endTime = DateUtil.create("2014-07-01 12:59:59");
-        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
         
         // exercise
-        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        boolean actual = repository.existsDuplicatedWorkTime(startTime, endTime);
         
         // verify
         assertThat(actual, is(false));
@@ -270,10 +268,9 @@ public class TaskRepositoryImplTest {
         // setup
         Date startTime = DateUtil.create("2014-07-01 12:59:58");
         Date endTime = DateUtil.create("2014-07-01 13:00:00");
-        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
         
         // exercise
-        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        boolean actual = repository.existsDuplicatedWorkTime(startTime, endTime);
         
         // verify
         assertThat(actual, is(true));
@@ -284,10 +281,9 @@ public class TaskRepositoryImplTest {
         // setup
         Date startTime = DateUtil.create("2014-07-01 13:01:00");
         Date endTime = DateUtil.create("2014-07-01 13:49:00");
-        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
         
         // exercise
-        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        boolean actual = repository.existsDuplicatedWorkTime(startTime, endTime);
         
         // verify
         assertThat(actual, is(true));
@@ -298,10 +294,9 @@ public class TaskRepositoryImplTest {
         // setup
         Date startTime = DateUtil.create("2014-07-01 13:50:00");
         Date endTime = DateUtil.create("2014-07-01 13:50:30");
-        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
         
         // exercise
-        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        boolean actual = repository.existsDuplicatedWorkTime(startTime, endTime);
         
         // verify
         assertThat(actual, is(true));
@@ -312,10 +307,35 @@ public class TaskRepositoryImplTest {
         // setup
         Date startTime = DateUtil.create("2014-07-01 13:50:30");
         Date endTime = DateUtil.create("2014-07-01 13:52:00");
-        WorkTime workTime = WorkTime.createConcludedWorkTime(startTime, endTime);
         
         // exercise
-        boolean actual = repository.existsDuplicatedWorkTime(workTime);
+        boolean actual = repository.existsDuplicatedWorkTime(startTime, endTime);
+        
+        // verify
+        assertThat(actual, is(true));
+    }
+    
+    @Test
+    public void 同じIDの重複は対象外になること() throws Exception {
+        // setup
+        Date startTime = DateUtil.create("2014-07-01 13:00:00");
+        Date endTime = DateUtil.create("2014-07-01 13:50:30");
+        
+        // exercise
+        boolean actual = repository.existsDuplicatedWorkTime(1L, startTime, endTime);
+        
+        // verify
+        assertThat(actual, is(false));
+    }
+    
+    @Test
+    public void ID指定でも_他の作業時間は重複チェックの対象となっていること() throws Exception {
+        // setup
+        Date startTime = DateUtil.create("2014-07-01 13:00:00");
+        Date endTime = DateUtil.create("2014-07-01 13:51:00");
+        
+        // exercise
+        boolean actual = repository.existsDuplicatedWorkTime(1L, startTime, endTime);
         
         // verify
         assertThat(actual, is(true));

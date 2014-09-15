@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import rusk.common.util.DateUtil;
 import rusk.domain.task.exception.DuplicateWorkTimeException;
+import rusk.domain.task.exception.WorkTimeNotFoundException;
 
 public class TaskTest {
 
@@ -83,4 +84,78 @@ public class TaskTest {
         assertThat(total, is(200L));
     }
     
+    @Test
+    public void 指定した作業時間の更新ができる() {
+        // setup
+        Date base = DateUtil.create("2014-09-01 00:00:00");
+        
+        WorkTime workTime1 = createWorkTime(1L, base, 10);
+        WorkTime workTime2 = createWorkTime(2L, DateUtil.addSeconds(base, 20), 20);
+        
+        List<WorkTime> originalWorkTimes = Arrays.asList(workTime1, workTime2);
+
+        task.setWorkTimes(originalWorkTimes);
+        
+        // exercise
+        WorkTime modifiedWorkTime = createWorkTime(workTime2.getId(), DateUtil.addSeconds(base, 100), 100);
+        task.modifyWorkTime(modifiedWorkTime);
+        
+        // verify
+        assertThat(task.getWorkTimes(), containsInAnyOrder(workTime1, modifiedWorkTime));
+    }
+    
+    @Test(expected=DuplicateWorkTimeException.class)
+    public void 更新しようとした作業時間が_既存の作業時間と重複する場合_例外がスローされること() {
+        // setup
+        Date base = DateUtil.create("2014-09-01 00:00:00");
+        
+        WorkTime workTime1 = createWorkTime(1L, base, 10);
+        WorkTime workTime2 = createWorkTime(2L, DateUtil.addSeconds(base, 20), 20);
+        
+        List<WorkTime> originalWorkTimes = Arrays.asList(workTime1, workTime2);
+
+        task.setWorkTimes(originalWorkTimes);
+        
+        // exercise
+        WorkTime modifiedWorkTime = createWorkTime(workTime2.getId(), base, 10);
+        task.modifyWorkTime(modifiedWorkTime);
+    }
+    
+    @Test(expected=WorkTimeNotFoundException.class)
+    public void 更新しようとした作業時間が存在しない場合_例外がスローされること() {
+        // setup
+        Date base = DateUtil.create("2014-09-01 00:00:00");
+        
+        WorkTime workTime1 = createWorkTime(1L, base, 10);
+        WorkTime workTime2 = createWorkTime(2L, DateUtil.addSeconds(base, 20), 20);
+        
+        List<WorkTime> originalWorkTimes = Arrays.asList(workTime1, workTime2);
+
+        task.setWorkTimes(originalWorkTimes);
+        
+        // exercise
+        long unknownId = -1L;
+        WorkTime modifiedWorkTime = createWorkTime(unknownId, base, 10);
+        
+        task.modifyWorkTime(modifiedWorkTime);
+    }
+    
+    private WorkTime createWorkTime(long id, Date base, int durationSec) {
+        return WorkTime.deserializeConcludedWorkTime(id, base, DateUtil.addSeconds(base, durationSec), DateUtil.create("2014-01-01 01:01:01"));
+    }
+    
+    @Test
+    public void ID指定で作業時間が取得できること() {
+        // setup
+        WorkTime workTime1 = WorkTime.deserializeConcludedWorkTime(1L, DATETIME_1, DATETIME_2, DATETIME_1);
+        WorkTime workTime2 = WorkTime.deserializeConcludedWorkTime(2L, DATETIME_3, DATETIME_4, DATETIME_1);
+        
+        task.setWorkTimes(Arrays.asList(workTime1, workTime2));
+        
+        // exercise
+        WorkTime selected = task.getWorkTime(1L);
+        
+        // verify
+        assertThat(selected, is(workTime1));
+    }
 }

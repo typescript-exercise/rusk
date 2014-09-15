@@ -84,4 +84,13 @@ public class TaskResource {
         form.taskId = id;
         this.taskService.registerWorkTime(form);
     }
+    
+    @PUT
+    @Path("{taskId}/work-time/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void modifyWorkTime(@PathParam("taskId") long taskId, @PathParam("id") long workTimeId, ModifyWorkTimeForm form) {
+        form.taskId = taskId;
+        form.workTimeId = workTimeId;
+        this.taskService.modifyWorkTime(form);
+    }
 }

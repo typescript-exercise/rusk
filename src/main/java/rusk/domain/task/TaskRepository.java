@@ -86,8 +86,22 @@ public interface TaskRepository {
     /**
      * 指定した作業時間と重複する作業時間が既に存在するかどうかを確認する。
      * 
-     * @param workTime 重複を確認する作業時間
+     * @param startTime 開始時間
+     * @param endTime 終了時間
      * @return 重複する作業時間が存在する場合は true
      */
-    boolean existsDuplicatedWorkTime(WorkTime workTime);
+    boolean existsDuplicatedWorkTime(Date startTime, Date endTime);
+    
+    /**
+     * 指定した作業時間と重複する作業時間が既に存在するかどうかを確認する。
+     * <p>
+     * ただし、変更前の ID に指定した作業時間は、重複チェックの対象からは外される。
+     * このメソッドは、作業時間を更新するときの重複チェックで使用する。
+     * 
+     * @param originalId 変更前の作業時間の ID
+     * @param startTime 開始時間
+     * @param endTime 終了時間
+     * @return 重複する作業時間が存在する場合は true
+     */
+    boolean existsDuplicatedWorkTime(long originalId, Date startTime, Date endTime);
 }

@@ -26,7 +26,9 @@ public class InWorkingTask extends Task {
     }
     
     private void startWorkTime() {
-        this.addWorkTime(WorkTime.createInWorkingTime(Now.getForStartTime()));
+        WorkTime workTime = WorkTime.createInWorkingTime(Now.getForStartTime());
+        workTime.setUpdateDate(Now.getForWorkTimeUpdateDate());
+        this.addWorkTime(workTime);
     }
 
     @Override
@@ -49,6 +51,7 @@ public class InWorkingTask extends Task {
         workTimes.forEach(time -> {
             if (!time.hasEndTime()) {
                 time.setEndTime(Now.getForEndTime());
+                time.setUpdateDate(Now.getForWorkTimeUpdateDate());
             }
         });
         

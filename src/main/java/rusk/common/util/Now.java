@@ -45,7 +45,11 @@ public class Now {
         return get();
     }
 
-    public static Timestamp getForUpdateDate() {
+    public static Timestamp getForTaskUpdateDate() {
+        return new Timestamp(get().getTime());
+    }
+    
+    public static Timestamp getForWorkTimeUpdateDate() {
         return new Timestamp(get().getTime());
     }
 }
