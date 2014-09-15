@@ -11,7 +11,9 @@ import javax.inject.Inject;
 
 import net.sf.persist.Persist;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.text.StrBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,8 +165,44 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public void saveModification(Task task) {
         this.updateTask(task);
+        this.removeWorkTimes(task); // 削除を先にしておかないと、新規に登録したレコードを削除してしまう
         this.updateWorkTimes(task);
         this.insertWorkTimes(task);
+    }
+
+    private void removeWorkTimes(Task task) {
+        List<Long> belongingWorkTimeIds = task.getWorkTimeIds();
+        
+        if (belongingWorkTimeIds.isEmpty()) {
+            this.removeAllWorkTimesBelongTask(task);
+        } else {
+            this.removeNotBelongingWorkTimes(task, belongingWorkTimeIds);
+        }
+    }
+
+    private void removeAllWorkTimesBelongTask(Task task) {
+        this.provider.getPersist().executeUpdate("DELETE FROM WORK_TIME WHERE TASK_ID=?", task.getId());
+    }
+
+    private void removeNotBelongingWorkTimes(Task task, List<Long> belongingWorkTimeIds) {
+        String sql = this.buildRemoveWorkTimeSql(belongingWorkTimeIds.size());
+        Object[] params = this.buildRemoveWorkTimeParameter(task.getId(), belongingWorkTimeIds);
+        
+        this.provider.getPersist().executeUpdate(sql, params);
+    }
+    
+    private String buildRemoveWorkTimeSql(int numberOfUnremovedWorkTime) {
+        StrBuilder workTimeIdsPlaceHolder = new StrBuilder();
+        
+        for (int i=0; i<numberOfUnremovedWorkTime; i++) {
+            workTimeIdsPlaceHolder.appendSeparator(", ").append("?");
+        }
+        
+        return "DELETE FROM WORK_TIME WHERE TASK_ID=? AND ID NOT IN (" + workTimeIdsPlaceHolder + ")";
+    }
+    
+    private Object[] buildRemoveWorkTimeParameter(long taskId, List<Long> workTimeIds) {
+        return ArrayUtils.addAll(new Object[]{taskId}, workTimeIds.toArray());
     }
 
     private void updateTask(Task task) {

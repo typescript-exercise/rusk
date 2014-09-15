@@ -270,4 +270,28 @@ public abstract class Task {
             throw new WorkTimeNotFoundException("作業時間が存在しません。 id=" + workTimeId);
         }
     }
+
+    /**
+     * 指定した ID の作業時間を削除する。
+     * 
+     * @param workTimeId 作業時間ID
+     * @throws WorkTimeNotFoundException 指定した作業時間が存在しない場合
+     */
+    public void removeWorkTime(long workTimeId) {
+        boolean removed = this.workTimes.removeIf(w -> w.getId() == workTimeId);
+
+        if (!removed) {
+            throw new WorkTimeNotFoundException("作業時間が存在しません。 id=" + workTimeId);
+        }
+    }
+
+    /**
+     * このタスクが持つ全作業時間の ID をリストにして取得する。
+     * 
+     * @return 全作業時間の ID
+     */
+    public List<Long> getWorkTimeIds() {
+        return this.workTimes.stream().map(w -> w.getId()).collect(toList());
+    }
 }
+

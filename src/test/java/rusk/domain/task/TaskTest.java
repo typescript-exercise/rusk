@@ -158,4 +158,31 @@ public class TaskTest {
         // verify
         assertThat(selected, is(workTime1));
     }
+    
+    @Test
+    public void 指定した作業時間を削除できる() {
+        // setup
+        WorkTime workTime1 = WorkTime.deserializeConcludedWorkTime(1L, DATETIME_1, DATETIME_2, DATETIME_1);
+        WorkTime workTime2 = WorkTime.deserializeConcludedWorkTime(2L, DATETIME_3, DATETIME_4, DATETIME_1);
+        
+        task.setWorkTimes(Arrays.asList(workTime1, workTime2));
+        
+        // exercise
+        task.removeWorkTime(2L);
+        
+        // verify
+        assertThat(task.getWorkTimes(), contains(workTime1));
+    }
+    
+    @Test(expected=WorkTimeNotFoundException.class)
+    public void 削除しようとした作業時間が存在しない場合_例外がスローされる() {
+        // setup
+        WorkTime workTime1 = WorkTime.deserializeConcludedWorkTime(1L, DATETIME_1, DATETIME_2, DATETIME_1);
+        WorkTime workTime2 = WorkTime.deserializeConcludedWorkTime(2L, DATETIME_3, DATETIME_4, DATETIME_1);
+        
+        task.setWorkTimes(Arrays.asList(workTime1, workTime2));
+        
+        // exercise
+        task.removeWorkTime(3L);
+    }
 }

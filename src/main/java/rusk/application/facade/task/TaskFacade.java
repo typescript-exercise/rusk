@@ -151,4 +151,15 @@ public class TaskFacade {
             this.modifyTaskService.modifyWorkTime(task, form);
         }
     }
+    
+    /**
+     * 作業時間を削除する。
+     * 
+     * @param form 削除情報
+     */
+    public void removeWorkTime(ModifyWorkTimeForm form) {
+        Task task = this.repository.inquireWithLock(form.taskId);
+        task.removeWorkTime(form.workTimeId);
+        this.repository.saveModification(task);
+    }
 }

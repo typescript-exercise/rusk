@@ -242,6 +242,23 @@ public class TaskRepositoryImplTest {
     }
     
     @Test
+    @Fixture(resources="TaskRepositoryImple-fixuture-作業時間削除.yaml")
+    public void 作業時間の削除が同期されること() throws Exception {
+        // setup
+        Task task = repository.inquireById(1L);
+        
+        // exercise
+        task.removeWorkTime(2L);
+        repository.saveModification(task);
+        
+        // verify
+        IDataSet expected = dbTester.loadDataSet("TaskRepositoryImple-fixuture-作業時間削除-expected.yaml");
+        
+        dbTester.verifyTable("TASK", expected, "UPDATE_DATE");
+        dbTester.verifyTable("WORK_TIME", expected);
+    }
+    
+    @Test
     public void 指定したタスクの最終更新日付が取得できる() {
         // exercise
         Date updateDate = repository.inquireUpdateDateById(1L);

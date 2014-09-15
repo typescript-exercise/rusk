@@ -93,4 +93,14 @@ public class TaskResource {
         form.workTimeId = workTimeId;
         this.taskService.modifyWorkTime(form);
     }
+    
+    @DELETE
+    @Path("{taskId}/work-time/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void removeWorkTime(@PathParam("taskId") long taskId, @PathParam("id") long workTimeId) {
+        ModifyWorkTimeForm form = new ModifyWorkTimeForm();
+        form.taskId = taskId;
+        form.workTimeId = workTimeId;
+        this.taskService.removeWorkTime(form);
+    }
 }

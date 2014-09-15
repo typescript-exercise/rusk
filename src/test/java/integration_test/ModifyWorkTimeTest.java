@@ -79,7 +79,7 @@ public class ModifyWorkTimeTest {
     }
     
     @Test
-    public void 同時更新されていた場合は409が返されること() throws Exception {
+    public void 更新しようとした作業時間が同時更新されていた場合は409が返されること() throws Exception {
         // setup
         ModifyWorkTimeForm form = new ModifyWorkTimeForm();
         form.startTime = DateUtil.create("2014-01-01 15:10:00");
@@ -93,6 +93,25 @@ public class ModifyWorkTimeTest {
         
         // verify
         assertThat(response.getStatus(), is(Status.CONFLICT.getStatusCode()));
+    }
+    
+    @Test
+    public void 削除時のテスト() throws Exception {
+        // exercise
+        rule.getTest().target("task/1/work-time/1").request().delete();
+        
+        // verify
+        IDataSet expected = dbTester.loadDataSet("modify-work-time-remove-expected.yaml");
+        dbTester.verifyTable("WORK_TIME", expected);
+    }
+    
+    @Test
+    public void 存在しない作業時間IDを削除しようとした場合_404を返すこと() throws Exception {
+        // exercise
+        Response response = rule.getTest().target("task/1/work-time/50").request().delete();
+        
+        // verify
+        assertThat(response.getStatus(), is(Status.NOT_FOUND.getStatusCode()));
     }
     
 }
