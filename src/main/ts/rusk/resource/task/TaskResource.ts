@@ -78,6 +78,28 @@ module rusk {
                             param.onSuccess();
                         });
                 }
+                
+                registerWorkTime(param) : void {
+                    var conf = {
+                        overrideInterceptor: {
+                            400: param.onBadRequest
+                        }
+                    };
+                    
+                    this.$http
+                        .post('rest/task/'+ param.taskId + '/work-time', param.postData, conf)
+                        .success(() => {
+                            param.onSuccess();
+                        });
+                }
+                
+                removeWorkTime(param) : void {
+                    this.$http
+                        .delete('rest/task/'+ param.taskId + '/work-time/' + param.workTimeId)
+                        .success(() => {
+                            param.onSuccess();
+                        });
+                }
             }
         }
     }

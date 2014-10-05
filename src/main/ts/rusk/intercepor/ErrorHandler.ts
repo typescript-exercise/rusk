@@ -5,7 +5,7 @@ module rusk {
         }
         
         export interface ErrorHandler {
-            handle() : void;
+            handle(response : any) : void;
         }
         
         export class RedirectErrorHandler implements ErrorHandler {

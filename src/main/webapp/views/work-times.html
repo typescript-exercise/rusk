@@ -1,7 +1,8 @@
 <div ng-if="task">
   <div ng-if="task.workTimes.length !== 0">
+    <h2 class="center">{{task.title}}</h2>
+    
     <table id="work-times-table" class="table table-bordered table-striped container">
-      <caption class="h2">{{task.title}}</caption>
       <caption class="h3">作業時間内訳</caption>
       <thead>
         <tr>
@@ -9,21 +10,56 @@
           <th>開始時間</th>
           <th>終了時間</th>
           <th>作業時間</th>
+          <th>編集</th>
+          <th>削除</th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="workTime in task.workTimes">
+        <tr ng-repeat="workTime in task.workTimes" ng-controller="EditWorkTimeController">
           <td>{{$index + 1}}</td>
           <td>{{workTime.startTime | date:'yyyy/MM/dd HH:mm'}}</td>
           <td>{{workTime.endTime | date:'yyyy/MM/dd HH:mm'}}</td>
           <td>{{workTime.duration | timeDuration}}</td>
+          <td class="center">
+            <button class="btn btn-xs btn-default" data-toggle="modal" data-target="#modifyWorkTimeModal">
+              <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+          </td>
+          <td class="center">
+            <button class="btn btn-xs btn-danger" ng-click="remove(task.id, workTime.id)">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+          </td>
         </tr>
         <tr>
           <td id="work-time-summary" colspan="3">合計</td>
           <td>{{task.totalWorkTime | timeDuration}}</td>
+          <td colspan="2"></td>
         </tr>
       </tbody>
     </table>
+    
+    <form class="container" id="register-work-time-form" ng-controller="RegisterWorkTimeController">
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8">
+          <h3>作業時間追加</h3>
+          <div class="form-group text-danger">
+            {{errorMessage}}
+          </div>
+          <div class="form-group">
+            <label for="start-time" class="control-label">開始日時</label>
+            <input id="start-time" name="startTime" type="text" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="end-time" class="control-label">終了日時</label>
+            <input id="end-time" name="endTime" type="text" class="form-control" />
+          </div>
+          <div class="form-group pull-right">
+            <button type="submit" class="btn btn-primary" ng-click="registerWorkTime()">追加</button>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
   <div ng-if="task.workTimes.length === 0">
     <h1>作業時間が存在しません。</h1>
@@ -31,4 +67,27 @@
 </div>
 <div ng-if="!task">
   <h1>読み込んでいます...</h1>
+</div>
+
+
+<div class="modal fade" id="modifyWorkTimeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title">作業時間編集</h4>
+      </div>
+      
+      <div class="modal-body">
+        ...
+      </div>
+      
+      <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+          <button type="submit" class="btn btn-primary">更新</button>
+      </div>
+    </div>
+  </div>
 </div>

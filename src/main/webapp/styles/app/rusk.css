@@ -12,6 +12,10 @@ textarea {
   min-height: 1em !important;
 }
 
+.center {
+  text-align: center;
+}
+
 .error {
   color: red;
 }

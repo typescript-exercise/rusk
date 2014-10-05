@@ -1,6 +1,13 @@
 module rusk {
     export module view {
         export module form {
+            export interface CutsomValidation {
+                name: string;
+                method: string;
+                validation: (value, element, param) => boolean;
+                message: string;
+            }
+            
             export class TaskValidateOptionBuilder {
                 private option = {};
                 
@@ -31,6 +38,28 @@ module rusk {
                     return this;
                 }
                 
+                startTime() : TaskValidateOptionBuilder {
+                    $.extend(true, this.option, {
+                        rules: {
+                            startTime: {
+                                required: true
+                            }
+                        }
+                    });
+                    return this;
+                }
+                
+                endTime() : TaskValidateOptionBuilder {
+                    $.extend(true, this.option, {
+                        rules: {
+                            endTime: {
+                                required: true
+                            }
+                        }
+                    });
+                    return this;
+                }
+                
                 importance() : TaskValidateOptionBuilder {
                     $.extend(true, this.option, {
                         rules: {
@@ -50,6 +79,26 @@ module rusk {
                             }
                         }
                     });
+                    return this;
+                }
+                
+                custom(option : CutsomValidation): TaskValidateOptionBuilder {
+                    (<any>$).validator.addMethod(option.method, option.validation, option.message);
+                    
+                    var _option : any = this.option;
+                    
+                    if (_.isUndefined(_option.rules)) {
+                        _option.rules = {};
+                    }
+                    
+                    if (_.isUndefined(_option.rules[option.name])) {
+                        _option.rules[option.name] = {};
+                    }
+                    
+                    _option.rules[option.name][option.method] = true;
+                    
+                    console.dir(this.option);
+                    
                     return this;
                 }
                 

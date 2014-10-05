@@ -17,6 +17,9 @@ public class DuplicateWorkTimeExceptionMapper implements ExceptionMapper<Duplica
     @Override
     public Response toResponse(DuplicateWorkTimeException exception) {
         logger.warn(exception.getMessage());
-        return Response.status(Status.BAD_REQUEST).build();
+        return Response
+                .status(Status.BAD_REQUEST)
+                .entity(new ErrorMessage("作業時間が重複しています（他のタスクも含みます）。"))
+                .build();
     }
 }

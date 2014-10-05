@@ -15,7 +15,7 @@ module ruks {
                 responseError: function(response) {
                     var errorHandler = ErrorHandlerFactory.createErrorHandler(response.status, response.config);
                     
-                    errorHandler.handle();
+                    errorHandler.handle(response.data);
                     
                     return $q.reject(response);
                 }
