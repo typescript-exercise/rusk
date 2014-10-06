@@ -255,7 +255,7 @@ public class TaskRepositoryImpl implements TaskRepository {
             + "               END_TIME IS NULL"
             + "               AND START_TIME<=?"
             + "           )"
-            + "       )";// 一番外の括弧は、 existsDuplicatedWorkTime() で同一ID の除去を条件で追加するときに必要となる。
+            + "       )";// 一番外の括弧は、 existsDuplicatedWorkTime() で同一ID の除去を条件で追加するときに必要となる。S
     
     @Override
     public boolean existsDuplicatedWorkTime(Date startTime, Date endTime) {
