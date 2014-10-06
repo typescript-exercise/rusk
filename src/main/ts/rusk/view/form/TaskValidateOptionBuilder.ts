@@ -1,6 +1,10 @@
+/// <reference path="../primitive/DateTime.ts" />
+
 module rusk {
     export module view {
         export module form {
+            import DateTime = primitive.DateTime;
+            
             export interface CutsomValidation {
                 name: string;
                 method: string;
@@ -42,21 +46,26 @@ module rusk {
                     $.extend(true, this.option, {
                         rules: {
                             startTime: {
-                                required: true
+                                requireDateTime: true
                             }
                         }
                     });
                     return this;
                 }
                 
-                endTime() : TaskValidateOptionBuilder {
+                endTime(startTime : DateTime, endTime : DateTime) : TaskValidateOptionBuilder {
                     $.extend(true, this.option, {
                         rules: {
                             endTime: {
-                                required: true
+                                requireDateTime: true,
+                                endTimeCustom: {
+                                    startTime: startTime,
+                                    endTime: endTime
+                                }
                             }
                         }
                     });
+                    
                     return this;
                 }
                 
@@ -106,6 +115,29 @@ module rusk {
                     return this.option;
                 }
             }
+            
+            (function() {
+                var validator = (<any>$).validator;
+                
+                validator.addMethod(
+                    'endTimeCustom',
+                    (value, element, param) => {
+                        var startTime : DateTime = param.startTime;
+                        var endTime : DateTime = param.endTime;
+                        
+                        return startTime.lessThan(endTime);
+                    },
+                    '開始日時＜終了日時となるように入力してください。'
+                );
+                
+                validator.addMethod(
+                    'requireDateTime',
+                    (value, element, param) => {
+                        return !DateTime.isEmpty(value);
+                    },
+                    'この項目は必須入力です。'
+                );
+            })();
         }
     }
 }

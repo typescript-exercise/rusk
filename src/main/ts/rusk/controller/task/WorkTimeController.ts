@@ -72,7 +72,6 @@ module rusk {
             
             _.extend($scope, {
                 registerWorkTime: () => {
-                    console.log(!form.isValid());
                     if (!form.isValid()) {
                         return false;
                     }

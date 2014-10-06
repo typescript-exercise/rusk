@@ -34,19 +34,7 @@ module rusk {
                 private initForm(param : RegisterWorkTimeFormConstructParameter) {
                     var $element = $(param.form.selector);
                     
-                    this.form = new Form($element, TaskValidateOptionBuilder.create().startTime().endTime().custom({
-                        name: 'endTime',
-                        method: 'test',
-                        validation: (value, element, param) : boolean => {
-                            console.dir({
-                                value: value,
-                                element: element,
-                                param: param
-                            });
-                            return false;
-                        },
-                        message: 'test desu'
-                    }).build());
+                    this.form = new Form($element, TaskValidateOptionBuilder.create().startTime().endTime(this.startTime, this.endTime).build());
                 }
                 
                 isValid() : boolean {

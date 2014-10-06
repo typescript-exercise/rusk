@@ -6,7 +6,7 @@ module rusk {
                 
                 constructor($element, validationRules) {
                     this.$element = $element;
-                    this.$element.validate(validationRules);
+                    this.$element.validate(_.extend({}, validationRules, {onfocusout: false, focusInvalid : false}));
                 }
                 
                 isValid() : boolean {
