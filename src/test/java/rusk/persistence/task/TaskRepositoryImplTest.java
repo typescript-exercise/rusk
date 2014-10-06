@@ -294,6 +294,19 @@ public class TaskRepositoryImplTest {
     }
     
     @Test
+    public void 指定した作業時間が_既存の作業時間を間に収める場合_trueを返す() throws Exception {
+        // setup
+        Date startTime = DateUtil.create("2014-07-01 12:59:00");
+        Date endTime = DateUtil.create("2014-07-01 13:50:01");
+        
+        // exercise
+        boolean actual = repository.existsDuplicatedWorkTime(startTime, endTime);
+        
+        // verify
+        assertThat(actual, is(true));
+    }
+    
+    @Test
     public void 指定した作業時間が_既存の作業時間の間に収まる場合_trueを返す() throws Exception {
         // setup
         Date startTime = DateUtil.create("2014-07-01 13:01:00");

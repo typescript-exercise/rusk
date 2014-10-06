@@ -236,19 +236,30 @@ public class TaskRepositoryImpl implements TaskRepository {
         return this.provider.getPersist().read(Date.class, "SELECT UPDATE_DATE FROM TASK WHERE ID=?", id);
     }
 
-    private static final String EXISTS_DUPLICATE_WORK_TIME_SQL_BASE = "SELECT COUNT(*)"
-                                                                    + "   FROM WORK_TIME"
-                                                                    + "  WHERE ("
-                                                                    + "           (END_TIME IS NOT NULL"
-                                                                    + "            AND (START_TIME<=? AND ?<=END_TIME)"
-                                                                    + "             OR (START_TIME <=? AND ?<=END_TIME))"
-                                                                    + "        OR (END_TIME IS NULL"
-                                                                    + "            AND START_TIME<=?)"
-                                                                    + "        )";
+    private static final String EXISTS_DUPLICATE_WORK_TIME_SQL_BASE =
+              "SELECT COUNT(*)"
+            + "  FROM WORK_TIME"
+            + " WHERE ("
+            + "           ("
+            + "               END_TIME IS NOT NULL"
+            + "               AND ("
+            + "                   ? BETWEEN START_TIME AND END_TIME"
+            + "                     OR"
+            + "                   ? BETWEEN START_TIME AND END_TIME"
+            + "                     OR"
+            + "                   START_TIME BETWEEN ? AND ?"
+            + "                     OR"
+            + "                   END_TIME BETWEEN ? AND ?"
+            + "               )"
+            + "           ) OR ("
+            + "               END_TIME IS NULL"
+            + "               AND START_TIME<=?"
+            + "           )"
+            + "       )";// 一番外の括弧は、 existsDuplicatedWorkTime() で同一ID の除去を条件で追加するときに必要となる。
     
     @Override
     public boolean existsDuplicatedWorkTime(Date startTime, Date endTime) {
-        long cnt = this.provider.getPersist().read(Long.class, EXISTS_DUPLICATE_WORK_TIME_SQL_BASE, startTime, startTime, endTime, endTime, endTime);
+        long cnt = this.provider.getPersist().read(Long.class, EXISTS_DUPLICATE_WORK_TIME_SQL_BASE, startTime, endTime, startTime, endTime, startTime, endTime, endTime);
         return cnt != 0;
     }
 
@@ -256,7 +267,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     public boolean existsDuplicatedWorkTime(long originalId, Date startTime, Date endTime) {
         String sql = EXISTS_DUPLICATE_WORK_TIME_SQL_BASE + " AND ID<>?";
      
-        long cnt = this.provider.getPersist().read(Long.class, sql, startTime, startTime, endTime, endTime, endTime, originalId);
+        long cnt = this.provider.getPersist().read(Long.class, sql, startTime, endTime, startTime, endTime, startTime, endTime, endTime, originalId);
         return cnt != 0;
     }
 }
