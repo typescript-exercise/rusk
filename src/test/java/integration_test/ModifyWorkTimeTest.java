@@ -66,7 +66,7 @@ public class ModifyWorkTimeTest {
         ModifyWorkTimeForm form = new ModifyWorkTimeForm();
         form.startTime = DateUtil.create("2014-01-01 15:10:00");
         form.endTime = DateUtil.create("2014-01-01 16:20:00");
-        form.lastUpdateDate = DateUtil.create("2014-01-01 16:30:02");
+        form.updateDate = DateUtil.create("2014-01-01 16:30:02");
         
         Entity<ModifyWorkTimeForm> entity = Entity.entity(form, MediaType.APPLICATION_JSON);
         
@@ -84,7 +84,7 @@ public class ModifyWorkTimeTest {
         ModifyWorkTimeForm form = new ModifyWorkTimeForm();
         form.startTime = DateUtil.create("2014-01-01 15:10:00");
         form.endTime = DateUtil.create("2014-01-01 16:20:00");
-        form.lastUpdateDate = DateUtil.create("2014-01-01 16:30:00");
+        form.updateDate = DateUtil.create("2014-01-01 16:30:00");
         
         Entity<ModifyWorkTimeForm> entity = Entity.entity(form, MediaType.APPLICATION_JSON);
         

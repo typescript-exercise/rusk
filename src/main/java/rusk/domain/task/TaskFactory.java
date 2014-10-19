@@ -82,7 +82,7 @@ public class TaskFactory {
         if (form.workTimeId == null) {
             return WorkTime.createConcludedWorkTime(form.startTime, form.endTime);
         } else {
-            return WorkTime.deserializeConcludedWorkTime(form.workTimeId, form.startTime, form.endTime, form.lastUpdateDate);
+            return WorkTime.deserializeConcludedWorkTime(form.workTimeId, form.startTime, form.endTime, form.updateDate);
         }
     }
 

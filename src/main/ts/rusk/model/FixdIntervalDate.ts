@@ -1,10 +1,11 @@
+/// <reference path="./NormalDate.ts" />
+
 module rusk {
     export module model {
-        export class FixdIntervalDate {
-            private date : Date;
+        export class FixdIntervalDate extends NormalDate {
             
             constructor(date : Date) {
-                this.date = new Date(date.getTime());
+                super(date);
                 var minute = this.date.getMinutes();
                 
                 if (0 < minute && minute < 30) {
@@ -14,26 +15,6 @@ module rusk {
                     this.date.setHours(hour + 1);
                     this.date.setMinutes(0);
                 }
-            }
-            
-            getDateAsString() : string {
-                return rusk.formatDate(this.date, 'yyyy/MM/dd');
-            }
-            
-            getTimeAsString() : string {
-                return rusk.formatDate(this.date, 'HH:mm');
-            }
-            
-            toString() : string {
-                return rusk.formatDate(this.date, 'yyyy/MM/dd HH:mm');
-            }
-            
-            getTime() : number {
-                return this.date.getTime();
-            }
-            
-            getDate() : Date {
-                return new Date(this.getTime());
             }
         }
     }

@@ -144,7 +144,7 @@ public class TaskFacade {
             Task task = this.repository.inquireWithLock(form.taskId);
             
             WorkTime workTime = task.getWorkTime(form.workTimeId);
-            if (form.lastUpdateDate.getTime() < workTime.getUpdateDate().getTime()) {
+            if (form.updateDate.getTime() < workTime.getUpdateDate().getTime()) {
                 throw new ConcurrentUpdateException();
             }
             

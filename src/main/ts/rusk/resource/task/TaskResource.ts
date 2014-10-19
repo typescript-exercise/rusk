@@ -94,8 +94,36 @@ module rusk {
                 }
                 
                 removeWorkTime(param) : void {
+                    var conf = {
+                        overrideInterceptor: {
+                            404: param.onNotFoundError
+                        }
+                    };
+                    
                     this.$http
-                        .delete('rest/task/'+ param.taskId + '/work-time/' + param.workTimeId)
+                        .delete('rest/task/'+ param.taskId + '/work-time/' + param.workTimeId, conf)
+                        .success(() => {
+                            param.onSuccess();
+                        });
+                }
+                
+                modifyWorkTime(param: {
+                    putData: any;
+                    onSuccess: Function;
+                    onBadRequestError : Function;
+                    onNotFoundError : Function;
+                    onConflictError : Function;
+                }) : void {
+                    var conf = {
+                        overrideInterceptor: {
+                            404: param.onNotFoundError,
+                            400: param.onBadRequestError,
+                            409: param.onConflictError
+                        }
+                    };
+                    
+                    this.$http
+                        .put('rest/task/'+ param.putData.taskId + '/work-time/' + param.putData.id, param.putData, conf)
                         .success(() => {
                             param.onSuccess();
                         });
