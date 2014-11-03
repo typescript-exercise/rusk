@@ -18,6 +18,10 @@ angular
             controller: 'WorkTimeController',
             templateUrl: 'views/work-times.html'
         })
+        .when('/daily-history', {
+            controller: 'DailyHistoryController',
+            templateUrl: 'views/daily-history.html'
+        })
         .when('/server-error', {
             templateUrl: 'views/server-error.html'
         })

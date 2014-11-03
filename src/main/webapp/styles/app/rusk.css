@@ -43,3 +43,7 @@ textarea {
 #work-time-summary {
   text-align: right;
 }
+
+#daily-history-table {
+  max-width: 600px;
+}
