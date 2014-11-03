@@ -2,6 +2,8 @@ package rusk.rest.resource.task;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -18,6 +20,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import rusk.application.facade.task.DailyHistoryDto;
 import rusk.application.facade.task.TaskFacade;
 import rusk.domain.task.Task;
 import rusk.domain.task.form.ModifyTaskForm;
@@ -101,5 +104,24 @@ public class TaskResource {
         form.taskId = taskId;
         form.workTimeId = workTimeId;
         this.taskService.removeWorkTime(form);
+    }
+    
+    @GET
+    @Path("daily/{date}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<DailyHistoryDto> inquireDailyHistory(@PathParam("date") String date) {
+        List<DailyHistoryDto> dummy = new ArrayList<>();
+        dummy.add(dto(1L, "タスク１", 1.5));
+        dummy.add(dto(2L, "タスク２", 1.25));
+        
+        return dummy;
+    }
+    
+    private static DailyHistoryDto dto(long id, String title, double workTimeSummary) {
+        DailyHistoryDto dto = new DailyHistoryDto();
+        dto.id = id;
+        dto.title = title;
+        dto.workTimeSummary = workTimeSummary;
+        return dto;
     }
 }
